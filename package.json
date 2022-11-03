@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "tsc er'r'r'r'r'r'r'r&& vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "deploy": "yarn；l'l'l'l'l'l'l'l'l'l'l'l'l'l'l'l'l'l'l'l'l build && npx thirdweb@latest upload dist"
   },
