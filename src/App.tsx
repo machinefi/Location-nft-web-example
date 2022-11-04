@@ -40,7 +40,7 @@ export default function Home() {
     console.log('claim-nft', res)
     if(res) {
       // @ts-ignore
-      store.optionNft = res;
+      store.optionNft = res.data.result.data.json;
       getNftBalance()
     }
   }
@@ -89,14 +89,16 @@ export default function Home() {
             Balance: {balance}
           </Flex>}
           {
-            balance !== 0  ? <Button colorScheme="purple" w="100%" disabled size="lg">Cliamed</Button> : <Web3Button
-              accentColor="#805ad5"
-              contractAddress={metapebbleStore.contract.TestAddress}
-              contractAbi={metapebbleStore.contract.TestAbi}
-              action={(con) => claimNFT(con)}
-            >
-              Cliam NFT
-            </Web3Button>
+            !store.optionNft ? <Button colorScheme="purple" w="100%" disabled size="lg">Incompatible</Button> : (
+                balance !== 0  ? <Button colorScheme="purple" w="100%" disabled size="lg">Cliamed</Button> : <Web3Button
+                accentColor="#805ad5"
+                contractAddress={metapebbleStore.contract.PresentSBT[4690]}
+                contractAbi={metapebbleStore.contract.PresentSBTABI}
+                action={(con) => claimNFT(con)}
+              >
+                Cliam NFT
+              </Web3Button>
+            )
           }
         </div>
       </main>
