@@ -82,8 +82,8 @@ export default function Home() {
             Balance: {balance}
           </Flex>}
           {
-            !optionNft ? <Button colorScheme="purple" w="100%" disabled size="lg">Incompatible</Button> : (
-                balance !== 0  ? <Button colorScheme="purple" w="100%" disabled size="lg">Cliamed</Button> : <Web3Button
+            balance > 0  ? <Button colorScheme="purple" w="100%" disabled size="lg">Cliamed</Button> : (
+              !optionNft ? <Button colorScheme="purple" w="100%" disabled size="lg">Incompatible</Button> : <Web3Button
                 accentColor="#805ad5"
                 contractAddress={metapebbleStore.contract.PresentSBT[4690]}
                 contractAbi={metapebbleStore.contract.PresentSBTABI}
@@ -91,8 +91,9 @@ export default function Home() {
               >
                 Cliam NFT
               </Web3Button>
-            )
+            ) 
           }
+      
         </div>
       </main>
     </div>
