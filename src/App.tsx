@@ -13,23 +13,19 @@ export default function Home() {
   const {metapebbleStore} = useStore()  
 
   const [balance, setBalance] = useState(0)
+  const [optionNft, setOptionNft] = useState({
+    user_: '',
+    value_: 0,
+    v_: 0,
+    s_: '',
+    r_: '',
+  })
 
   const { contract } = useContract(metapebbleStore.contract.PresentSBT[4690], metapebbleStore.contract.PresentSBTABI)
-	// const { contract } = useContract(metapebbleStore.contract.TestAddress, metapebbleStore.contract.TestAbi)
   const address = useAddress()
   const chainId = useChainId()
-  // const connectMetamask = useMetamask()
-  // const disconnect = useDisconnect();
 
   const store = useLocalObservable(() => ({
-    optionNft: {
-      user_: '',
-      value_: 0,
-      v_: 0,
-      s_: '',
-      r_: '',
-    },
-    nftBalance: 0,
     loading: false,
   }));
 
@@ -40,7 +36,7 @@ export default function Home() {
     console.log('claim-nft', res)
     if(res) {
       // @ts-ignore
-      store.optionNft = res.data.result.data.json;
+      setOptionNft(res.data.result.data.json)
       getNftBalance()
     }
   }
@@ -48,15 +44,12 @@ export default function Home() {
   const getNftBalance = async () => {
     const balanceResult = await contract?.call("balanceOf", address);
     setBalance(balanceResult.toNumber())
-    store.nftBalance = balanceResult.toNumber()
     console.log('nft balance', balanceResult.toNumber(), balance);
   }
 
   const claimNFT = async (con: any) => {
     store.loading = true
-    const { user_, r_, s_, v_ } = store.optionNft
-    // @ts-ignore
-    // const res = await con?.call("mint", address, new BigNumber(10000000000000000000).toString())
+    const { user_, r_, s_, v_ } = optionNft
     const res = await con?.call("claim", user_, v_, r_, s_)
     console.log('res', res);
     if(res.receipt) {
@@ -89,7 +82,7 @@ export default function Home() {
             Balance: {balance}
           </Flex>}
           {
-            !store.optionNft ? <Button colorScheme="purple" w="100%" disabled size="lg">Incompatible</Button> : (
+            !optionNft ? <Button colorScheme="purple" w="100%" disabled size="lg">Incompatible</Button> : (
                 balance !== 0  ? <Button colorScheme="purple" w="100%" disabled size="lg">Cliamed</Button> : <Web3Button
                 accentColor="#805ad5"
                 contractAddress={metapebbleStore.contract.PresentSBT[4690]}
