@@ -28,8 +28,11 @@ export default function Home() {
   const [signature, setSignature] = useState('')
   const [optionNft, setOptionNft] = useState(null)
   const [signStauts, setSignStauts] = useState(false)
+  const [index, setIndex] = useState(0)
+  const [total, setTotal] = useState(0)
+  const [cliamArr, setWaitCliamArr] = useState([])
 
-  const { contract } = useContract(metapebbleStore.contract.PresentSBT[4690], metapebbleStore.contract.PresentSBTABI)
+  const { contract } = useContract(metapebbleStore.contract.PebbleNFT[4690], metapebbleStore.contract.PebbleNFTABI)
   const address = useAddress()
   const chainId = useChainId()
   const sdk = useSDK()
@@ -66,31 +69,41 @@ export default function Home() {
 
   const initNft = async(message:string, signature:string) => {
     // @ts-ignore
-    const params = `${encodeURIComponent(superjson.stringify({address: address,  contract_address: metapebbleStore.contract.PresentSBT[chainId], 
+    const params = `${encodeURIComponent(superjson.stringify({address: address,  contract_address: metapebbleStore.contract.PebbleNFT[chainId], 
+      contractName: "PebbleNFT",
       chain_id: chainId?.toString(),
       message: message,
       signature: signature
     }))}`
-    const response = await axios.get(`${publicConfig.APIURL}/api/claim-nft?input=${params}`)
-    console.log('claim-nft', response)
+    const response = await axios.get(`${publicConfig.APIURL}/api/claim-nft?input=${params}`)    
     const result = response.data.result.data.json
+    console.log('claim-nft', response)
+
     if(result && result.error) {
       setSignStauts(false)
-      toast({
-        description: result.error,
-        status: 'warning',
-        duration: 9000,
-        isClosable: true,
-      })
+      toast({description: result.error,status: 'warning',duration: 9000,isClosable: true})
       return
     } else {
       setSignStauts(true)
     }
-
     if(response) {
-      getNftBalance()
-      setOptionNft(result)
+      formatDevice(result)
     }
+  }
+
+  const formatDevice = async (data: any) => {
+    getNftBalance()
+    if(data.list.length > 0) {
+      data.list.forEach(async (o: any, oindex: number) => {
+        const result = await contract?.call('claimed', o.hash)
+        data.list[oindex].claimed = result
+      })
+    }
+    console.log('formatDevice', data)
+    const waitCliamArr = data.list.filter(async (o: any) => o.claimed == false)
+    setTotal(waitCliamArr.length)
+    setWaitCliamArr(waitCliamArr)
+    if(waitCliamArr.length > 0) setOptionNft(waitCliamArr[index])
   }
 
   const getNftBalance = async () => {
@@ -100,10 +113,11 @@ export default function Home() {
   }
 
   const claimNFT = async (con: any) => {
+   try {
     store.loading = true
     // @ts-ignore
-    const { user_, r_, s_, v_ } = optionNft
-    const res = await con?.call("claim", user_, v_, r_, s_)
+    const { hash, r_, s_, v_ } = optionNft
+    const res = await con?.call("claim", address, hash, v_, r_, s_)
     console.log('res', res);
     if(res.receipt) {
       store.loading = false
@@ -114,15 +128,21 @@ export default function Home() {
         isClosable: true,
       })
       getNftBalance()
-    } else {
-      toast({
-        description: 'Claim failed',
-        status: 'error',
-        duration: 9000,
-        isClosable: true,
-      })
-      store.loading = false
+      if(balance < total) {
+        setIndex(index + 1)
+        setOptionNft(cliamArr[index + 1])
+      }
     }
+   } catch (err) {
+    console.log('claimNFT', err)
+    toast({
+      description: 'Claim failed',
+      status: 'error',
+      duration: 9000,
+      isClosable: true,
+    })
+    store.loading = false
+   }
   }
 
   
@@ -146,16 +166,16 @@ export default function Home() {
           {
             address ? (
               signStauts ? (
-                  balance > 0  ? <Button colorScheme="purple" w="100%" disabled size="lg">Cliamed</Button> : 
+                  balance >= total  ? <Button colorScheme="purple" w="100%" disabled size="lg">Cliamed</Button> : 
                     (
                       !optionNft ? <Button colorScheme="purple" w="100%" disabled size="lg">Incompatible</Button> : 
                         <Web3Button
                           accentColor="#805ad5"
-                          contractAddress={metapebbleStore.contract.PresentSBT[4690]}
-                          contractAbi={metapebbleStore.contract.PresentSBTABI}
+                          contractAddress={metapebbleStore.contract.PebbleNFT[4690]}
+                          contractAbi={metapebbleStore.contract.PebbleNFTABI}
                           action={(con) => claimNFT(con)}
                         >
-                          Cliam NFT
+                          Cliam NFT {total > 0 && `(${total})`}
                         </Web3Button>
                 )) :  <Button colorScheme="purple" w="100%" disabled size="lg">Sign Failed</Button>) : 
             <ConnectWallet accentColor="#805ad5" />
