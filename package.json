@@ -24,6 +24,7 @@
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-hot-toast": "^2.4.0",
+    "siwe": "^1.1.6",
     "superjson": "^1.11.0"
   },
   "devDependencies": {
