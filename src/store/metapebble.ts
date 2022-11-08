@@ -897,7 +897,7 @@ export class MetapebbleStore {
       4690: "0xe2365135a35702877d533780Ab89aEd9b45991a6"
     },
 		PebbleNFT: {
-			4690: '0xB16d04B4BAc4574bf98b4c364F78E66Dc33232C7'
+			4690: '0x898EF2F18fB58039E58Ee748558baBFe7edF7845'
 		},
 		PebbleNFTABI,
     StreamToken: {

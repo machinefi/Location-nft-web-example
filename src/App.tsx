@@ -4,9 +4,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useStore } from './store/index';
 import {  useLocalObservable } from 'mobx-react-lite';
-import { Button, Flex } from '@chakra-ui/react'
+import { Button, Flex, Text, Box } from '@chakra-ui/react'
 import superjson from 'superjson'
-import { ethers } from 'ethers';
 import { SiweMessage } from 'siwe';
 import { publicConfig} from './config'
 import { useToast } from '@chakra-ui/react'
@@ -148,7 +147,7 @@ export default function Home() {
 
   
   useEffect(() => {
-    if(chainId && address) {
+    if(address) {
       signInWithEthereum()
     }
   }, [chainId, address])
@@ -157,31 +156,40 @@ export default function Home() {
     <div className="container">
       <main className="main">
         <h1 className="title">
-          Location Based NFT  
+          Location Based <a href="">NFT</a>
         </h1>
 
-        <div className="connect">
+        <Flex w={{base: "100%", md: "545px"}} justifyContent="flex-start" flexDirection={'column'} mt="2rem" mb="3rem">
+            {/* <Text fontSize={'1.25rem'}>How to play?</Text> */}
+            <Text lineHeight={'1.65rem'}>
+              Step 1: Download Metapebble <br />
+              Step 2: Register Metapebble and submit location<br />
+              Step 3: Claim NFT
+            </Text>
+          </Flex>
+
           {address && <Flex mb="2rem" justifyContent="center" textAlign={'center'} fontWeight="500">
             Balance: {balance}
           </Flex>}
-          {
-            address ? (
-              signStauts ? (
-                !optionNft ? <Button colorScheme="purple" w="100%" disabled size="lg">Incompatible</Button>  : 
-                    (
-                      balance >= total  ? <Button colorScheme="purple" w="100%" disabled size="lg">Cliamed</Button> : 
-                        <Web3Button
-                          accentColor="#805ad5"
-                          contractAddress={metapebbleStore.contract.PebbleNFT[4690]}
-                          contractAbi={metapebbleStore.contract.PebbleNFTABI}
-                          action={(con) => claimNFT(con)}
-                        >
-                          Cliam NFT {total > 0 && `(${total})`}
-                        </Web3Button>
-                )) :  <Button colorScheme="purple" w="100%" disabled size="lg">Sign Failed</Button>) : 
-            <ConnectWallet accentColor="#805ad5" />
-          }      
-        </div>
+          <Box w="200px">
+            {
+              address ? (
+                signStauts ? (
+                  (balance >= total && total !== 0)  ? <Button colorScheme="purple" w="100%" disabled size="lg">Cliamed</Button>  : 
+                      (
+                        !optionNft ? <Button colorScheme="purple" w="100%" disabled size="lg">Incompatible</Button> : 
+                          <Web3Button
+                            accentColor="#805ad5"
+                            contractAddress={metapebbleStore.contract.PebbleNFT[4690]}
+                            contractAbi={metapebbleStore.contract.PebbleNFTABI}
+                            action={(con) => claimNFT(con)}
+                          >
+                            Cliam NFT {total > 0 && `(${total})`}
+                          </Web3Button>
+                  )) :  <Button colorScheme="purple" w="100%" disabled size="lg">Sign Failed</Button>) : 
+              <ConnectWallet accentColor="#805ad5" />
+            }      
+          </Box>
       </main>
     </div>
   );
