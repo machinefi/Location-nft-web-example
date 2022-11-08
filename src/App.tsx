@@ -26,7 +26,7 @@ export default function Home() {
   const [balance, setBalance] = useState(0)
   const [signature, setSignature] = useState('')
   const [optionNft, setOptionNft] = useState(null)
-  const [signStauts, setSignStauts] = useState(false)
+  const [signStauts, setSignStauts] = useState(true)
   const [index, setIndex] = useState(0)
   const [total, setTotal] = useState(0)
   const [cliamArr, setWaitCliamArr] = useState([])
