@@ -53,7 +53,7 @@ export default function Home() {
   }
 
  const signInWithEthereum = async() => {
-    const message = createSiweMessage( address || '', 'Sign in with Ethereum to the app.');
+    const message = createSiweMessage( address || '', 'Sign in Location Based NFT');
     const sign = await sdk?.wallet.sign(message)
     // @ts-ignore
     setSignature(sign)
@@ -86,24 +86,25 @@ export default function Home() {
     } else {
       setSignStauts(true)
     }
-    if(response) {
+    if(result) {
+      getNftBalance()
       formatDevice(result)
     }
   }
 
   const formatDevice = async (data: any) => {
-    getNftBalance()
-    if(data.list.length > 0) {
+    if(data.list && data.list?.length > 0) {
       data.list.forEach(async (o: any, oindex: number) => {
         const result = await contract?.call('claimed', o.hash)
         data.list[oindex].claimed = result
       })
+      console.log('formatDevice', data)
+      const waitCliamArr = data.list.filter(async (o: any) => o.claimed == false)
+      setTotal(waitCliamArr.length)
+      setWaitCliamArr(waitCliamArr)
+      if(waitCliamArr.length > 0) setOptionNft(waitCliamArr[index])
     }
-    console.log('formatDevice', data)
-    const waitCliamArr = data.list.filter(async (o: any) => o.claimed == false)
-    setTotal(waitCliamArr.length)
-    setWaitCliamArr(waitCliamArr)
-    if(waitCliamArr.length > 0) setOptionNft(waitCliamArr[index])
+    
   }
 
   const getNftBalance = async () => {
@@ -117,7 +118,7 @@ export default function Home() {
     store.loading = true
     // @ts-ignore
     const { hash, r_, s_, v_ } = optionNft
-    const res = await con?.call("claim", address, hash, v_, r_, s_)
+    const res = await con?.call("claim", address?.toLowerCase(), hash, v_, r_, s_)
     console.log('res', res);
     if(res.receipt) {
       store.loading = false
@@ -166,9 +167,9 @@ export default function Home() {
           {
             address ? (
               signStauts ? (
-                  balance >= total  ? <Button colorScheme="purple" w="100%" disabled size="lg">Cliamed</Button> : 
+                !optionNft ? <Button colorScheme="purple" w="100%" disabled size="lg">Incompatible</Button>  : 
                     (
-                      !optionNft ? <Button colorScheme="purple" w="100%" disabled size="lg">Incompatible</Button> : 
+                      balance >= total  ? <Button colorScheme="purple" w="100%" disabled size="lg">Cliamed</Button> : 
                         <Web3Button
                           accentColor="#805ad5"
                           contractAddress={metapebbleStore.contract.PebbleNFT[4690]}
