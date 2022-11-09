@@ -184,7 +184,7 @@ export default function Home() {
                             contractAbi={metapebbleStore.contract.PebbleNFTABI}
                             action={(con) => claimNFT(con)}
                           >
-                            Cliam NFT {total > 0 && `(${total})`}
+                            Claim NFT {total > 0 && `(${total})`}
                           </Web3Button>
                   )) :  <Button colorScheme="purple" w="100%" disabled size="lg">Sign Failed</Button>) : 
               <ConnectWallet accentColor="#805ad5" />
