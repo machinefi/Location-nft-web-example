@@ -84,9 +84,9 @@ export default function Home() {
       return
     } else {
       setSignStauts(true)
+      getNftBalance()
     }
     if(result) {
-      getNftBalance()
       formatDevice(result)
     }
   }
