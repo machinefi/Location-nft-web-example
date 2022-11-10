@@ -162,7 +162,7 @@ export default function Home() {
         <Flex w={{base: "100%", md: "545px"}} justifyContent="flex-start" flexDirection={'column'} mt="2rem" mb="3rem">
             {/* <Text fontSize={'1.25rem'}>How to play?</Text> */}
             <Text lineHeight={'1.65rem'}>
-              Step 1: Download Metapebble <br />
+              Step 1: <a href="https://metapebble.app/metapebbleapp" target="_blank">Download Metapebble</a> <br />
               Step 2: Register Metapebble and submit location<br />
               Step 3: Claim NFT
             </Text>
