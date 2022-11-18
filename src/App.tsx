@@ -144,10 +144,10 @@ export default function Home() {
   }
 
   // claim nft
-  const claimNFT = async (con: any) => {
+  const claimNFT = async (con: any, item: any) => {
    try {
      // @ts-ignore
-    const { hash, latitude, longitude, distance, timestamp } = optionNft
+    const { hash, latitude, longitude, distance, timestamp } = item
     const signHash = utils.solidityKeccak256(
       ["address", "int256", "int256", "uint256", "bytes32", "uint256"],
       [address, latitude, longitude, distance, hash, timestamp]
@@ -225,7 +225,7 @@ export default function Home() {
                             <Text>IMEI：{item.imei}</Text>
                             {
                               item.claimed ? <Button colorScheme="purple"  disabled size="lg">Cliamed</Button> : 
-                              <Button colorScheme="purple" ml="1rem" onClick={() => claimNFT(contract)}>Claim</Button>
+                              <Button colorScheme="purple" ml="1rem" onClick={() => claimNFT(contract, item)}>Claim</Button>
                             }
                           </Flex>
                       })
