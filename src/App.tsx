@@ -9,6 +9,8 @@ import superjson from 'superjson'
 import { SiweMessage } from 'siwe';
 import { publicConfig} from './config'
 import { useToast } from '@chakra-ui/react'
+import { utils, sign } from 'ethers'
+import BigNumber from "bignumber.js";
 
 
 type optionNft = {
@@ -30,15 +32,21 @@ export default function Home() {
   const [index, setIndex] = useState(0)
   const [total, setTotal] = useState(0)
   const [cliamArr, setWaitCliamArr] = useState([])
+  const [places, setPlaces] = useState<any>([])
 
-  const { contract } = useContract(metapebbleStore.contract.PebbleNFT[4690], metapebbleStore.contract.PebbleNFTABI)
+  // contract
   const address = useAddress()
   const chainId = useChainId()
   const sdk = useSDK()
+  // @ts-ignore
+  const contractAddress = metapebbleStore.contract.PebbleMultipleLocationNFT[chainId]
+  const contractAbi = metapebbleStore.contract.PebbleMultipleLocationNFTABI
+  const { contract } = useContract(contractAddress, contractAbi)
 
   const domain = window.location.host;
   const origin = window.location.origin;
 
+  // create sign
   const createSiweMessage = (address: string, statement: string) => {
     const message = new SiweMessage({
       domain,
@@ -51,35 +59,59 @@ export default function Home() {
     return message.prepareMessage();
   }
 
- const signInWithEthereum = async() => {
+  // sign metamask
+  const signInWithMetamask = async() => {
     const message = createSiweMessage( address || '', 'Sign in Location Based NFT');
     const sign = await sdk?.wallet.sign(message)
     // @ts-ignore
     setSignature(sign)
-    console.log('signInWithEthereum', message, sign);
+    console.log('Sign in Location Based NFT', message, sign);
     if(sign) {
-      initNft(message, sign);
+      // initNft(message, sign);
     }
   }
 
-  const store = useLocalObservable(() => ({
-    loading: false,
-  }));
+  // formatPlaces
+  const formatPlaces = async() => {
+    let data = []
+    // places count
+    const result = await contract?.call("palceCount");
+    const count = result.toNumber()
+    console.log('palceCount', count);
 
-  const initNft = async(message:string, signature:string) => {
-    // @ts-ignore
-    const params = `${encodeURIComponent(superjson.stringify({address: address,  contract_address: metapebbleStore.contract.PebbleNFT[chainId], 
-      contractName: "PebbleNFT",
-      chain_id: chainId?.toString(),
-      message: message,
-      signature: signature
-    }))}`
-    const response = await axios.get(`${publicConfig.APIURL}/api/claim-nft?input=${params}`)    
-    const result = response.data.result.data.json
+    for(let i = 0; i < count; i++) {
+      // place hash
+      const hash = await contract?.call("placesHash", i);
+      // place item
+      const item = await contract?.call("places", hash);
+      console.log('item', i, hash, item, item.maxDistance.toNumber());
+      const lat = item.lat.toNumber()
+      const long = item.long.toNumber()
+      data.push({
+        latitude: lat > 0 ? lat / 1000000 : (Number(lat.toString().split('-')[1]) / 1000000) * -1,
+        longitude: long > 0 ? long / 1000000 : (Number(long.toString().split('-')[1]) / 1000000) * -1,
+        distance: item.maxDistance.toNumber()
+      })
+    }
+    console.log('all places', data)
+    setPlaces(data)
+    initNft(data)
+  }
+
+  // init
+  const initNft = async(placedata: any) => {
+    const params = {
+      owner: address,
+      latlong: placedata
+    }
+    const response = await axios.post(`${publicConfig.APIURL}/api/sign_records`, params)    
     console.log('claim-nft', response)
+    const result = response.data.result
 
+    // @ts-ignore
     if(result && result.error) {
       setSignStauts(false)
+       // @ts-ignore
       toast({description: result.error,status: 'warning',duration: 9000,isClosable: true})
       return
     } else {
@@ -87,40 +119,57 @@ export default function Home() {
       getNftBalance()
     }
     if(result) {
-      formatDevice(result)
+      formatDevice(result.data)
     }
   }
 
+  // formatDevice
   const formatDevice = async (data: any) => {
-    if(data.list && data.list?.length > 0) {
-      data.list.forEach(async (o: any, oindex: number) => {
+    if(data && data?.length > 0) {
+      data.forEach(async (o: any, oindex: number) => {
+        // deviceHash
+        data[oindex]['hash'] = utils.keccak256(utils.toUtf8Bytes(o.imei))
+        data[oindex]['latitude'] = o.latitude * 1000000
+        data[oindex]['longitude'] = o.longitude * 1000000
         const result = await contract?.call('claimed', o.hash)
-        data.list[oindex].claimed = result
+        data[oindex].claimed = result
       })
       console.log('formatDevice', data)
-      const waitCliamArr = data.list.filter(async (o: any) => o.claimed == false)
+      
+      const waitCliamArr = data.filter(async (o: any) => o.claimed === false)
       setTotal(waitCliamArr.length)
       setWaitCliamArr(waitCliamArr)
-      if(waitCliamArr.length > 0) setOptionNft(waitCliamArr[index])
+      console.log('waitCliamArr[index]', waitCliamArr[0])
+      if(waitCliamArr.length > 0) setOptionNft(waitCliamArr[0])
     }
     
   }
 
+  // get nft balance
   const getNftBalance = async () => {
     const balanceResult = await contract?.call("balanceOf", address);
     setBalance(balanceResult.toNumber())
     console.log('nft balance', balanceResult.toNumber(), balance);
   }
 
+  // claim nft
   const claimNFT = async (con: any) => {
    try {
-    store.loading = true
+     // @ts-ignore
+    const { hash, latitude, longitude, distance, timestamp } = optionNft
+    console.log('claimNFT', latitude, longitude, distance);
+    const signHash = utils.solidityKeccak256(
+      ["address", "int256", "int256", "uint256", "bytes32", "uint256"],
+      [address, longitude, latitude, distance, hash, timestamp]
+    )
+    const messageHashBinary = utils.arrayify(signHash)
     // @ts-ignore
-    const { hash, r_, s_, v_ } = optionNft
-    const res = await con?.call("claim", address?.toLowerCase(), hash, v_, r_, s_)
+    const signature = await sdk?.wallet.sign(messageHashBinary)
+    
+    const res = await con?.call("claim", longitude , latitude, distance, hash, timestamp, signature)
     console.log('res', res);
+
     if(res.receipt) {
-      store.loading = false
       toast({
         description: res.receipt.blockHash,
         status: 'success',
@@ -141,16 +190,16 @@ export default function Home() {
       duration: 9000,
       isClosable: true,
     })
-    store.loading = false
    }
   }
 
   
   useEffect(() => {
-    if(address) {
-      signInWithEthereum()
+    if(address && contract) {
+      formatPlaces()
+      // signInWithMetamask()
     }
-  }, [chainId, address])
+  }, [contract, chainId, address])
 
   return (
     <div className="container">
@@ -160,7 +209,6 @@ export default function Home() {
         </h1>
 
         <Flex w={{base: "100%", md: "545px"}} justifyContent="flex-start" flexDirection={'column'} mt="2rem" mb="3rem">
-            {/* <Text fontSize={'1.25rem'}>How to play?</Text> */}
             <Text lineHeight={'1.65rem'}>
               Step 1: <a href="https://metapebble.app/metapebbleapp" target="_blank">Download Metapebble</a> <br />
               Step 2: Register Metapebble and submit location<br />
@@ -180,11 +228,11 @@ export default function Home() {
                         !optionNft ? <Button colorScheme="purple" w="100%" disabled size="lg">Incompatible</Button> : 
                           <Web3Button
                             accentColor="#805ad5"
-                            contractAddress={metapebbleStore.contract.PebbleNFT[4690]}
-                            contractAbi={metapebbleStore.contract.PebbleNFTABI}
+                            contractAddress={contractAddress}
+                            contractAbi={contractAbi}
                             action={(con) => claimNFT(con)}
                           >
-                            Claim NFT {total > 0 && `(${total})`}
+                            Claim NFT {total > 0 && `(${total-balance})`}
                           </Web3Button>
                   )) :  <Button colorScheme="purple" w="100%" disabled size="lg">Sign Failed</Button>) : 
               <ConnectWallet accentColor="#805ad5" />
