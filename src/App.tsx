@@ -9,8 +9,7 @@ import superjson from 'superjson'
 import { SiweMessage } from 'siwe';
 import { publicConfig} from './config'
 import { useToast } from '@chakra-ui/react'
-import { utils, sign } from 'ethers'
-import BigNumber from "bignumber.js";
+import { utils } from 'ethers'
 
 
 type optionNft = {
