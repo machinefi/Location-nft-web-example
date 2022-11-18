@@ -30,7 +30,7 @@ export default function Home() {
   const [signStauts, setSignStauts] = useState(true)
   const [index, setIndex] = useState(0)
   const [total, setTotal] = useState(0)
-  const [cliamArr, setWaitCliamArr] = useState([])
+  const [cliamArr, setWaitCliamArr] = useState<any>([])
   const [places, setPlaces] = useState<any>([])
 
   // contract
@@ -62,15 +62,11 @@ export default function Home() {
   const signInWithMetamask = async() => {
     const message = createSiweMessage( address || '', 'Sign in Location Based NFT');
     const sign = await sdk?.wallet.sign(message)
-    // @ts-ignore
-    setSignature(sign)
-    console.log('Sign in Location Based NFT', message, sign);
-    if(sign) {
-      // initNft(message, sign);
-    }
+    setSignature(sign || '')
+    if(sign) formatPlaces()
   }
 
-  // formatPlaces
+  // format Places
   const formatPlaces = async() => {
     let data = []
     // places count
@@ -83,7 +79,6 @@ export default function Home() {
       const hash = await contract?.call("placesHash", i);
       // place item
       const item = await contract?.call("places", hash);
-      console.log('item', i, hash, item, item.maxDistance.toNumber());
       const lat = item.lat.toNumber()
       const long = item.long.toNumber()
       data.push({
@@ -92,19 +87,16 @@ export default function Home() {
         distance: item.maxDistance.toNumber()
       })
     }
-    console.log('all places', data)
     setPlaces(data)
     initNft(data)
   }
 
   // init
   const initNft = async(placedata: any) => {
-    const params = {
+    const response = await axios.post(`${publicConfig.APIURL}/api/sign_records`, {
       owner: address,
       latlong: placedata
-    }
-    const response = await axios.post(`${publicConfig.APIURL}/api/sign_records`, params)    
-    console.log('claim-nft', response)
+    })    
     const result = response.data.result
 
     // @ts-ignore
@@ -122,24 +114,24 @@ export default function Home() {
     }
   }
 
-  // formatDevice
+  // format Device
   const formatDevice = async (data: any) => {
-    if(data && data?.length > 0) {
+    if(data && data.length > 0) {
+      let waitCliamArr: any = []
       data.forEach(async (o: any, oindex: number) => {
-        // deviceHash
-        data[oindex]['hash'] = utils.keccak256(utils.toUtf8Bytes(o.imei))
-        data[oindex]['latitude'] = o.latitude * 1000000
-        data[oindex]['longitude'] = o.longitude * 1000000
+        o.hash = utils.keccak256(utils.toUtf8Bytes(o.imei))
         const result = await contract?.call('claimed', o.hash)
-        data[oindex].claimed = result
+        waitCliamArr.push({
+          ...o,
+          claimed: result,
+          hash: utils.keccak256(utils.toUtf8Bytes(o.imei)),
+          latitude: o.latitude * 1000000,
+          longitude: o.longitude * 1000000
+        })
       })
-      console.log('formatDevice', data)
-      
-      const waitCliamArr = data.filter(async (o: any) => o.claimed === false)
       setTotal(waitCliamArr.length)
       setWaitCliamArr(waitCliamArr)
-      console.log('waitCliamArr[index]', waitCliamArr[0])
-      if(waitCliamArr.length > 0) setOptionNft(waitCliamArr[0])
+      // if(waitCliamArr.length > 0) setOptionNft(waitCliamArr[index])
     }
     
   }
@@ -156,16 +148,15 @@ export default function Home() {
    try {
      // @ts-ignore
     const { hash, latitude, longitude, distance, timestamp } = optionNft
-    console.log('claimNFT', latitude, longitude, distance);
     const signHash = utils.solidityKeccak256(
       ["address", "int256", "int256", "uint256", "bytes32", "uint256"],
-      [address, longitude, latitude, distance, hash, timestamp]
+      [address, latitude, longitude, distance, hash, timestamp]
     )
     const messageHashBinary = utils.arrayify(signHash)
-    // @ts-ignore
-    const signature = await sdk?.wallet.sign(messageHashBinary)
-    
-    const res = await con?.call("claim", longitude , latitude, distance, hash, timestamp, signature)
+    const signature = await sdk?.wallet.sign(`${messageHashBinary}`)
+    console.log('signature', signature);
+
+    const res = await con?.call("claim", latitude , longitude, distance, hash, timestamp, signature)
     console.log('res', res);
 
     if(res.receipt) {
@@ -182,7 +173,6 @@ export default function Home() {
       }
     }
    } catch (err) {
-    console.log('claimNFT', err)
     toast({
       description: 'Claim failed',
       status: 'error',
@@ -218,23 +208,30 @@ export default function Home() {
           {address && <Flex mb="2rem" justifyContent="center" textAlign={'center'} fontWeight="500">
             Balance: {balance}
           </Flex>}
-          <Box w="200px">
-            {
-              address ? (
-                signStauts ? (
-                  (balance >= total && total !== 0)  ? <Button colorScheme="purple" w="100%" disabled size="lg">Cliamed</Button>  : 
-                      (
-                        !optionNft ? <Button colorScheme="purple" w="100%" disabled size="lg">Incompatible</Button> : 
-                          <Web3Button
-                            accentColor="#805ad5"
-                            contractAddress={contractAddress}
-                            contractAbi={contractAbi}
-                            action={(con) => claimNFT(con)}
-                          >
-                            Claim NFT {total > 0 && `(${total-balance})`}
-                          </Web3Button>
-                  )) :  <Button colorScheme="purple" w="100%" disabled size="lg">Sign Failed</Button>) : 
+          {
+            !address && <Box w="200px">
               <ConnectWallet accentColor="#805ad5" />
+            </Box>
+          }
+          <Box w="545px">
+            {
+              address && (
+                !signStauts ? <Button colorScheme="purple" w="200px" disabled size="lg">Sign Failed</Button> :
+                  cliamArr.length === 0 ? <Button colorScheme="purple" w="200px" disabled size="lg">Incompatible</Button> :
+                  <Box flexDirection="column" alignItems={'center'} w="full">
+                    {
+                      cliamArr.map((item:any) =>{
+                        return  <Flex key={item.imei} mb='1rem' w="545px" alignItems={'center'} justifyContent={'space-between'}>
+                            <Text>IMEI：{item.imei}</Text>
+                            {
+                              item.claimed ? <Button colorScheme="purple"  disabled size="lg">Cliamed</Button> : 
+                              <Button colorScheme="purple" ml="1rem" onClick={() => claimNFT(contract)}>Claim</Button>
+                            }
+                          </Flex>
+                      })
+                    }
+                  </Box>
+              ) 
             }      
           </Box>
       </main>
