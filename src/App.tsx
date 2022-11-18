@@ -213,11 +213,11 @@ export default function Home() {
               <ConnectWallet accentColor="#805ad5" />
             </Box>
           }
-          <Box w="545px">
+          <Box>
             {
               address && (
                 !signStauts ? <Button colorScheme="purple" w="200px" disabled size="lg">Sign Failed</Button> :
-                  cliamArr.length === 0 ? <Button colorScheme="purple" w="200px" disabled size="lg">Incompatible</Button> :
+                  cliamArr.length === 0 ? <Button colorScheme="purple" mx="auto" w="200px" disabled size="lg">Incompatible</Button> :
                   <Box flexDirection="column" alignItems={'center'} w="full">
                     {
                       cliamArr.map((item:any) =>{
