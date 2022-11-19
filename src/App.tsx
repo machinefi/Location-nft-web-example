@@ -134,9 +134,8 @@ export default function Home() {
    }
   }
 
-  
   useEffect(() => {
-    if(chainId && chainId !== 4609) {
+    if(chainId && chainId !== 4690) {
       toast({
         description: 'Please switch to the IoTeX Testnet network',
         status: 'warning',
@@ -144,6 +143,10 @@ export default function Home() {
         isClosable: true,
       })
     }
+  }, [chainId])
+
+  
+  useEffect(() => {
     if(address && contract && chainId) {
       signInWithMetamask()
     }
