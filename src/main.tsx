@@ -5,8 +5,7 @@ import { ChainId, ThirdwebProvider } from "@thirdweb-dev/react";
 import "./styles/globals.css";
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 
-// This is the chainId your dApp will work on.
-const activeChainId = ChainId.Mainnet;
+const activeChainId = ChainId.Mainnet
 
 const container = document.getElementById("root");
 const root = createRoot(container!);
@@ -38,9 +37,11 @@ const theme = extendTheme({ colors, styles: {
   },
 }})
 
+
+
 root.render(
-  <React.StrictMode>
-    <ThirdwebProvider desiredChainId={4690}>
+  <React.StrictMode> 
+    <ThirdwebProvider desiredChainId={activeChainId} chainRpc={{ [ChainId.Mainnet]: "https://babel-api.testnet.iotex.io" }}>
       <ChakraProvider theme={theme}>
         <App />
       </ChakraProvider>
