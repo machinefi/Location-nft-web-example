@@ -136,7 +136,14 @@ export default function Home() {
 
   
   useEffect(() => {
-    console.log('chainId', chainId)
+    if(chainId && chainId !== 4609) {
+      toast({
+        description: 'Please switch to the IoTeX Testnet network',
+        status: 'warning',
+        duration: 9000,
+        isClosable: true,
+      })
+    }
     if(address && contract && chainId) {
       signInWithMetamask()
     }
@@ -179,7 +186,7 @@ export default function Home() {
                         return  <Flex key={item.devicehash} mb='1rem' w="545px" alignItems={'center'} justifyContent={'space-between'}>
                             <Text>Device Hash{item.claimed}：{`${item.devicehash.slice(0, 5)}...${item.devicehash.slice( item.devicehash.length - 5, item.devicehash.length)}`}</Text>
                             {
-                              item.claimed ? <Button colorScheme="purple" disabled size="sm">Cliamed</Button> : 
+                              item.claimed ? <Button colorScheme="purple" disabled size="sm">Claimed</Button> : 
                               <Button isLoading={claimLoading} colorScheme="purple" ml="1rem"  size="sm" onClick={() => claimNFT(contract, item)}>Claim</Button>
                             }
                           </Flex>
