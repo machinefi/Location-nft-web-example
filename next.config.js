@@ -2,7 +2,7 @@ const nextConfig = {
   reactStrictMode: true,
   assetPrefix: "./",
   publicRuntimeConfig: {
-    NEXT_PUBLIC_APIURL: process.env.API_URL,
+    NEXT_PUBLIC_APIURL: process.env.NEXT_PUBLIC_APIURL,
   },
 };
 
