@@ -21,7 +21,7 @@ type DEVICE_ITEM = {
 
 const { publicRuntimeConfig } = getConfig();
 
-const { API_URL } = publicRuntimeConfig;
+const { NEXT_PUBLIC_APIURL } = publicRuntimeConfig;
 
 export default function Home() {
   const toast = useToast()
@@ -75,7 +75,7 @@ export default function Home() {
   const initNft = async(message: string, signature: string) => {
     try {
       console.log('init', process)
-      const response = await axios.post(`${API_URL}/api/get_sign_data_for_location`, {
+      const response = await axios.post(`${NEXT_PUBLIC_APIURL}/api/get_sign_data_for_location`, {
         signature,
         message, 
         owner: address,
