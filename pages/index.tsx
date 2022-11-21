@@ -75,7 +75,7 @@ export default function Home() {
   const initNft = async(message: string, signature: string) => {
     try {
       console.log('init', process)
-      const response = await axios.post(`${API_URL}/api/sign_records`, {
+      const response = await axios.post(`${API_URL}/api/get_sign_data_for_location`, {
         signature,
         message, 
         owner: address,
