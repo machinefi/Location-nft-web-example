@@ -79,8 +79,8 @@ export default function Home() {
         signature,
         message, 
         owner: address,
-        from: `${moment().startOf('day').valueOf()}`,
-        to: `${moment().endOf('day').valueOf()}`
+        from: `${moment().startOf('day').unix()}`,
+        to: `${moment().endOf('day').unix()}`
       })    
       console.log('response', response)
       const result = response.data.result
