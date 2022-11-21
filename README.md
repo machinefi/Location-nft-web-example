@@ -7,8 +7,8 @@ The following assumes the use of `node@>=16`.
 
 ### Install Dependencies
 
-`yarn install`
+`pnpm install`
 
 ### Run 
 
-`yarn dev`
+`pnpm dev`

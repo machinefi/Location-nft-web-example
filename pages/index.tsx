@@ -1,12 +1,14 @@
 import { ConnectWallet, useContract, useSDK, useAddress, useChainId, Web3Button  } from "@thirdweb-dev/react";
-import "./styles/Home.css";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useStore } from './store/index';
+import { useStore } from '../store/index';
 import { Button, Flex, Text, Box, Spinner } from '@chakra-ui/react'
 import { SiweMessage } from 'siwe';
-import { publicConfig} from './config'
 import { useToast } from '@chakra-ui/react'
+import '../styles/Home.module.css'
+import { useRouter } from 'next/router';
+import getConfig from 'next/config';
+import moment from 'moment'
 
 type DEVICE_ITEM = {
   latitude: number
@@ -17,6 +19,10 @@ type DEVICE_ITEM = {
   devicehash: string
 }
 
+const { publicRuntimeConfig } = getConfig();
+
+const { API_URL } = publicRuntimeConfig;
+
 export default function Home() {
   const toast = useToast()
   const {metapebbleStore} = useStore()  
@@ -25,7 +31,7 @@ export default function Home() {
   const [cliamArr, setWaitCliamArr] = useState<any>([])
   const [loading, setLoading] = useState(false)
   const [claimLoading, setClaimLoading] = useState(false)
-
+  const { asPath } = useRouter();
   // contract
   const address = useAddress()
   const chainId = useChainId()
@@ -36,8 +42,15 @@ export default function Home() {
   const { contract } = useContract(contractAddress, contractAbi)
 
   // create sign
-  const domain = window.location.host;
-  const origin = window.location.origin;
+  const domain =
+  typeof window !== 'undefined' && window.location.host
+      ? window.location.host
+      : '';
+  const origin =
+        typeof window !== 'undefined' && window.location.origin
+            ? window.location.origin
+            : '';
+
   const createSiweMessage = (address: string, statement: string) => {
     const message = new SiweMessage({
       domain,
@@ -61,7 +74,14 @@ export default function Home() {
   // init
   const initNft = async(message: string, signature: string) => {
     try {
-      const response = await axios.post(`${publicConfig.APIURL}/api/sign_records`, {signature,message, owner: address})    
+      console.log('init', process)
+      const response = await axios.post(`${API_URL}/api/sign_records`, {
+        signature,
+        message, 
+        owner: address,
+        from: moment().startOf('day').valueOf(),
+        to: moment().endOf('day').valueOf()
+      })    
       console.log('response', response)
       const result = response.data.result
       
@@ -153,53 +173,50 @@ export default function Home() {
   }, [contract, chainId, address])
 
   return (
-    <div className="container">
-      <main className="main">
-        <h1 className="title">
+    <Flex h="100vh" flexDirection="column" justifyContent="center" alignItems="center">
+        <Text className="title" fontSize={50}>
           Location Based <a href="">NFT</a>
-        </h1>
-
+        </Text>
         <Flex w={{base: "100%", md: "545px"}} justifyContent="flex-start" flexDirection={'column'} mt="2rem" mb="3rem">
-            <Text lineHeight={'1.65rem'}>
-              Step 1: <a href="https://metapebble.app/metapebbleapp" target="_blank">Download Metapebble</a> <br />
-              Step 2: Register Metapebble and submit location<br />
-              Step 3: Claim NFT
-            </Text>
-          </Flex>
+          <Text lineHeight={'1.65rem'}>
+            Step 1: <a href="https://metapebble.app/metapebbleapp" rel="noreferrer" target="_blank">Download Metapebble</a> <br />
+            Step 2: Register Metapebble and submit location<br />
+            Step 3: Claim NFT
+          </Text>
+        </Flex>
 
-          {!loading && address && <Flex mb="2rem" justifyContent="center" textAlign={'center'} fontWeight="500">
-            Balance: {balance}
-          </Flex>}
+        {!loading && address && <Flex mb="2rem" justifyContent="center" textAlign={'center'} fontWeight="500">
+          Balance: {balance}
+        </Flex>}
 
-          
-          {
-            !address && <Box w="200px">
-              <ConnectWallet accentColor="#805ad5" />
-            </Box>
-          }
-          <Box>
-            {
-              (loading && address) ? <Spinner size="xl" color="purple" /> : 
-              address && (
-                !signStauts ? <Button colorScheme="purple" w="200px" disabled size="lg">Sign Failed</Button> :
-                  cliamArr.length === 0 ? <Button colorScheme="purple" mx="auto" w="200px" disabled size="lg">Incompatible</Button> :
-                  <Box flexDirection="column" alignItems={'center'} w="full">
-                    {
-                      cliamArr.map((item:any) =>{
-                        return  <Flex key={item.devicehash} mb='1rem' w="545px" alignItems={'center'} justifyContent={'space-between'}>
-                            <Text>Device Hash{item.claimed}：{`${item.devicehash.slice(0, 5)}...${item.devicehash.slice( item.devicehash.length - 5, item.devicehash.length)}`}</Text>
-                            {
-                              item.claimed ? <Button colorScheme="purple" disabled size="sm">Claimed</Button> : 
-                              <Button isLoading={claimLoading} colorScheme="purple" ml="1rem"  size="sm" onClick={() => claimNFT(contract, item)}>Claim</Button>
-                            }
-                          </Flex>
-                      })
-                    }
-                  </Box>
-              ) 
-            }      
+        
+        {
+          !address && <Box w="200px">
+            <ConnectWallet accentColor="#805ad5" />
           </Box>
-      </main>
-    </div>
+        }
+        <Box>
+          {
+            (loading && address) ? <Spinner size="xl" color="purple" /> : 
+            address && (
+              !signStauts ? <Button colorScheme="purple" w="200px" disabled size="lg">Sign Failed</Button> :
+                cliamArr.length === 0 ? <Button colorScheme="purple" mx="auto" w="200px" disabled size="lg">Incompatible</Button> :
+                <Box flexDirection="column" alignItems={'center'} w="full">
+                  {
+                    cliamArr.map((item:any) =>{
+                      return  <Flex key={item.devicehash} mb='1rem' w="545px" alignItems={'center'} justifyContent={'space-between'}>
+                          <Text>Device Hash{item.claimed}：{`${item.devicehash.slice(0, 5)}...${item.devicehash.slice( item.devicehash.length - 5, item.devicehash.length)}`}</Text>
+                          {
+                            item.claimed ? <Button colorScheme="purple" disabled size="sm">Claimed</Button> : 
+                            <Button isLoading={claimLoading} colorScheme="purple" ml="1rem"  size="sm" onClick={() => claimNFT(contract, item)}>Claim</Button>
+                          }
+                        </Flex>
+                    })
+                  }
+                </Box>
+            ) 
+          }      
+        </Box>
+    </Flex>
   );
 }
