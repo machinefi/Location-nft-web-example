@@ -129,6 +129,7 @@ export default function Home() {
    try {
     setClaimLoading(true)
     const { latitude , longitude, distance, devicehash, timestamp, signature } = item
+    console.log('item', item)
     const res = await con?.call("claim", latitude , longitude, distance, devicehash, timestamp, signature)
     console.log('res', res);
 
