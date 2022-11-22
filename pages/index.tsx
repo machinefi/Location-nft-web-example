@@ -5,10 +5,10 @@ import { useStore } from '../store/index';
 import { Button, Flex, Text, Box, Spinner } from '@chakra-ui/react'
 import { SiweMessage } from 'siwe';
 import { useToast } from '@chakra-ui/react'
-import '../styles/Home.module.css'
 import { useRouter } from 'next/router';
 import getConfig from 'next/config';
 import moment from 'moment'
+import '../styles/Home.module.css'
 
 type DEVICE_ITEM = {
   latitude: number
@@ -27,11 +27,12 @@ export default function Home() {
   const toast = useToast()
   const {metapebbleStore} = useStore()  
   const [balance, setBalance] = useState(0)
+  const [index, setIndex] = useState(0)
   const [signStauts, setSignStauts] = useState(true)
   const [cliamArr, setWaitCliamArr] = useState<any>([])
   const [loading, setLoading] = useState(false)
   const [claimLoading, setClaimLoading] = useState(false)
-  const { asPath } = useRouter();
+
   // contract
   const address = useAddress()
   const chainId = useChainId()
@@ -74,7 +75,6 @@ export default function Home() {
   // init
   const initNft = async(message: string, signature: string) => {
     try {
-      console.log('init', process)
       const response = await axios.post(`${NEXT_PUBLIC_APIURL}/api/get_sign_data_for_location`, {
         signature,
         message, 
@@ -82,7 +82,7 @@ export default function Home() {
         from: `${moment().startOf('day').unix()}`,
         to: `${moment().endOf('day').unix()}`
       })    
-      console.log('response', response)
+      console.log('initNft', response)
       const result = response.data.result
       
       if(result) {
@@ -92,7 +92,7 @@ export default function Home() {
         setLoading(false)
       }
     } catch (error) {
-      console.log('error', error)
+      console.log('initNft error', error)
       setSignStauts(false)
       setLoading(false)
       toast({
@@ -106,15 +106,14 @@ export default function Home() {
 
   // format Device
   const formatDevice = async (data: any) => {
-    let waitCliamArr: any = []
     const list = [...data]
     if(list.length > 0) {
       list.forEach(async (item: DEVICE_ITEM, index) => {
         const status = await contract?.call("claimed", item.devicehash)
-        list[index] = {...item, claimed: status}
+        list[index] = {...item, claimed: status, loading: false}
       })
       setWaitCliamArr(list)
-      console.log('list', list)
+      console.log('formatDevice', list)
     }
   }
 
@@ -125,13 +124,14 @@ export default function Home() {
   }
 
   // claim nft
-  const claimNFT = async (con: any, item: any) => {
+  const claimNFT = async (con: any, item: any, index: number) => {
    try {
+    setIndex(index)
     setClaimLoading(true)
     const { latitude , longitude, distance, devicehash, timestamp, signature } = item
     console.log('item', item)
     const res = await con?.call("claim", latitude , longitude, distance, devicehash, timestamp, signature)
-    console.log('res', res);
+    console.log('claimNFT res', res);
 
     if(res.receipt) {
       toast({
@@ -145,7 +145,7 @@ export default function Home() {
       formatDevice(cliamArr)
     }
    } catch (err) {
-    console.log('err', err)
+    console.log('claimNFT err', err)
     setClaimLoading(false)
     toast({
       description: 'Claim failed',
@@ -205,12 +205,12 @@ export default function Home() {
                 cliamArr.length === 0 ? <Button colorScheme="purple" mx="auto" w="200px" disabled size="lg">Incompatible</Button> :
                 <Box flexDirection="column" alignItems={'center'} w="full">
                   {
-                    cliamArr.map((item:any) =>{
+                    cliamArr.map((item:any, oindex:number) =>{
                       return  <Flex key={item.devicehash} mb='1rem' w="545px" alignItems={'center'} justifyContent={'space-between'}>
                           <Text>Device Hash{item.claimed}：{`${item.devicehash.slice(0, 5)}...${item.devicehash.slice( item.devicehash.length - 5, item.devicehash.length)}`}</Text>
                           {
                             item.claimed ? <Button colorScheme="purple" disabled size="sm">Claimed</Button> : 
-                            <Button isLoading={claimLoading} colorScheme="purple" ml="1rem"  size="sm" onClick={() => claimNFT(contract, item)}>Claim</Button>
+                            <Button isLoading={claimLoading && index === oindex} colorScheme="purple" ml="1rem"  size="sm" onClick={() => claimNFT(contract, item, oindex)}>Claim</Button>
                           }
                         </Flex>
                     })
