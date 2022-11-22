@@ -144,6 +144,7 @@ export default function Home() {
       formatDevice(cliamArr)
     }
    } catch (err) {
+    console.log('err', err)
     setClaimLoading(false)
     toast({
       description: 'Claim failed',
