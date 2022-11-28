@@ -95,8 +95,8 @@ export default function Home() {
       const lat = item.lat.toNumber()
       const long = item.long.toNumber()
       data.push({
-        latitude: new BigNumber(item.lat.toString()).div(1e6).toNumber(),
-        longitude: new BigNumber(item.long.toString()).div(1e6).toNumber(),
+        latitude: new BigNumber(item.lat.toString()).toNumber(),
+        longitude: new BigNumber(item.long.toString()).toNumber(),
         distance: item.maxDistance.toNumber()
       })
     }
