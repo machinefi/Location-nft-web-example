@@ -36,7 +36,32 @@ const createSiweMessage = (address: string, statement: string) => {
   return message.prepareMessage();
 };
 ```
+#### format places
+```ts
+// format Places
+  const formatPlaces = async(message: string, signature: string) => {
+    let data = []
+    // places count
+    const result = await contract?.call("palceCount");
+    const count = result.toNumber()
 
+    for(let i = 0; i < count; i++) {
+      // place hash
+      const hash = await contract?.call("placesHash", i);
+      // place item
+      const item = await contract?.call("places", hash);
+      const lat = item.lat.toNumber()
+      const long = item.long.toNumber()
+      data.push({
+        latitude: new BigNumber(item.lat.toString()).toNumber(),
+        longitude: new BigNumber(item.long.toString()).toNumber(),
+        distance: item.maxDistance.toNumber()
+      })
+    }
+    console.log('palces', data);
+    if(data.length !== 0) initNft(message, signature, data)
+  }
+```
 #### sign the query then send to metapebble server to get sign data for location
 
 ```ts
@@ -45,7 +70,12 @@ const sign = await sdk?.wallet.sign(message);
 
 const response = await axios.post(
   `https://test.metapebble.app/api/get_sign_data_for_location`,
-  { signature, message, owner: address }
+  { signature,
+    message, 
+    owner: address,
+    from: `${moment().startOf('day').unix()}`,
+    to: `${moment().endOf('day').unix()}`,
+    locations: places }
 );
 
 // response:
@@ -73,7 +103,6 @@ const { contract } = useContract(contractAddress, contractAbi);
 const status = await contract?.call("claimed", item.devicehash);
 
 // claim token
-
 await contract?.call(
   "claim",
   latitude,
@@ -84,3 +113,4 @@ await contract?.call(
   signature
 );
 ```
+
