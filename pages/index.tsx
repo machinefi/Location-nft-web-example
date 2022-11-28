@@ -8,6 +8,7 @@ import { useToast } from '@chakra-ui/react'
 import { useRouter } from 'next/router';
 import getConfig from 'next/config';
 import moment from 'moment'
+import { BigNumber } from 'bignumber.js';
 import '../styles/Home.module.css'
 
 type DEVICE_ITEM = {
@@ -17,6 +18,12 @@ type DEVICE_ITEM = {
   distance: number
   signature: string
   devicehash: string
+}
+
+type PLACE_ITEM = {
+  latitude: number
+  longitude: number
+  distance: number
 }
 
 const { publicRuntimeConfig } = getConfig();
@@ -69,18 +76,44 @@ export default function Home() {
     setLoading(true)
     const message = createSiweMessage( address || '', 'Sign in Location Based NFT');
     const sign = await sdk?.wallet.sign(message)
-    if(sign) initNft(message, sign)
+    if(sign) formatPlaces(message, sign)
+  }
+
+
+  // format Places
+  const formatPlaces = async(message: string, signature: string) => {
+    let data = []
+    // places count
+    const result = await contract?.call("palceCount");
+    const count = result.toNumber()
+
+    for(let i = 0; i < count; i++) {
+      // place hash
+      const hash = await contract?.call("placesHash", i);
+      // place item
+      const item = await contract?.call("places", hash);
+      const lat = item.lat.toNumber()
+      const long = item.long.toNumber()
+      data.push({
+        latitude: new BigNumber(item.lat.toString()).div(1e6).toNumber(),
+        longitude: new BigNumber(item.long.toString()).div(1e6).toNumber(),
+        distance: item.maxDistance.toNumber()
+      })
+    }
+    console.log('palces', data);
+    if(data.length !== 0) initNft(message, signature, data)
   }
 
   // init
-  const initNft = async(message: string, signature: string) => {
+  const initNft = async(message: string, signature: string, places: any) => {
     try {
       const response = await axios.post(`${NEXT_PUBLIC_APIURL}/api/get_sign_data_for_location`, {
         signature,
         message, 
         owner: address,
         from: `${moment().startOf('day').unix()}`,
-        to: `${moment().endOf('day').unix()}`
+        to: `${moment().endOf('day').unix()}`,
+        locations: places
       })    
       console.log('initNft', response)
       const result = response.data.result
@@ -155,6 +188,7 @@ export default function Home() {
     })
    }
   }
+
 
   useEffect(() => {
     if(chainId && chainId !== 4690) {
