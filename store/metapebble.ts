@@ -188,10 +188,13 @@ export class MpStore {
         const res = await contract?.call("claim", scaled_latitude, scaled_longitude, distance, devicehash, timestamp, signature);
 
         if (res.receipt) {
+          console.log("Receipt", res.receipt.blockHash)
           toast.success(res.receipt.blockHash);
           await this.nftBalance.call();
+          await this.claimLists.call();
         }
       } catch (err) {
+        console.log("error", err)
         toast.error("Claim failed");
       }
     },
