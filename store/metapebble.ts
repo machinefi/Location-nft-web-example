@@ -67,6 +67,7 @@ export class MpStore {
       owner: address,
       sdk,
     });
+    await this.nftBalance.call();
     const { message, sign } = await this.signInWithMetamask();
     await this.places.call();
     await this.signData.call(message, sign);
@@ -129,7 +130,8 @@ export class MpStore {
   signData = new PromiseState({
     name: "getClaimOriginList",
     value: [] as SIGN_DATA[],
-    function: async (message: string, signature: string, places = this.places.value, contract = this.contractInstance) => {
+    function: async (message: string, signature: string, contract = this.contractInstance) => {
+      const places = this.places.value;
       try {
         const response = await axios.post(`${NEXT_PUBLIC_APIURL}/api/get_sign_data_for_location`, {
           signature,
@@ -168,7 +170,7 @@ export class MpStore {
     },
   });
 
-  nftBalcne = new PromiseState({
+  nftBalance = new PromiseState({
     function: async () => {
       const contract = this.contractInstance;
       const balance = contract?.call("balanceOf", this.owner);
@@ -187,7 +189,7 @@ export class MpStore {
 
         if (res.receipt) {
           toast.success(res.receipt.blockHash);
-          this.nftBalcne.call();
+          await this.nftBalance.call();
         }
       } catch (err) {
         toast.error("Claim failed");

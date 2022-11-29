@@ -59,7 +59,7 @@ const Home = observer(() => {
 
       {!mpStore.initLoadinng && address && (
         <Flex mb="2rem" justifyContent="center" textAlign={"center"} fontWeight="500">
-          Balance: {mpStore.nftBalcne?.value}
+          Balance: {mpStore.nftBalance?.value}
         </Flex>
       )}
       {!address && (
