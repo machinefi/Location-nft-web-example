@@ -84,7 +84,7 @@ const Home = observer(() => {
                           <Text>Device Hash{item.claimed}：{`${item.devicehash.slice(0, 5)}...${item.devicehash.slice( item.devicehash.length - 5, item.devicehash.length)}`}</Text>
                           {
                             item.claimed ? <Button colorScheme="purple" disabled size="sm">Claimed</Button> : 
-                            <Button isLoading={mpStore.claimNFT.loading.value} colorScheme="purple" ml="1rem"  size="sm" onClick={() => claimNFT(contract, item, oindex)}>Claim</Button>
+                            <Button isLoading={mpStore.claimNFT.loading.value} colorScheme="purple" ml="1rem"  size="sm" onClick={() => mpStore.claimNFT.function(contract, item)}>Claim</Button>
                           }
                         </Flex>
                     })
