@@ -1,3 +1,13 @@
+import react from "react"
+import axios from "axios";
+import moment from 'moment'
+import { makeAutoObservable } from 'mobx';
+import RootStore from './root';
+import getConfig from 'next/config';
+import { SiweMessage } from 'siwe';
+import { BigNumber } from 'bignumber.js';
+import toast from 'react-hot-toast'
+import { PromiseState } from "./standard/PromiseState";
 
 const PebbleMultipleLocationNFTABI = [
 	{
@@ -673,12 +683,178 @@ const PebbleMultipleLocationNFTABI = [
 		"type": "function"
 	}
 ]
-export class MetapebbleStore {
+
+const { publicRuntimeConfig } = getConfig();
+const { NEXT_PUBLIC_APIURL } = publicRuntimeConfig;
+
+
+type DEVICE_ITEM = {
+  latitude: number
+  longitude: number
+  timestamp: number
+  distance: number
+  signature: string
+  devicehash: string
+}
+
+export class MpStore {
+	rootStore: RootStore;
   contract = {
-    PebbleMultipleLocationNFT: {
-			// 0x7962D28018391177D602ff1F9f1bE9cD80E1C335
+		PebbleMultipleLocationNFTABI,
+		PebbleMultipleLocationNFT: {
 			4690: '0xa8b44E4401e8A2c33cC9587b583498A037Bc8F04'
 		},
-		PebbleMultipleLocationNFTABI
+	}
+
+	signStatus: boolean = false
+	owner: string = ''
+	balance: number = 0
+	claimLists: DEVICE_ITEM[] = []
+	chainId: number = 4690
+
+	constructor(rootStore: RootStore) {
+    this.rootStore = rootStore;
+    makeAutoObservable(this);
   }
+
+	// set owner address
+	setOwnerAddress(address: string) {
+		this.owner = address
+	}
+
+	setChainId(chainId: number) {
+		this.chainId = chainId
+	}
+
+	// set sign status
+	setSignStauts(status: boolean) {
+		this.signStatus = status
+	}
+
+	// set balance
+	setBalance(balance: number) {
+		this.balance = balance
+	}
+
+	// set claim lists
+	setClaimLists(lists: DEVICE_ITEM[]) {
+		this.claimLists = lists
+	}
+
+	// create siwe message
+	createSiweMessage = (statement: string) => {
+    const message = new SiweMessage({
+      domain:  typeof window !== 'undefined' && window.location.host ? window.location.host : '',
+      address: this.owner,
+      statement,
+      uri: typeof window !== 'undefined' && window.location.origin ? window.location.origin : '',
+      version: '1',
+      chainId: this.chainId
+    });
+    return message.prepareMessage();
+  }
+
+
+	// sign in with metamask
+	signInWithMetamask = async(sdk: any) => {
+    const message = this.createSiweMessage(`check the location(lat, lng) distance(xxkm) of the user’s(0x…) device from(from ) to(to)` );
+    const sign = await sdk?.wallet.sign(message)
+    return {message, sign}
+  }
+
+	// init loading
+	get initLoadinng() {
+		return this.getAndFormatPlaces.loading.value || this.getClaimOriginList.loading.value
+	}
+
+	// get places from contract and format places
+	getAndFormatPlaces = new PromiseState({
+		name: 'getAndFormatPlaces',
+		function: async(contract: any) => {
+			let places = []
+			const result = await contract?.call("palceCount");
+			const count = result.toNumber()
+			for(let i = 0; i < count; i++) {
+				const hash = await contract?.call("placesHash", i);
+				const item = await contract?.call("places", hash);
+				places.push({
+					scaled_latitude: new BigNumber(item.lat.toString()).toNumber(),
+					scaled_longitude: new BigNumber(item.long.toString()).toNumber(),
+					distance: item.maxDistance.toNumber()
+				})
+			}
+			return places
+		}
+	})
+
+	// get claim origin list
+	getClaimOriginList = new PromiseState({
+		name: 'getClaimOriginList',
+		function: async(message: string, signature: string, places: any, contract: any) => {
+			try {
+				const response = await axios.post(`${NEXT_PUBLIC_APIURL}/api/get_sign_data_for_location`, {
+					signature,
+					message, 
+					owner: this.owner,
+					from: `${moment().startOf('day').unix()}`,
+					to: `${moment().endOf('day').unix()}`,
+					locations: places
+				})    
+				console.log('getClaimOriginList', response)
+				const result = response.data.result
+	
+				if(result) {
+					this.setSignStauts(true)
+					this.getNftClaimedBalance(contract)
+				}
+				if(result.data.length > 0) {
+					this.formatDeviceAddClaimedStatus(result.data, contract)
+				}
+			} catch (error) {
+				console.log('initNft error', error)
+				this.setSignStauts(false)
+				toast.error('Signature is not valid',)
+			}
+		}
+	})
+
+	// format device add claimed status
+	formatDeviceAddClaimedStatus = async (data: any, contract: any) => {
+    const list = [...data]
+    if(list.length > 0) {
+      list.forEach(async (item: DEVICE_ITEM, index) => {
+        const status = await contract?.call("claimed", item.devicehash)
+        list[index] = {...item, claimed: status, loading: false}
+      })
+      this.setClaimLists(list)
+      console.log('formatDeviceAddClaimedStatus', list)
+    }
+  }
+
+	// get nft claimed balance
+	getNftClaimedBalance = async (contract: any) => {
+    const balanceResult = await contract?.call("balanceOf", this.owner);
+    this.setBalance(balanceResult.toNumber())
+  }
+
+	// claim NFT
+	claimNFT = new PromiseState({
+		name: 'claimNFT',
+		function: async (contract: any, item: any) => {
+			try {
+			 const { scaled_latitude , scaled_longitude, distance, devicehash, timestamp, signature } = item
+			 console.log('item', item)
+			 const res = await contract?.call("claim", scaled_latitude , scaled_longitude, distance, devicehash, timestamp, signature)
+			 console.log('claimNFT res', res);
+	 
+			 if(res.receipt) {
+				 toast.success(res.receipt.blockHash)
+				 this.getNftClaimedBalance(contract)
+			 }
+			} catch (err) {
+			 console.log('claimNFT err', err)
+			 toast.error( 'Claim failed')
+			}
+		 }
+	})
 }

@@ -1,5 +1,4 @@
-import { MetapebbleStore } from './metapebble';
-
+import { MpStore } from './metapebble';
 export default class RootStore {
-  metapebbleStore = new MetapebbleStore();
+  mpStore = new MpStore(this);
 }

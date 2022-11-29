@@ -12,6 +12,8 @@ specifiers:
   eslint-config-next: ^12.1.6
   ethers: ^5.6.8
   framer-motion: ^7.6.7
+  mobx: ^6.7.0
+  mobx-react-lite: ^3.4.0
   moment: ^2.29.4
   next: ^12.1.6
   react: ^18.1.0
@@ -19,6 +21,7 @@ specifiers:
   react-hot-toast: ^2.4.0
   siwe: ^1.1.6
   typescript: ^4.7.2
+  uuid: 8.3.2
 
 dependencies:
   '@chakra-ui/react': 2.4.1_2pud4dpkjr436b4pn46rbpn5sq
@@ -28,12 +31,15 @@ dependencies:
   bignumber.js: 9.1.0
   ethers: 5.7.2
   framer-motion: 7.6.7_biqbaboplfbrettd7655fr4n2y
+  mobx: 6.7.0
+  mobx-react-lite: 3.4.0_jofyzmwkboewm6mjrhi25mngky
   moment: 2.29.4
   next: 12.3.3_biqbaboplfbrettd7655fr4n2y
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-hot-toast: 2.4.0_biqbaboplfbrettd7655fr4n2y
   siwe: 1.1.6_ethers@5.7.2
+  uuid: 8.3.2
 
 devDependencies:
   '@types/node': 17.0.45
@@ -3294,7 +3300,7 @@ packages:
   /axios/0.21.4_debug@4.3.4:
     resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
     dependencies:
-      follow-redirects: 1.15.2_debug@4.3.4
+      follow-redirects: 1.15.2
     transitivePeerDependencies:
       - debug
     dev: false
@@ -5781,6 +5787,28 @@ packages:
 
   /minimist/1.2.7:
     resolution: {integrity: sha512-bzfL1YUZsP41gmu/qjrEk0Q6i2ix/cVeAhbCbqH9u3zYutS1cLg00qhrD0M2MVdCcx4Sc0UpP2eBWo9rotpq6g==}
+
+  /mobx-react-lite/3.4.0_jofyzmwkboewm6mjrhi25mngky:
+    resolution: {integrity: sha512-bRuZp3C0itgLKHu/VNxi66DN/XVkQG7xtoBVWxpvC5FhAqbOCP21+nPhULjnzEqd7xBMybp6KwytdUpZKEgpIQ==}
+    peerDependencies:
+      mobx: ^6.1.0
+      react: ^16.8.0 || ^17 || ^18
+      react-dom: '*'
+      react-native: '*'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
+    dependencies:
+      mobx: 6.7.0
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
+
+  /mobx/6.7.0:
+    resolution: {integrity: sha512-1kBLBdSNG2bA522HQdbsTvwAwYf9hq9FWxmlhX7wTsJUAI54907J+ozfGW+LoYUo06vjit748g6QH1AAGLNebw==}
+    dev: false
 
   /moment/2.29.4:
     resolution: {integrity: sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==}
