@@ -60,6 +60,7 @@ export class MpStore {
     Object.assign(this, args);
   }
 
+  // Main function
   async init({ contract, chainId, address, sdk }: any) {
     this.setData({
       contractInstance: contract,
@@ -103,7 +104,7 @@ export class MpStore {
 
   // get places from contract and format places
   places = new PromiseState({
-    name: "getAndFormatPlaces",
+    name: "get query places from contract",
     function: async () => {
       const contract = this.contractInstance;
       const result = await contract?.call("palceCount");
@@ -128,7 +129,7 @@ export class MpStore {
 
   // get claim origin list
   signData = new PromiseState({
-    name: "getClaimOriginList",
+    name: "get sign data from Metapebble API",
     value: [] as SIGN_DATA[],
     function: async (message: string, signature: string, contract = this.contractInstance) => {
       const places = this.places.value;
@@ -153,6 +154,7 @@ export class MpStore {
     },
   });
   claimLists = new PromiseState({
+    name: "check claim list from contract",
     value: [] as DEVICE_ITEM[],
     function: async () => {
       if (!this.signData.value) return [];
@@ -171,6 +173,7 @@ export class MpStore {
   });
 
   nftBalance = new PromiseState({
+    name: "get nft balance",
     function: async () => {
       const contract = this.contractInstance;
       const balance = contract?.call("balanceOf", this.owner);
@@ -180,8 +183,8 @@ export class MpStore {
 
   // claim NFT
   claimNFT = new PromiseState({
-    name: "claimNFT",
-    function: async (item: any) => {
+    name: "claim NFT",
+    function: async (item: SIGN_DATA) => {
       const contract = this.contractInstance;
       try {
         const { scaled_latitude, scaled_longitude, distance, devicehash, timestamp, signature } = item;
