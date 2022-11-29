@@ -1,4 +1,3 @@
-import react from "react";
 import axios from "axios";
 import moment from "moment";
 import { makeAutoObservable } from "mobx";
@@ -68,8 +67,8 @@ export class MpStore {
       owner: address,
       sdk,
     });
-    await this.nftBalance.call();
     const { message, sign } = await this.signInWithMetamask();
+    await this.nftBalance.call();
     await this.places.call();
     await this.signData.call(message, sign);
     await this.claimLists.call();
@@ -174,6 +173,7 @@ export class MpStore {
 
   nftBalance = new PromiseState({
     name: "get nft balance",
+    value: 0,
     function: async () => {
       const contract = this.contractInstance;
       const balance = contract?.call("balanceOf", this.owner);

@@ -1,12 +1,8 @@
 import { ConnectWallet, useContract, useSDK, useAddress, useChainId, Web3Button } from "@thirdweb-dev/react";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useStore } from "../store/index";
 import { Button, Flex, Text, Box, Spinner } from "@chakra-ui/react";
-import { SiweMessage } from "siwe";
 import { useToast } from "@chakra-ui/react";
-import getConfig from "next/config";
-import moment from "moment";
 import { observer } from "mobx-react-lite";
 import "../styles/Home.module.css";
 
@@ -14,11 +10,7 @@ const Home = observer(() => {
   const toast = useToast();
   const { mpStore } = useStore();
 
-  // contract
-  const address = useAddress();
-  const chainId = useChainId();
-  const sdk = useSDK();
-  // @ts-ignore
+  const [address, chainId, sdk] = [useAddress(), useChainId(), useSDK()];
   const { address: contractAddress, abi: contractAbi } = mpStore.contract.LocationNFT[chainId as number] || {};
   const { contract } = useContract(contractAddress, contractAbi);
 
@@ -29,7 +21,7 @@ const Home = observer(() => {
   }, [contract, chainId, address]);
 
   useEffect(() => {
-    // request metamask switch network
+    // TODO: request metamask switch network
     if (chainId && chainId !== 4690) {
       toast({
         description: "Please switch to the IoTeX Testnet network",
