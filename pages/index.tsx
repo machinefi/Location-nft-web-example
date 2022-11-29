@@ -29,6 +29,7 @@ const Home = observer(() => {
   }, [contract, chainId, address]);
 
   useEffect(() => {
+    // request metamask switch network
     if (chainId && chainId !== 4690) {
       toast({
         description: "Please switch to the IoTeX Testnet network",
