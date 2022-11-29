@@ -84,7 +84,7 @@ export class MpStore {
       uri: globalThis.location.host,
       version: "1",
       chainId: this.chainId,
-      expirationTime: moment().add(1, "minute").toISOString(),
+      expirationTime: moment().add(1, "minutes").toISOString(),
     });
     return message.prepareMessage();
   };
