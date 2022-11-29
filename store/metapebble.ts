@@ -81,7 +81,7 @@ export class MpStore {
       domain: globalThis.location.host,
       address: this.owner,
       statement: `Sign in Location Based NFT`,
-      uri: globalThis.location.host,
+      uri: globalThis.location.origin,
       version: "1",
       chainId: this.chainId,
       expirationTime: moment().add(1, "minutes").toISOString(),
@@ -188,13 +188,13 @@ export class MpStore {
         const res = await contract?.call("claim", scaled_latitude, scaled_longitude, distance, devicehash, timestamp, signature);
 
         if (res.receipt) {
-          console.log("Receipt", res.receipt.blockHash)
+          console.log("Receipt", res.receipt.blockHash);
           toast.success(res.receipt.blockHash);
           await this.nftBalance.call();
           await this.claimLists.call();
         }
       } catch (err) {
-        console.log("error", err)
+        console.log("error", err);
         toast.error("Claim failed");
       }
     },
