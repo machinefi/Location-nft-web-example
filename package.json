@@ -18,6 +18,7 @@
     "bignumber.js": "^9.1.0",
     "ethers": "^5.6.8",
     "framer-motion": "^7.6.7",
+    "lodash": "^4.17.21",
     "mobx": "^6.7.0",
     "mobx-react-lite": "^3.4.0",
     "moment": "^2.29.4",

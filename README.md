@@ -23,12 +23,12 @@ https://docs.login.xyz/libraries/typescript
 ```js
 import { SiweMessage } from "siwe";
 
-createSiweMessage = (statement: string) => {
+const createSiweMessage = (statement: string) => {
   const message = new SiweMessage({
-    domain: window.location.host,
+    domain: globalThis.location.host,
     address: "0x.....",
-    statement,
-    uri: window.location.host,
+    statement: "Sign in Location Based NFT",
+    uri: globalThis.location.host,
     version: "1",
     chainId: 4690,
   });
@@ -39,7 +39,7 @@ createSiweMessage = (statement: string) => {
 #### sign the query then send to metapebble server to get sign data for location, get claim origin list
 
 ```ts
-const message = createSiweMessage(`Sign in Location Based NFT`);
+const message = createSiweMessage();
 const signature = await sdk?.wallet.sign(message);
 
 const response = await axios.post(
