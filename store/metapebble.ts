@@ -110,7 +110,6 @@ export class MpStore {
       const count = result.toNumber();
       let places = await Promise.all(
         _.range(0, count).map(async (i) => {
-          console.log(i);
           const hash = await contract?.call("placesHash", i);
           const item = await contract?.call("places", hash);
           return {
@@ -121,8 +120,6 @@ export class MpStore {
         })
       );
       return places;
-      // for debug
-      // return [{ scaled_latitude: 30489389, scaled_longitude: 114440210, distance: 1000 }];
     },
   });
 
@@ -176,7 +173,7 @@ export class MpStore {
     value: 0,
     function: async () => {
       const contract = this.contractInstance;
-      const balance = contract?.call("balanceOf", this.owner);
+      const balance = await contract?.call("balanceOf", this.owner);
       return balance.toNumber();
     },
   });
