@@ -23,7 +23,7 @@ https://docs.login.xyz/libraries/typescript
 ```js
 import { SiweMessage } from "siwe";
 
-const createSiweMessage = (statement: string) => {
+const createSiweMessage = () => {
   const message = new SiweMessage({
     domain: globalThis.location.host,
     address: "0x.....",
@@ -42,23 +42,20 @@ const createSiweMessage = (statement: string) => {
 const message = createSiweMessage();
 const signature = await sdk?.wallet.sign(message);
 
-const response = await axios.post(
-  `${NEXT_PUBLIC_APIURL}/api/get_sign_data_for_location`,
-  {
-    signature,
-    message,
-    owner: "0x...",
-    from: `${moment().startOf("day").unix()}`,
-    to: `${moment().endOf("day").unix()}`,
-    locations: [
-      {
-        scaled_latitude: 4131637,
-        scaled_longitude: 10168213,
-        distance: 1000,
-      },
-    ],
-  }
-);
+const response = await axios.post(`${NEXT_PUBLIC_APIURL}/api/get_sign_data_for_location`, {
+  signature,
+  message,
+  owner: "0x...",
+  from: `${moment().startOf("day").unix()}`,
+  to: `${moment().endOf("day").unix()}`,
+  locations: [
+    {
+      scaled_latitude: 4131637,
+      scaled_longitude: 10168213,
+      distance: 1000,
+    },
+  ],
+});
 // response:
 // [
 //     {
@@ -76,14 +73,7 @@ const response = await axios.post(
 
 ```ts
 const item = response[0];
-const {
-  scaled_latitude,
-  scaled_longitude,
-  distance,
-  devicehash,
-  timestamp,
-  signature,
-} = item;
+const { scaled_latitude, scaled_longitude, distance, devicehash, timestamp, signature } = item;
 const { contract } = useContract(contractAddress, contractAbi);
 
 // get claimed balance
@@ -93,13 +83,5 @@ const balanceResult = await contract?.call("balanceOf", this.owner);
 const status = await contract?.call("claimed", item.devicehash);
 
 // claim token
-await contract?.call(
-  "claim",
-  scaled_latitude,
-  scaled_longitude,
-  distance,
-  devicehash,
-  timestamp,
-  signature
-);
+await contract?.call("claim", scaled_latitude, scaled_longitude, distance, devicehash, timestamp, signature);
 ```
