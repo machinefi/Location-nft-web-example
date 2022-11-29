@@ -17,6 +17,16 @@ The following assumes the use of `node@>=16`.
 
 metapebble api: https://test.metapebble.app/swagger/index.html#/metapebble/mutation.get_sign_data_for_location
 
+
+### loading public data
+```ts
+  const loadPublicData = async() => {
+    const places = await mpStore.getAndFormatPlaces.call(contract)
+    const { message, sign } = await mpStore.signInWithMetamask(sdk)
+    await mpStore.getClaimOriginList.call(message, sign, places, contract)
+  }
+```
+
 #### create swie sign message
 
 https://docs.login.xyz/libraries/typescript
@@ -24,70 +34,61 @@ https://docs.login.xyz/libraries/typescript
 ```ts
 import { SiweMessage } from "siwe";
 
-const createSiweMessage = (address: string, statement: string) => {
+createSiweMessage = (statement: string) => {
   const message = new SiweMessage({
-    domain,
-    address,
+    domain:  typeof window !== 'undefined' && window.location.host ? window.location.host : '',
+    address: this.owner,
     statement,
-    uri: origin,
-    version: "1",
-    chainId,
+    uri: typeof window !== 'undefined' && window.location.origin ? window.location.origin : '',
+    version: '1',
+    chainId: this.chainId
   });
   return message.prepareMessage();
-};
+}
 ```
-#### format places
+
+#### get places from contract and format places
 ```ts
-// format Places
-  const formatPlaces = async(message: string, signature: string) => {
-    let data = []
-    // places count
+  getAndFormatPlaces = async(contract: any) => {
+    let places = []
     const result = await contract?.call("palceCount");
     const count = result.toNumber()
-
     for(let i = 0; i < count; i++) {
-      // place hash
       const hash = await contract?.call("placesHash", i);
-      // place item
       const item = await contract?.call("places", hash);
-      const lat = item.lat.toNumber()
-      const long = item.long.toNumber()
-      data.push({
-        latitude: new BigNumber(item.lat.toString()).toNumber(),
-        longitude: new BigNumber(item.long.toString()).toNumber(),
+      places.push({
+        scaled_latitude: new BigNumber(item.lat.toString()).toNumber(),
+        scaled_longitude: new BigNumber(item.long.toString()).toNumber(),
         distance: item.maxDistance.toNumber()
       })
     }
-    console.log('palces', data);
-    if(data.length !== 0) initNft(message, signature, data)
+    return places
   }
 ```
-#### sign the query then send to metapebble server to get sign data for location
+#### sign the query then send to metapebble server to get sign data for location, get claim origin list
 
 ```ts
-const message = createSiweMessage(address || "", "Sign in Location Based NFT");
-const sign = await sdk?.wallet.sign(message);
+const message = this.createSiweMessage(`Sign in Location Based NFT` );
+const sign = await sdk?.wallet.sign(message)
 
-const response = await axios.post(
-  `https://test.metapebble.app/api/get_sign_data_for_location`,
-  { signature,
+const response = await axios.post(`${NEXT_PUBLIC_APIURL}/api/get_sign_data_for_location`, 
+  {
+    signature,
     message, 
-    owner: address,
+    owner: this.owner,
     from: `${moment().startOf('day').unix()}`,
     to: `${moment().endOf('day').unix()}`,
-    locations: places }
-);
-
+    locations: places
+  })    
 // response:
 // [
 //     {
-//       "latitude": string,
-//       "longitude": string,
+//       "scaled_latitude": string,
+//       "scaled_longitude": string,
 //       "timestamp": number,
 //       "distance": number,
 //       "signature": "string",
 //       "devicehash": "string",
-//       "imei": "string"
 //     }
 //   ]
 ```
@@ -96,17 +97,20 @@ const response = await axios.post(
 
 ```ts
 const item = response[0];
-const { latitude, longitude, distance, devicehash, timestamp, signature } = item
+const { scaled_latitude , scaled_longitude, distance, devicehash, timestamp, signature } = item
 const { contract } = useContract(contractAddress, contractAbi);
 
+// get claimed balance
+const balanceResult = await contract?.call("balanceOf", this.owner);
+
 // check token claimeable
-const status = await contract?.call("claimed", item.devicehash);
+const status = await contract?.call("claimed", item.devicehash)
 
 // claim token
 await contract?.call(
   "claim",
-  latitude,
-  longitude,
+  scaled_latitude,
+  scaled_longitude,
   distance,
   devicehash,
   timestamp,

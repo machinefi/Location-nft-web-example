@@ -34,6 +34,7 @@ export class NumberState {
 }
 
 export class ValueState<T> {
+  // @ts-ignore
   _value: T = null;
   constructor(args: Partial<ValueState<T>> = {}) {
     Object.assign(this, args);
@@ -47,6 +48,7 @@ export class ValueState<T> {
     this._value = value;
   }
 
+  // @ts-ignore
   getValue: (value: T) => T;
 
   setValue(value: T) {

@@ -1,20 +1,24 @@
 import { makeAutoObservable, observable, action } from 'mobx';
 import { BooleanState } from './base';
+// @ts-ignore
 import { v4 as uuid } from 'uuid';
 
 export class PromiseState<T extends (...args: any[]) => Promise<any>, U = ReturnType<T>> {
   loading = new BooleanState({ value: false });
   disposableLoading = new BooleanState({ value: true });
+  // @ts-ignore
   value?: Awaited<U> = null;
+  // @ts-ignore
   cache?: {
     getKey: () => string;
     ttl: number; //seconds
   } = null;
+  // @ts-ignore
   function: T;
   name: string = uuid();
   context: any = undefined;
   autoAlert: boolean = true;
-
+  // @ts-ignore
   id: Function;
 
   constructor(args: Partial<PromiseState<T, U>> = {}) {
@@ -23,6 +27,7 @@ export class PromiseState<T extends (...args: any[]) => Promise<any>, U = Return
       makeAutoObservable(this);
     } catch (error) {
       console.log(args);
+      // @ts-ignore
       console.log(error.message);
     }
   }
@@ -36,6 +41,7 @@ export class PromiseState<T extends (...args: any[]) => Promise<any>, U = Return
     return res;
   }
 
+  // @ts-ignore
   async call(...args: Parameters<T>): Promise<Awaited<U>> {
     // if (this.promiseLoading.value) return;
     try {

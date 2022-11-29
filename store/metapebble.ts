@@ -757,7 +757,7 @@ export class MpStore {
 
 	// sign in with metamask
 	signInWithMetamask = async(sdk: any) => {
-    const message = this.createSiweMessage(`check the location(lat, lng) distance(xxkm) of the user’s(0x…) device from(from ) to(to)` );
+    const message = this.createSiweMessage(`Sign in Location Based NFT` );
     const sign = await sdk?.wallet.sign(message)
     return {message, sign}
   }
@@ -800,7 +800,6 @@ export class MpStore {
 					to: `${moment().endOf('day').unix()}`,
 					locations: places
 				})    
-				console.log('getClaimOriginList', response)
 				const result = response.data.result
 	
 				if(result) {
@@ -811,7 +810,6 @@ export class MpStore {
 					this.formatDeviceAddClaimedStatus(result.data, contract)
 				}
 			} catch (error) {
-				console.log('initNft error', error)
 				this.setSignStauts(false)
 				toast.error('Signature is not valid',)
 			}
@@ -843,16 +841,13 @@ export class MpStore {
 		function: async (contract: any, item: any) => {
 			try {
 			 const { scaled_latitude , scaled_longitude, distance, devicehash, timestamp, signature } = item
-			 console.log('item', item)
 			 const res = await contract?.call("claim", scaled_latitude , scaled_longitude, distance, devicehash, timestamp, signature)
-			 console.log('claimNFT res', res);
 	 
 			 if(res.receipt) {
 				 toast.success(res.receipt.blockHash)
 				 this.getNftClaimedBalance(contract)
 			 }
 			} catch (err) {
-			 console.log('claimNFT err', err)
 			 toast.error( 'Claim failed')
 			}
 		 }
