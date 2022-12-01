@@ -25,7 +25,8 @@ type DEVICE_ITEM = {
 type SIGN_DATA = {
   scaled_latitude: string;
   scaled_longitude: string;
-  timestamp: number;
+  from: number;
+  to: number;
   distance: number;
   signature: string;
   devicehash: string;
@@ -37,7 +38,7 @@ export class MpStore {
     LocationNFT: {
       4690: {
         abi: LocationNFTABI,
-        address: "0xa8b44E4401e8A2c33cC9587b583498A037Bc8F04",
+        address: "0xBa9bB4a081f2432C8404Eded4AAeE74de72f914A",
       },
     },
   };
@@ -72,7 +73,7 @@ export class MpStore {
     await this.places.call();
     await this.signData.call(message, sign);
     await this.claimLists.call();
-    console.log("places===", message, sign, this.places, this.claimLists);
+    console.log("places===", message, sign, this.places.value, this.claimLists);
   }
 
   // create siwe message
@@ -112,7 +113,10 @@ export class MpStore {
         _.range(0, count).map(async (i) => {
           const hash = await contract?.call("placesHash", i);
           const item = await contract?.call("places", hash);
+          console.log(item);
           return {
+            from: item.startTimestamp.toNumber(),
+            to: item.endTimestamp.toNumber(),
             scaled_latitude: new BigNumber(item.lat.toString()).toNumber(),
             scaled_longitude: new BigNumber(item.long.toString()).toNumber(),
             distance: item.maxDistance.toNumber(),
@@ -134,8 +138,6 @@ export class MpStore {
           signature,
           message,
           owner: this.owner,
-          from: `${moment().startOf("day").unix()}`,
-          to: `${moment().endOf("day").unix()}`,
           locations: places,
         });
         const signData: SIGN_DATA[] = response.data.result.data;
@@ -184,8 +186,8 @@ export class MpStore {
     function: async (item: SIGN_DATA) => {
       const contract = this.contractInstance;
       try {
-        const { scaled_latitude, scaled_longitude, distance, devicehash, timestamp, signature } = item;
-        const res = await contract?.call("claim", scaled_latitude, scaled_longitude, distance, devicehash, timestamp, signature);
+        const { scaled_latitude, scaled_longitude, distance, devicehash, from, to, signature } = item;
+        const res = await contract?.call("claim", scaled_latitude, scaled_longitude, distance, devicehash, from, to, signature);
 
         if (res.receipt) {
           console.log("Receipt", res.receipt.blockHash);
