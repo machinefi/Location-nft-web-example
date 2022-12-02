@@ -38,7 +38,7 @@ export class MpStore {
     LocationNFT: {
       4690: {
         abi: LocationNFTABI,
-        address: "0xBa9bB4a081f2432C8404Eded4AAeE74de72f914A",
+        address: "0xDBaEb377717338f5434798102C8753BAc2b7b387",
       },
     },
   };
@@ -68,9 +68,9 @@ export class MpStore {
       owner: address,
       sdk,
     });
-    const { message, sign } = await this.signInWithMetamask();
     await this.nftBalance.call();
     await this.places.call();
+    const { message, sign } = await this.signInWithMetamask();
     await this.signData.call(message, sign);
     await this.claimLists.call();
     console.log("places===", message, sign, this.places.value, this.claimLists);
@@ -78,10 +78,15 @@ export class MpStore {
 
   // create siwe message
   createSiweMessage = () => {
+    const locations = {
+      "type": "FeatureCollection",
+      "features": this.places.value.map(item => item.feature),
+    }
+    console.log("locations===", locations);
     const message = new SiweMessage({
       domain: globalThis.location.host,
       address: this.owner,
-      statement: `Sign in Location Based NFT`,
+      statement: `Sign in Location Based NFT The application will know if you were located in one of the following regions in the time range below: from: ${moment().utc()} to: ${moment().utc()}`,
       uri: globalThis.location.origin,
       version: "1",
       chainId: this.chainId,
@@ -94,6 +99,7 @@ export class MpStore {
   signInWithMetamask = async () => {
     const message = this.createSiweMessage();
     const sign = await this.sdk?.wallet.sign(message);
+    console.log("message===", JSON.stringify(message));
     return { message, sign };
   };
 
@@ -113,13 +119,25 @@ export class MpStore {
         _.range(0, count).map(async (i) => {
           const hash = await contract?.call("placesHash", i);
           const item = await contract?.call("places", hash);
-          console.log(item);
+          console.log("item===", item.lat.toNumber(), item.long.toNumber());
           return {
             from: item.startTimestamp.toNumber(),
             to: item.endTimestamp.toNumber(),
             scaled_latitude: new BigNumber(item.lat.toString()).toNumber(),
             scaled_longitude: new BigNumber(item.long.toString()).toNumber(),
             distance: item.maxDistance.toNumber(),
+            feature: {
+              "type": "Feature",
+              "properties": {
+                  "shape": "Circle",
+                  "radius": 100,
+                  "category": "default"
+              },
+              "geometry": {
+                  "type": "Point",
+                  "coordinates": [new BigNumber(item.lat.toString()).div(1e6).toNumber(), new BigNumber(item.long.toString()).div(1e6).toNumber()]
+              },
+            }
           };
         })
       );
@@ -132,7 +150,8 @@ export class MpStore {
     name: "get sign data from Metapebble API",
     value: [] as SIGN_DATA[],
     function: async (message: string, signature: string, contract = this.contractInstance) => {
-      const places = this.places.value;
+      const places = JSON.parse(JSON.stringify(this.places.value)).map(e => { delete e.feature; return e});
+      console.log("places===", places);
       try {
         const response = await axios.post(`${NEXT_PUBLIC_APIURL}/api/get_sign_data_for_location`, {
           signature,
@@ -144,9 +163,11 @@ export class MpStore {
         this.setData({ signStatus: true });
 
         return signData;
-      } catch (error) {
+      } catch (error: any) {
+        const err = JSON.parse(error.response.data.error.message)
+        console.log("error", err);
+        toast.error(err[0].message);
         this.setData({ signStatus: false });
-        toast.error("Signature is not valid");
         return [];
       }
     },

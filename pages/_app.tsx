@@ -2,6 +2,8 @@ import type { AppProps } from "next/app";
 import { ChainId, ThirdwebProvider } from "@thirdweb-dev/react";
 import "../styles/globals.css";
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
+import { Toaster } from 'react-hot-toast';
+
 // This is the chainId your dApp will work on.
 const activeChainId = ChainId.Mainnet;
 const colors = {
@@ -36,6 +38,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ThirdwebProvider desiredChainId={activeChainId} chainRpc={{ [ChainId.Mainnet]: "https://babel-api.testnet.iotex.io" }}>
       <ChakraProvider theme={theme}>
+        <Toaster />
         <Component {...pageProps} />
       </ChakraProvider>
     </ThirdwebProvider>
