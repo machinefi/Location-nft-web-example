@@ -38,7 +38,7 @@ export class MpStore {
     LocationNFT: {
       4690: {
         abi: LocationNFTABI,
-        address: "0xDBaEb377717338f5434798102C8753BAc2b7b387",
+        address: "0x775B56a6E3b13A19404FC186098f564B19715Ab9",
       },
     },
   };
@@ -70,10 +70,11 @@ export class MpStore {
     });
     await this.nftBalance.call();
     await this.places.call();
+    await this.claimFee.call();
     const { message, sign } = await this.signInWithMetamask();
     await this.signData.call(message, sign);
     await this.claimLists.call();
-    console.log("places===", message, sign, this.places.value, this.claimLists);
+    console.log("init===", this.claimFee.value);
   }
 
   // create siwe message
@@ -201,6 +202,16 @@ export class MpStore {
     },
   });
 
+  claimFee = new PromiseState({
+    name: "get claim fee",
+    value: 0,
+    function: async () => {
+      const contract = this.contractInstance;
+      const fee = await contract?.call("claimFee");
+      return fee
+    },
+  });
+
   // claim NFT
   claimNFT = new PromiseState({
     name: "claim NFT",
@@ -208,7 +219,9 @@ export class MpStore {
       const contract = this.contractInstance;
       try {
         const { scaled_latitude, scaled_longitude, distance, devicehash, from, to, signature } = item;
-        const res = await contract?.call("claim", scaled_latitude, scaled_longitude, distance, devicehash, from, to, signature);
+        const res = await contract?.call("claim", scaled_latitude, scaled_longitude, distance, devicehash, from, to, signature, {
+          value: this.claimFee.value
+        });
 
         if (res.receipt) {
           console.log("Receipt", res.receipt.blockHash);
