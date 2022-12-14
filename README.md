@@ -76,6 +76,9 @@ const item = response[0];
 const { scaled_latitude, scaled_longitude, distance, devicehash, timestamp, signature } = item;
 const { contract } = useContract(contractAddress, contractAbi);
 
+// get claim fee
+const fee = await contract?.call("claimFee");
+
 // get claimed balance
 const balanceResult = await contract?.call("balanceOf", this.owner);
 
@@ -83,5 +86,7 @@ const balanceResult = await contract?.call("balanceOf", this.owner);
 const status = await contract?.call("claimed", item.devicehash);
 
 // claim token
-await contract?.call("claim", scaled_latitude, scaled_longitude, distance, devicehash, timestamp, signature);
+await contract?.call("claim", scaled_latitude, scaled_longitude, distance, devicehash, timestamp, signature, {
+  value: this.claimFee.value
+});
 ```
