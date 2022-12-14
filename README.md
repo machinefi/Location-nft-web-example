@@ -42,14 +42,21 @@ const createSiweMessage = () => {
 const message = createSiweMessage();
 const signature = await sdk?.wallet.sign(message);
 
+// place count
+const palceCount = await contract?.call("palceCount");
+// place Hash
+const placeHash = await contract?.call("placesHash", i);
+// place Item
+const placeItem = await contract?.call("places", placeHash);
+
 const response = await axios.post(`${NEXT_PUBLIC_APIURL}/api/get_sign_data_for_location`, {
   signature,
   message,
   owner: "0x...",
-  from: `${moment().startOf("day").unix()}`,
-  to: `${moment().endOf("day").unix()}`,
   locations: [
     {
+      from: 1671007072,
+      to: 1671098400,
       scaled_latitude: 4131637,
       scaled_longitude: 10168213,
       distance: 1000,
@@ -61,7 +68,8 @@ const response = await axios.post(`${NEXT_PUBLIC_APIURL}/api/get_sign_data_for_l
 //     {
 //       "scaled_latitude": string,
 //       "scaled_longitude": string,
-//       "timestamp": number,
+//       "from": number,
+//       "to": number,
 //       "distance": number,
 //       "signature": "string",
 //       "devicehash": "string",

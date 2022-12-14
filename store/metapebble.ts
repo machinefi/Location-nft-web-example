@@ -79,15 +79,12 @@ export class MpStore {
 
   // create siwe message
   createSiweMessage = () => {
-    const locations = {
-      "type": "FeatureCollection",
-      "features": this.places.value.map(item => item.feature),
-    }
+    const locations = this.places.value.map(item => item.feature)
     console.log("locations===", locations);
     const message = new SiweMessage({
       domain: globalThis.location.host,
       address: this.owner,
-      statement: `Sign in Location Based NFT The application will know if you were located in one of the following regions in the time range below: from: ${moment().utc()} to: ${moment().utc()}`,
+      statement: `Sign in Location Based NFT The application will know if you were located in one of the following regions in the time range below: locations: ${locations.join(',')}`,
       uri: globalThis.location.origin,
       version: "1",
       chainId: this.chainId,
@@ -127,18 +124,7 @@ export class MpStore {
             scaled_latitude: new BigNumber(item.lat.toString()).toNumber(),
             scaled_longitude: new BigNumber(item.long.toString()).toNumber(),
             distance: item.maxDistance.toNumber(),
-            feature: {
-              "type": "Feature",
-              "properties": {
-                  "shape": "Circle",
-                  "radius": 100,
-                  "category": "default"
-              },
-              "geometry": {
-                  "type": "Point",
-                  "coordinates": [new BigNumber(item.lat.toString()).div(1e6).toNumber(), new BigNumber(item.long.toString()).div(1e6).toNumber()]
-              },
-            }
+            feature: `from ${item.startTimestamp.toNumber()} to ${item.endTimestamp.toNumber()} within ${item.maxDistance.toNumber()} from [${new BigNumber(item.lat.toString()).div(1e6).toNumber()}}, ${new BigNumber(item.long.toString()).div(1e6).toNumber()}]`
           };
         })
       );
@@ -154,7 +140,7 @@ export class MpStore {
       const places = JSON.parse(JSON.stringify(this.places.value)).map(e => { delete e.feature; return e});
       console.log("places===", places);
       try {
-        const response = await axios.post(`${NEXT_PUBLIC_APIURL}/api/get_sign_data_for_location`, {
+        const response = await axios.post(`${NEXT_PUBLIC_APIURL}/api/pol`, {
           signature,
           message,
           owner: this.owner,
@@ -165,9 +151,9 @@ export class MpStore {
 
         return signData;
       } catch (error: any) {
-        const err = JSON.parse(error.response.data.error.message)
-        console.log("error", err);
-        toast.error(err[0].message);
+        const err = error.response.data.error.message
+        console.error('error', err)
+        toast.error(`${err}`);
         this.setData({ signStatus: false });
         return [];
       }
