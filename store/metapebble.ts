@@ -84,7 +84,7 @@ export class MpStore {
     const message = new SiweMessage({
       domain: globalThis.location.host,
       address: this.owner,
-      statement: `Sign in Location Based NFT The application will know if you were located in one of the following regions in the time range below: locations: ${locations.join(',')}`,
+      statement: `Sign in Location Based NFT The application will know if you were located in one of the following regions in the time range below:locations:${locations.join(',')}`,
       uri: globalThis.location.origin,
       version: "1",
       chainId: this.chainId,
@@ -124,7 +124,7 @@ export class MpStore {
             scaled_latitude: new BigNumber(item.lat.toString()).toNumber(),
             scaled_longitude: new BigNumber(item.long.toString()).toNumber(),
             distance: item.maxDistance.toNumber(),
-            feature: `from ${item.startTimestamp.toNumber()} to ${item.endTimestamp.toNumber()} within ${item.maxDistance.toNumber()} from [${new BigNumber(item.lat.toString()).div(1e6).toNumber()}}, ${new BigNumber(item.long.toString()).div(1e6).toNumber()}]`
+            feature: `from ${item.startTimestamp.toNumber()} to ${item.endTimestamp.toNumber()} within ${item.maxDistance.toNumber()} from [${new BigNumber(item.lat.toString()).div(1e6).toNumber()}, ${new BigNumber(item.long.toString()).div(1e6).toNumber()}]`
           };
         })
       );
