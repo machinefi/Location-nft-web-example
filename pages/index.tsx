@@ -35,7 +35,6 @@ const Home = observer(() => {
         },
         rpcUrls: ['https://babel-api.mainnet.iotex.io/']
       });
-      
     }
   }, [chainId, sdk]);
 
