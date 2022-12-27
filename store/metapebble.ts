@@ -2,7 +2,6 @@ import axios from "axios";
 import moment from "moment";
 import { makeAutoObservable } from "mobx";
 import RootStore from "./root";
-import getConfig from "next/config";
 import { SiweMessage } from "siwe";
 import { BigNumber } from "bignumber.js";
 import toast from "react-hot-toast";
@@ -10,8 +9,6 @@ import { PromiseState } from "./standard/PromiseState";
 import LocationNFTABI from "../constants/abis/LocationNFTABI.json";
 import _ from "lodash";
 
-const { publicRuntimeConfig } = getConfig();
-const { NEXT_PUBLIC_APIURL } = publicRuntimeConfig;
 
 type DEVICE_ITEM = {
   latitude: number;
@@ -55,7 +52,7 @@ export class MpStore {
   signStatus: boolean = false;
   owner: string = "";
   balance: number = 0;
-  chainId: number = 4690;
+  chainId: number = 4689;
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
@@ -68,6 +65,7 @@ export class MpStore {
 
   // Main function
   async init({ contract, chainId, address, sdk }: any) {
+    console.log('chainId===', chainId, address)
     this.setData({
       contractInstance: contract,
       chainId,
@@ -85,7 +83,7 @@ export class MpStore {
 
   // create siwe message
   createSiweMessage = () => {
-    const locations = this.places.value.map(item => item.feature)
+    const locations = this.places.value && this.places.value.length > 0 ? this.places.value.map(item => item.feature) : []
     console.log("locations===", locations);
     const message = new SiweMessage({
       domain: globalThis.location.host,
@@ -143,7 +141,7 @@ export class MpStore {
     name: "get sign data from Metapebble API",
     value: [] as SIGN_DATA[],
     function: async (message: string, signature: string, contract = this.contractInstance) => {
-      const places = JSON.parse(JSON.stringify(this.places.value)).map(e => { delete e.feature; return e});
+      const places = this.places.value ? JSON.parse(JSON.stringify(this.places.value)).map(e => { delete e.feature; return e}) : [];
       console.log("places===", places);
       try {
         const response = await axios.post(`${this.contract.LocationNFT[this.chainId].API_URL}/api/pol`, {

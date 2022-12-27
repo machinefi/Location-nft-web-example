@@ -22,9 +22,9 @@ const Home = observer(() => {
 
   useEffect(() => {
     // TODO: request metamask switch network
-    if (chainId && chainId !== 4690) {
+    if (chainId && chainId !== 4690 && chainId !== 4689 ) {
       toast({
-        description: "Please switch to the IoTeX Testnet network",
+        description: "Please switch to the IoTeX Testnet or Mainnet network",
         status: "warning",
         duration: 9000,
         isClosable: true,
