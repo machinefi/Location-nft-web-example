@@ -4,8 +4,6 @@ import "../styles/globals.css";
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 import { Toaster } from 'react-hot-toast';
 
-// This is the chainId your dApp will work on.
-const activeChainId = ChainId.Mainnet;
 const colors = {
   model: 'dark',
   bg: '#0000',
@@ -36,7 +34,12 @@ const theme = extendTheme({ colors, styles: {
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ThirdwebProvider desiredChainId={activeChainId} chainRpc={{ [ChainId.Mainnet]: "https://babel-api.testnet.iotex.io" }}>
+    <ThirdwebProvider desiredChainId={1} chainRpc={{ 
+      [ChainId.Mainnet]: "https://babel-api.mainnet.iotex.io",
+      // @ts-ignore
+      4690: "https://babel-api.testnet.iotex.io",
+      4689: "https://babel-api.mainnet.iotex.io",
+     }} supportedChains={[1, 4689, 4690]}>
       <ChakraProvider theme={theme}>
         <Toaster />
         <Component {...pageProps} />

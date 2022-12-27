@@ -1,9 +1,10 @@
-import { ConnectWallet, useContract, useSDK, useAddress, useChainId, Web3Button } from "@thirdweb-dev/react";
+import { ConnectWallet, useContract, useSDK, useAddress, useChainId } from "@thirdweb-dev/react";
 import { useEffect, useState } from "react";
 import { useStore } from "../store/index";
 import { Button, Flex, Text, Box, Spinner } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
+import {metamaskUtils} from '../store/metaskUtils'
 import "../styles/Home.module.css";
 
 const Home = observer(() => {
@@ -23,14 +24,20 @@ const Home = observer(() => {
   useEffect(() => {
     // TODO: request metamask switch network
     if (chainId && chainId !== 4690 && chainId !== 4689 ) {
-      toast({
-        description: "Please switch to the IoTeX Testnet or Mainnet network",
-        status: "warning",
-        duration: 9000,
-        isClosable: true,
+       metamaskUtils.setupNetwork({
+        chainId: 4689,
+        blockExplorerUrls: ['https://iotexscan.io'],
+        chainName: 'IoTeX',
+        nativeCurrency: {
+          decimals:  18,
+          name: 'IOTX Mainnet',
+          symbol: 'IOTX'
+        },
+        rpcUrls: ['https://babel-api.mainnet.iotex.io/']
       });
+      
     }
-  }, [chainId]);
+  }, [chainId, sdk]);
 
   return (
     <Flex h="100vh" flexDirection="column" justifyContent="center" alignItems="center">
