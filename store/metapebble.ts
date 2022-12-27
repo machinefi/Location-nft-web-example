@@ -215,7 +215,7 @@ export class MpStore {
 
         if (res.receipt) {
           console.log("Receipt", res.receipt.blockHash);
-          toast.success(res.receipt.blockHash);
+          toast.success('Claimed Success!');
           await this.nftBalance.call();
           await this.claimLists.call();
         }
