@@ -39,7 +39,13 @@ export class MpStore {
       4690: {
         abi: LocationNFTABI,
         address: "0x775B56a6E3b13A19404FC186098f564B19715Ab9",
+        API_URL:"https://geo-test.w3bstream.com"
       },
+      4689: {
+        abi: LocationNFTABI,
+        address: "0xfCeD441036d0616fe0618B09945fF0Eaf9978444",
+        API_URL:"https://geo.w3bstream.com"
+      }
     },
   };
 
@@ -140,7 +146,7 @@ export class MpStore {
       const places = JSON.parse(JSON.stringify(this.places.value)).map(e => { delete e.feature; return e});
       console.log("places===", places);
       try {
-        const response = await axios.post(`${NEXT_PUBLIC_APIURL}/api/pol`, {
+        const response = await axios.post(`${this.contract.LocationNFT[this.chainId].API_URL}/api/pol`, {
           signature,
           message,
           owner: this.owner,
