@@ -5,7 +5,6 @@ import { Button, Flex, Text, Box, Spinner } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 import {metamaskUtils} from '../store/metaskUtils'
-import "../styles/Home.module.css";
 
 const Home = observer(() => {
   const toast = useToast();
