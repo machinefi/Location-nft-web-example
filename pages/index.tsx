@@ -1,17 +1,18 @@
-import { ConnectWallet, useContract, useSDK, useAddress, useChainId } from "@thirdweb-dev/react";
+import { ConnectWallet, useContract, useSDK, useAddress, useChainId, useMetamask } from "@thirdweb-dev/react";
 import { useEffect, useState } from "react";
 import { useStore } from "../store/index";
-import { Button, Flex, Text, Box, Spinner } from "@chakra-ui/react";
+import { Button, Flex, Text, Box, Spinner, Image } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 import {metamaskUtils} from '../store/metaskUtils'
-import "../styles/Home.module.css";
+import Head from 'next/head'
+
 
 const Home = observer(() => {
   const toast = useToast();
   const { mpStore } = useStore();
 
-  const [address, chainId, sdk] = [useAddress(), useChainId(), useSDK()];
+  const [address, chainId, sdk, connectWithMetamask] = [useAddress(), useChainId(), useSDK(), useMetamask()];
   const { address: contractAddress, abi: contractAbi } = mpStore.contract.LocationNFT[chainId as number] || {};
   const { contract } = useContract(contractAddress, contractAbi);
 
@@ -39,71 +40,116 @@ const Home = observer(() => {
   }, [chainId, sdk]);
 
   return (
-    <Flex h="100vh" flexDirection="column" justifyContent="center" alignItems="center">
-      <Text className="title" fontSize={50}>
-        Location Based <a href="">NFT</a>
-      </Text>
-      <Flex w={{ base: "100%", md: "545px" }} justifyContent="flex-start" flexDirection={"column"} mt="2rem" mb="3rem">
-        <Text lineHeight={"1.65rem"}>
-          Step 1:{" "}
-          <a href="https://metapebble.app/metapebbleapp" rel="noreferrer" target="_blank">
-            Download Metapebble
-          </a>{" "}
-          <br />
-          Step 2: Register Metapebble and submit location
-          <br />
-          Step 3: Claim NFT
-        </Text>
-      </Flex>
-
-      {!mpStore.initLoadinng && address && (
-        <Flex mb="2rem" justifyContent="center" textAlign={"center"} fontWeight="500">
-          Balance: {mpStore.nftBalance?.value}
+    <Box w="100vw" h="100vh" overflow={'hidden'} bg="linear-gradient(0deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)), linear-gradient(107.56deg, #00C2FF 0%, #CC00FF 100%);">
+      <Head>
+        <title>Claim Your CES-W3bstream NFT</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <link href="https://fonts.googlefonts.cn/css?family=Prompt" rel="stylesheet" />
+      </Head>
+      <Flex flexDirection={'column'} w="100vw" h="100vh" overflow={{base: "auto", lg: 'hidden'}} bgImage={{base: "url(images/bg_mobile.png)", lg: "url(images/bg.png)"}} bgSize={{base: "100%", lg: "100% 100%"}} bgPosition={{base: "0 210px", lg: "0 0"}} bgRepeat="no-repeat">
+        {/* logos */}
+        <Flex justifyContent={{base: "center", lg: "flex-start"}} ml={{base: "0", md: "5%", xl: "15%"}} mt={{base: "4rem", lg: "3rem", xl: "4rem", "2xl": "4rem"}} mb={{base: "2rem", md: "2rem", lg: "3rem", "2xl": "4rem"}} alignItems={'center'}>
+          <Image flex="none" src="images/logo.png" mr="4.375rem" alt="" h="2.5rem"></Image>
+          <Image flex="none" src="images/logo_CES.png" alt="" h="3.5rem"></Image>
         </Flex>
-      )}
-      {!address && (
-        <Box w="200px">
-          <ConnectWallet accentColor="#805ad5" />
+        {/* mobile title */}
+        <Box display={{base:"block", lg:"none"}} textAlign='center'>
+          <Text whiteSpace={'pre-line'} fontSize={{base: "28px", lg: "3rem", xl: "3.75rem"}} fontWeight={700} lineHeight={{base: "34px", lg: "4.5rem"}} fontFamily={'Prompt'}>{`Claim Your CES-\nW3bstream NFT`}</Text>
+          <Text whiteSpace={'pre-line'} fontSize={{base: "11px", lg: "1.25rem"}} fontWeight={300} mt={{base: "11px", lg: "1.2rem", xl: "1.5625rem"}} mb={{base: "35px", lg: "1.5rem", xl: "2.5rem"}} fontFamily={'Helvetica'}>
+            {`Simply download and register Meta-Pebble.\nSubmit your location to claim the NFT reward!`}
+          </Text>
         </Box>
-      )}
-      <Box>
-        {mpStore.initLoadinng ? (
-          <Spinner size="xl" color="purple" />
-        ) : (
-          address &&
-          (!mpStore.signStatus ? (
-            <Button colorScheme="purple" w="200px" disabled size="lg">
-              Sign Failed
-            </Button>
-          ) : mpStore.claimLists.value?.length === 0 ? (
-            <Button colorScheme="purple" mx="auto" w="200px" disabled size="lg">
-              Incompatible
-            </Button>
-          ) : (
-            <Box flexDirection="column" alignItems={"center"} w="full">
-              {mpStore.claimLists.value?.map((item: any, oindex: number) => {
-                return (
-                  <Flex key={item.devicehash} mb="1rem" w="545px" alignItems={"center"} justifyContent={"space-between"}>
-                    <Text>
-                      Device Hash{item.claimed}：{`${item.devicehash.slice(0, 5)}...${item.devicehash.slice(item.devicehash.length - 5, item.devicehash.length)}`}
-                    </Text>
-                    {item.claimed ? (
-                      <Button colorScheme="purple" disabled size="sm">
-                        Claimed
-                      </Button>
-                    ) : (
-                      <Button isLoading={mpStore.claimNFT.loading.value} colorScheme="purple" ml="1rem" size="sm" onClick={() => mpStore.claimNFT.call(item)}>
-                        Claim
-                      </Button>
-                    )}
-                  </Flex>
-                );
-              })}
+
+        {/* center */}
+        <Flex flex={{base: "none", lg: "1"}} ml={{base: "0", md: "5%", xl: "15%"}} flexDirection={{base: "column", lg: "row"}} justifyContent={{base: "center", lg: "flex-start"}} alignItems={{base: "center", lg: "flex-start"}}>
+         {/* badge */}
+         <Box bgImage={"url(images/bg_nft.png)"} bgSize="100% 100%" flex="none" w={{base: "300px", lg: "22.5rem"}} h={{base: "330px", lg: "24.75rem"}} maxWidth={'22.5rem'} mr={{base: "0", lg: "4rem"}}>
+          <Image className="badgeAnimate" src="images/badge.png" alt="" w={{base: "221px", lg: "16.6rem"}} mx="auto" mt="3.4181rem"></Image>
+         </Box>
+         {/* title */}
+         <Box textAlign={{base: "center", lg: 'left'}} py={{base: "80px", lg: 0}} w={{base: "90%", lg: "auto"}}>
+          <Text display={{base:"none", lg:"block"}} whiteSpace={'pre-line'} fontSize={{base: "3.5rem", lg: "3rem", xl: "3.75rem"}} fontWeight={700} lineHeight="4.5rem" fontFamily={'Prompt'}>{`Claim Your CES-\nW3bstream NFT`}</Text>
+          <Text display={{base:"none", lg:"block"}} whiteSpace={'pre-line'} fontSize="1.25rem" fontWeight={300} mt={{base: "1rem", lg: "1.2rem", xl: "1.5625rem"}} mb={{base: "1.5rem", lg: "1.5rem", xl: "2.5rem"}} fontFamily={'Helvetica'}>
+            {`Simply download and register Meta-Pebble.\nSubmit your location to claim the NFT reward!`}
+          </Text>
+            {!address && (
+              <Button w={{base: "14.275rem", lg: "20rem"}} h={{base: "50px", lg: "4rem"}} borderRadius={0} onClick={connectWithMetamask} bg="white">
+                <Text bg="linear-gradient(107.56deg, #00C2FF 0%, #CC00FF 100%)" fontSize={{base: "1rem", lg:"1.5rem"}} fontWeight={700} fontFamily="Helvetica" backgroundClip={'text'} css={{
+                  textFillColor: "transparent"
+                }}>Connect Wallet</Text>
+              </Button>
+            )}
+            
+            <Box>
+              {mpStore.initLoadinng ? (
+                <Spinner size="xl" color="linear-gradient(107.56deg, #00C2FF 0%, #CC00FF 100%)" />
+              ) : (
+                address &&
+                (!mpStore.signStatus ? (
+                  <Button w={{base: "14.275rem", lg: "20rem"}} h={{base: "50px", lg: "4rem"}} borderRadius={0} disabled bg="white">
+                    <Text bg="linear-gradient(107.56deg, #00C2FF 0%, #CC00FF 100%)" fontSize={{base: "1rem", lg:"1.5rem"}} fontWeight={700} fontFamily="Helvetica" backgroundClip={'text'} css={{
+                      textFillColor: "transparent"
+                    }}>Sign Failed</Text>
+                  </Button>
+                ) : mpStore.claimLists.value?.length === 0 ? (
+                  <Button w={{base: "14.275rem", lg: "20rem"}} h={{base: "50px", lg: "4rem"}} borderRadius={0} disabled bg="white">
+                    <Text bg="linear-gradient(107.56deg, #00C2FF 0%, #CC00FF 100%)" fontSize={{base: "1rem", lg:"1.5rem"}} fontWeight={700} fontFamily="Helvetica" backgroundClip={'text'} css={{
+                      textFillColor: "transparent"
+                    }}>Incompatible</Text>
+                  </Button>
+                ) : (
+                  <Box flexDirection="column" alignItems={"center"} w="full">
+                    {mpStore.claimLists.value?.map((item: any, oindex: number) => {
+                      return (
+                        <Flex key={item.devicehash} mb="1rem" w="100%" alignItems={"center"} justifyContent={"space-between"}>
+                          <Text>
+                            Device Hash{item.claimed}：{`${item.devicehash.slice(0, 5)}...${item.devicehash.slice(item.devicehash.length - 5, item.devicehash.length)}`}
+                          </Text>
+                          {item.claimed ? (
+                            <Button bg="white" disabled size="sm">
+                              <Text bg="linear-gradient(107.56deg, #00C2FF 0%, #CC00FF 100%)" fontSize="0.875rem" fontWeight={700} fontFamily="Helvetica" backgroundClip={'text'} css={{
+                                textFillColor: "transparent"
+                              }}>Claimed</Text>
+                            </Button>
+                          ) : (
+                            <Button isLoading={mpStore.claimNFT.loading.value} onClick={() => mpStore.claimNFT.call(item)} bg="white" size="sm">
+                              <Text bg="linear-gradient(107.56deg, #00C2FF 0%, #CC00FF 100%)" fontSize="0.875rem" fontWeight={700} fontFamily="Helvetica" backgroundClip={'text'} css={{
+                                textFillColor: "transparent"
+                              }}>Claim</Text>
+                            </Button>
+                          )}
+                        </Flex>
+                      );
+                    })}
+                  </Box>
+                ))
+              )}
             </Box>
-          ))
-        )}
-      </Box>
-    </Flex>
+         </Box>
+        </Flex>
+        {/* steps */}
+        <Flex w="100%" flexDirection={{base: "column", lg: "row"}} py={{base: "40px", lg: "1rem"}} bg="rgba(255, 255, 255, 0.1);" justifyContent={"center"} alignItems="center" fontFamily={'Helvetica'} fontSize={'1.25rem'} fontWeight={400}>
+          <Box w={{base: "90%", lg: "21.875rem"}} textAlign={'center'}>
+            <Image src="images/step1.png" alt="" width="4.25rem" mb="1rem" mx="auto"></Image>
+            <a href="https://metapebble.app/metapebbleapp" rel="noreferrer" target="_blank">
+              <Text whiteSpace={{base: "normal", lg: "pre-line"}}>{`Download \n Metapebble`}</Text>
+            </a>
+          </Box>
+          <Image display={{base: "none", lg: "block"}} src="images/right.png" alt="" width="2rem" h="2rem" flex="none" mx="1rem"></Image>
+          <Image display={{base: "block", lg: "none"}} src="images/down.png" alt="" width="2rem" h="2rem" flex="none" my="1rem"></Image>
+          <Box w={{base: "90%", lg: "21.875rem"}} textAlign={'center'}>
+            <Image src="images/step2.png" alt="" width="4.25rem" mb="1rem" mx="auto"></Image>
+            <Text whiteSpace={{base: "normal", lg: "pre-line"}}>{`Register Meta-Pebble \n and submit location`}</Text>
+          </Box>
+          <Image display={{base: "none", lg: "block"}} src="images/right.png" alt="" width="2rem" h="2rem" flex="none" mx="1rem"></Image>
+          <Image display={{base: "block", lg: "none"}} src="images/down.png" alt="" width="2rem" h="2rem" flex="none" my="1rem"></Image>
+          <Box w={{base: "90%", lg: "21.875rem"}} textAlign={'center'} pb="24px">
+            <Image src="images/step3.png" alt="" width="4.25rem" mb="1rem" mx="auto"></Image>
+            Claim NFT
+          </Box>
+        </Flex>
+      </Flex>
+    </Box>
   );
 });
 

@@ -1,8 +1,8 @@
 import type { AppProps } from "next/app";
 import { ChainId, ThirdwebProvider } from "@thirdweb-dev/react";
-import "../styles/globals.css";
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 import { Toaster } from 'react-hot-toast';
+import "../styles/globals.css";
 
 const colors = {
   model: 'dark',
@@ -20,10 +20,12 @@ const theme = extendTheme({ colors, styles: {
     body: {
       bg: '#0f1318',
       color: 'white',
+      padding: 0
     },
     // styles for the `a`
     a: {
-      color: 'teal.500',
+      color: '#fff',
+      textDecoration: 'underline',
       _hover: {
         textDecoration: 'underline',
       },

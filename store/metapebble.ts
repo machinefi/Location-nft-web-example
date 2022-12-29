@@ -49,7 +49,7 @@ export class MpStore {
   contractInstance: any;
   sdk: any;
 
-  signStatus: boolean = false;
+  signStatus: boolean = true;
   owner: string = "";
   balance: number = 0;
   chainId: number = 4689;
@@ -107,7 +107,7 @@ export class MpStore {
 
   // init loading
   get initLoadinng() {
-    return this.places.loading.value || this.signData.loading.value;
+    return  this.places.loading.value || this.signData.loading.value;
   }
 
   // get places from contract and format places
