@@ -65,8 +65,8 @@ const Home = observer(() => {
           <ConnectWallet accentColor="#805ad5" />
         </Box>
       )}
-      <Button onClick={connectWithMetamask} bg="white">
-        <Text bg="linear-gradient(107.56deg, #00C2FF 0%, #CC00FF 100%)" backgroundClip={'text'} css={{
+      <Button w={{base: "14.275rem", lg: "20rem"}} h={{base: "50px", lg: "4rem"}} borderRadius={0} onClick={connectWithMetamask} bg="white">
+        <Text bg="linear-gradient(107.56deg, #00C2FF 0%, #CC00FF 100%)" fontSize={{base: "1rem", lg:"1.5rem"}} fontWeight={700} fontFamily="Helvetica" backgroundClip={'text'} css={{
           textFillColor: "transparent"
         }}>Connect Wallet</Text>
       </Button>
@@ -81,7 +81,7 @@ const Home = observer(() => {
             </Button>
           ) : mpStore.claimLists.value?.length === 0 ? (
             <Button colorScheme="purple" mx="auto" w="200px" disabled size="lg">
-              Incompatible
+              Not Eligible
             </Button>
           ) : (
             <Box flexDirection="column" alignItems={"center"} w="full">

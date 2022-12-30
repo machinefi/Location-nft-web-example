@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@chakra-ui/icons': ^2.0.15
   '@chakra-ui/react': ^2.3.7
   '@thirdweb-dev/react': ^3
   '@thirdweb-dev/sdk': ^3
@@ -26,6 +27,7 @@ specifiers:
   uuid: 8.3.2
 
 dependencies:
+  '@chakra-ui/icons': 2.0.15_react@18.2.0
   '@chakra-ui/react': 2.4.1_2pud4dpkjr436b4pn46rbpn5sq
   '@thirdweb-dev/react': 3.6.0_iqaaqcerx4bu4pcmsd7w7tub2a
   '@thirdweb-dev/sdk': 3.6.0_ethers@5.7.2
@@ -456,6 +458,26 @@ packages:
     dependencies:
       '@chakra-ui/shared-utils': 2.0.3
       '@chakra-ui/system': 2.3.3_react@18.2.0
+      react: 18.2.0
+    dev: false
+
+  /@chakra-ui/icon/3.0.14_react@18.2.0:
+    resolution: {integrity: sha512-ksNDXSByoLFNec/7UANtiy/lHt2NO3/Xe5KIde3zh70yY1QcRQjO8TjvXgYwqLbR0D6OzMGggrZnJKafeZhjRQ==}
+    peerDependencies:
+      '@chakra-ui/system': '>=2.0.0'
+      react: '>=18'
+    dependencies:
+      '@chakra-ui/shared-utils': 2.0.4
+      react: 18.2.0
+    dev: false
+
+  /@chakra-ui/icons/2.0.15_react@18.2.0:
+    resolution: {integrity: sha512-/Hsefej7DfRMg+Go+gf/UU4PHNMPmba41ogO1K3242aP9VSs/6/qXB3zrZHl21OX/rdrK408VqYEPInLmUwiHw==}
+    peerDependencies:
+      '@chakra-ui/system': '>=2.0.0'
+      react: '>=18'
+    dependencies:
+      '@chakra-ui/icon': 3.0.14_react@18.2.0
       react: 18.2.0
     dev: false
 
@@ -981,6 +1003,10 @@ packages:
 
   /@chakra-ui/shared-utils/2.0.3:
     resolution: {integrity: sha512-pCU+SUGdXzjAuUiUT8mriekL3tJVfNdwSTIaNeip7k/SWDzivrKGMwAFBxd3XVTDevtVusndkO4GJuQ3yILzDg==}
+    dev: false
+
+  /@chakra-ui/shared-utils/2.0.4:
+    resolution: {integrity: sha512-JGWr+BBj3PXGZQ2gxbKSD1wYjESbYsZjkCeE2nevyVk4rN3amV1wQzCnBAhsuJktMaZD6KC/lteo9ou9QUDzpA==}
     dev: false
 
   /@chakra-ui/skeleton/2.0.18_5rblpff3ywqi5dqv4dv3oiensi:
@@ -7775,14 +7801,14 @@ packages:
     dev: false
 
   github.com/Bundlr-Network/avsc/a730cc8018b79e114b6a3381bbb57760a24c6cef:
-    resolution: {tarball: https://codeload.github.com/Bundlr-Network/avsc/tar.gz/a730cc8018b79e114b6a3381bbb57760a24c6cef}
+    resolution: {commit: a730cc8018b79e114b6a3381bbb57760a24c6cef, repo: git+ssh://git@github.com/Bundlr-Network/avsc.git, type: git}
     name: avsc
     version: 5.4.7
     engines: {node: '>=0.11'}
     dev: false
 
   github.com/ethereumjs/ethereumjs-abi/ee3994657fa7a427238e6ba92a84d0b529bbcde0:
-    resolution: {tarball: https://codeload.github.com/ethereumjs/ethereumjs-abi/tar.gz/ee3994657fa7a427238e6ba92a84d0b529bbcde0}
+    resolution: {commit: ee3994657fa7a427238e6ba92a84d0b529bbcde0, repo: git+ssh://git@github.com/ethereumjs/ethereumjs-abi.git, type: git}
     name: ethereumjs-abi
     version: 0.6.8
     dependencies:
