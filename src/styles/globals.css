@@ -87,7 +87,7 @@ body {
 
 #injected {
   background-image: url('/images/iopay.png') !important;
-  background-position: 1rem 16px;
+  background-position: 1rem 12px;
   background-size: 24px 24px;
   background-repeat: no-repeat !important;
   padding-left: 48px !important;
