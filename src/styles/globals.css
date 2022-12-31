@@ -48,6 +48,7 @@ body {
   height: 4rem !important;
   width: 20rem !important;
   background: #fff !important;
+  margin: auto !important;
 }
 
 .walletBtn:focus:after {
