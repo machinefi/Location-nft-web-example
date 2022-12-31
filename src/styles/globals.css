@@ -48,8 +48,14 @@ body {
   height: 4rem !important;
   width: 20rem !important;
   background: #fff !important;
-  margin: auto !important;
 }
+
+@media screen and (max-width: 992px) {
+  .walletBtn {
+    margin: auto !important;
+  }
+}
+
 
 .walletBtn:focus:after {
   border: none !important;
