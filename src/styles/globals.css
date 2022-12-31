@@ -73,3 +73,7 @@ body {
 #metamask, #walletConnect {
   padding: 1rem 1em !important;
 }
+
+#injected svg {
+  display: none !important;
+}
