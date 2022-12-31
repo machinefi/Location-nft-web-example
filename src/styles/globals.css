@@ -82,5 +82,5 @@ body {
 }
 
 #injected svg {
-  display: none !important;
+  /* display: none !important; */
 }
