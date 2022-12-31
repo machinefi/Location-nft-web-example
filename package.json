@@ -45,6 +45,7 @@
     "react-hot-toast": "^2.4.0",
     "siwe": "^1.1.6",
     "tabler-icons-react": "^1.56.0",
+    "typed-emitter": "^2.1.0",
     "uuid": "8.3.2",
     "wagmi": "^0.8.10"
   },

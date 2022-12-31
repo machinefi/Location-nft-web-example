@@ -10,9 +10,9 @@ import { rootStore } from '../store/index';
 import { hooks } from './hooks';
 import { ethers, utils } from 'ethers';
 import { _ } from './lodash';
-import { showNotification } from '@mantine/notifications';
 import { eventBus } from './event';
 import { TransactionModule, TransctionCoin } from '../store/history';
+import { toast } from 'react-hot-toast';
 
 export interface RouterParsed {
   pathname: string;
@@ -20,34 +20,12 @@ export interface RouterParsed {
   query: Record<string, string | string[] | undefined>;
 }
 
-export const toast = {
-  success: (msg: string) => {
-    showNotification({
-      title: rootStore.lang.t('notification'),
-      color: 'green',
-      message: msg
-    });
-  },
-  error: (msg: string) => {
-    showNotification({
-      title: rootStore.lang.t('error'),
-      color: 'red',
-      message: msg
-    });
-  },
-  warning: (msg: string) => {
-    showNotification({
-      title: rootStore.lang.t('warning'),
-      color: 'yellow',
-      message: msg
-    });
-  }
-};
 
 export const helper = {
   recordHistory(params: { chainId: number; amount: string; module: TransactionModule; title: string; receipt: TransactionReceipt; coin?: TransctionCoin }) {
     //If you give the "coin" argument, it will automatically pop up
     eventBus.emit('history.insert', {
+      // @ts-ignore
       uuid: this.uuid,
       timestamp: Date.now(),
       from: params.receipt.from,
@@ -57,6 +35,7 @@ export const helper = {
       status: 'success',
       ...params
     });
+    // @ts-ignore
     return this.uuid;
   },
   setChain(god, chainId) {
@@ -247,6 +226,7 @@ export const helper = {
           callback.setValue(val.toString());
         }
       } catch (error) {
+        // @ts-ignore
         throw new Error(error.message);
       }
     }
@@ -309,12 +289,10 @@ export const helper = {
       } catch (error) {
         console.log(error);
         if (autoAlert) {
-          showNotification({
-            title: 'Error',
-            message: error.data?.message || error.message,
-            color: 'red'
-          });
+          // @ts-ignore
+          toast.error(error.data?.message || error.message,)
         }
+        // @ts-ignore
         onError && onError(error);
         throw error;
       }

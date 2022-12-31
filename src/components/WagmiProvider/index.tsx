@@ -9,6 +9,7 @@ import { useEffect } from 'react';
 import { eventBus } from '../../lib/event';
 import axios from 'axios';
 import { SiweMessage } from 'siwe';
+import { toast } from 'react-hot-toast';
 
 const createSiweMessage = async (address: string, chainId: number) => {
   const res = await axios.get(`/api/auth/nonce`);
@@ -139,11 +140,7 @@ const Wallet = observer(() => {
   useEffect(() => {
     if (error) {
       if (error.message.includes('Connector already connected')) return;
-      showNotification({
-        title: 'Error',
-        message: error.message,
-        color: 'red'
-      });
+      toast.error(error.message)
     }
     if (connector) {
       connector.getChainId().then((chainId) => {

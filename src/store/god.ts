@@ -14,6 +14,7 @@ export class GodStore {
   rootStore: RootStore;
   network: EthNetworkState;
   showTransactionSubmitDialog = new BooleanState();
+  // @ts-ignore
   curTransaction: ethers.providers.TransactionResponse = null;
   updateTicker = new NumberState();
 

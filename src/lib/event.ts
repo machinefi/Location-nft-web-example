@@ -1,4 +1,4 @@
-import { TransactionItem } from '@/store/history';
+import { TransactionItem } from '../store/history';
 import { EventEmitter } from 'events';
 import TypedEmitter from 'typed-emitter';
 import { publicConfig } from '../config/public';
@@ -25,6 +25,7 @@ interface MessageEvents {
   provider: (signer: any) => void;
 }
 
+// @ts-ignore
 export const eventBus = new MyEmitter() as TypedEmitter<MessageEvents>;
 
 if (!publicConfig.isProd) {

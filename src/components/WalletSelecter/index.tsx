@@ -1,6 +1,7 @@
 import React from 'react';
 import { observer, useLocalObservable, useLocalStore } from 'mobx-react-lite';
 import { useStore } from '../../store/index';
+// @ts-ignore
 import { useWeb3React } from '@web3-react/core';
 import { injected, walletconnect } from '../../lib/web3-react';
 import { Button, Flex, Text, Menu, MenuButton, MenuList, MenuItem, Box, Spinner, Image, AvatarGroup, Avatar } from "@chakra-ui/react";
@@ -14,6 +15,7 @@ export const WalletSelecter = observer(() => {
   const { connect, connectors, error, isLoading, pendingConnector } = useConnect();
 
   const store = useLocalObservable(() => ({
+    // @ts-ignore
     network: new StringState<'mainnet' | 'testnet'>({ value: 'mainnet' }),
     get visible() {
       return god.eth.connector.showConnector;

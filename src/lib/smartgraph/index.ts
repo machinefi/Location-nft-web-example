@@ -4,14 +4,13 @@ import { plugins } from '@smartgraph/plugins';
 import { encodeInputData } from 'iotex-antenna/lib/contract/abi-to-byte';
 
 import schemaJson from './schema.json';
-import { UniswapPlugin } from './uniswap.plugin';
 import { AntennaPlugin } from './antenna.plugin';
 import { _ } from '../lodash';
 import { helper } from '../helper';
 import { from } from '@iotexproject/iotex-address-ts';
 
 export const smartGraph = new SmartGraph({
-  plugins: [plugins.NetworkPlugin(), plugins.ERC20Extension(), plugins.LpTokenExtension(), UniswapPlugin(), AntennaPlugin()],
+  plugins: [plugins.NetworkPlugin(), plugins.ERC20Extension(), plugins.LpTokenExtension(), AntennaPlugin()],
   //@ts-ignore
   encodeFunction(args: { contract: string; method: string; params: any[]; root }) {
     const contract = smartGraph.getContract(args.contract);

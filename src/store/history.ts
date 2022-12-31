@@ -47,6 +47,7 @@ export class TransactionHistoryStore {
   rootStore: RootStore;
   isOpen: boolean = false;
   isTransactionDialogOpen: boolean = false;
+  // @ts-ignore
   curTransactionHistoryItem: TransactionItem;
   filterParams = {
     module: 'Farm',
@@ -131,9 +132,12 @@ export class TransactionHistoryStore {
       title,
       uuid,
       timestamp: Date.now(),
+      // @ts-ignore
       from: null,
+       // @ts-ignore
       to: null,
       isRead: false,
+       // @ts-ignore
       hash: null,
       status: 'loading'
     });

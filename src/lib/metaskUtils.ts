@@ -48,6 +48,7 @@ export const metamaskUtils = {
           resolve(true);
         } catch (switchError) {
           // This error code indicates that the chain has not been added to MetaMask.
+          // @ts-ignore
           if (switchError.code === 4902) {
             try {
               await provider.request({

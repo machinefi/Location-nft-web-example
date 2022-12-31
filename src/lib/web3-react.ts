@@ -1,7 +1,10 @@
 import { publicConfig } from './../config/public';
 import { Web3Provider } from '@ethersproject/providers';
+// @ts-ignore
 import { InjectedConnector, NoEthereumProviderError, UserRejectedRequestError } from '@web3-react/injected-connector';
+// @ts-ignore
 import { WalletConnectConnector, UserRejectedRequestError as UserRejectedRequestErrorWalletConnect } from '@iotexproject/walletconnect-connector';
+// @ts-ignore
 import { UnsupportedChainIdError } from '@web3-react/core';
 
 const POLLING_INTERVAL = 12000;
