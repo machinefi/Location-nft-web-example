@@ -1,4 +1,4 @@
-import { ConnectWallet, useContract, useSDK, useAddress, useChainId, useMetamask, useWalletConnect } from "@thirdweb-dev/react";
+import { ConnectWallet,  useContract, useSDK, useAddress, useChainId, useMetamask, useWalletConnect } from "@thirdweb-dev/react";
 import { useEffect, useState } from "react";
 import { useStore } from "../store/index";
 import { Button, Flex, Text, Menu, MenuButton, MenuList, MenuItem, Box, Spinner, Image } from "@chakra-ui/react";
@@ -74,11 +74,9 @@ const Home = observer(() => {
             {`Simply download and register Meta-Pebble.\nSubmit your location to claim the NFT reward!`}
           </Text>
             {!address && (
-              <WalletSelecter />
+               <ConnectWallet className="walletBtn" />
             )}
 
-            <ConnectWallet />
-            
             <Box>
               {mpStore.initLoadinng ? (
                 <Spinner size="xl" color="linear-gradient(107.56deg, #00C2FF 0%, #CC00FF 100%)" />

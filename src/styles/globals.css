@@ -40,3 +40,36 @@ body {
     margin-top: 30px;
   }
 }
+
+.walletBtn {
+  background-color: #fff !important;
+  border: none !important;
+  border-radius: 0 !important;
+  height: 4rem !important;
+  width: 20rem !important;
+  background: #fff !important;
+}
+
+.walletBtn:focus:after {
+  border: none !important;
+}
+
+.walletBtn span {
+  background: linear-gradient(107.56deg, #00C2FF 0%, #CC00FF 100%);
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+.walletBtn svg {
+  display: none !important;
+}
+
+#coinbasewallet {
+  display: none !important;
+}
+
+#metamask, #walletConnect {
+  padding: 1rem 1em !important;
+}
