@@ -50,12 +50,6 @@ body {
   background: #fff !important;
 }
 
-@media screen and (max-width: 992px) {
-  .walletBtn {
-    margin: auto !important;
-  }
-}
-
 
 .walletBtn:focus:after {
   border: none !important;
@@ -77,10 +71,17 @@ body {
   display: none !important;
 }
 
+
 #metamask, #walletConnect {
   padding: 1rem 1em !important;
 }
 
-#injected svg {
-  /* display: none !important; */
+@media screen and (max-width: 992px) {
+  .walletBtn {
+    margin: auto !important;
+  }
+  #metamask {
+    display: none !important;
+  }
 }
+

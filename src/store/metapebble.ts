@@ -53,6 +53,7 @@ export class MpStore {
   owner: string = "";
   balance: number = 0;
   chainId: number = 4689;
+  loading: boolean = true;
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
@@ -67,6 +68,7 @@ export class MpStore {
   async init({ contract, chainId, address, sdk }: any) {
     console.log('chainId===', chainId, address)
     this.setData({
+      loading: true,
       contractInstance: contract,
       chainId,
       owner: address,
@@ -143,6 +145,7 @@ export class MpStore {
     function: async (message: string, signature: string, contract = this.contractInstance) => {
       const places = this.places.value ? JSON.parse(JSON.stringify(this.places.value)).map(e => { delete e.feature; return e}) : [];
       console.log("places===", places);
+     
       try {
         const response = await axios.post(`${this.contract.LocationNFT[this.chainId].API_URL}/api/pol`, {
           signature,
@@ -151,14 +154,14 @@ export class MpStore {
           locations: places,
         });
         const signData: SIGN_DATA[] = response.data.result.data;
-        this.setData({ signStatus: true });
+        this.setData({ signStatus: true, loading: false });
 
         return signData;
       } catch (error: any) {
         const err = error.response.data.error.message
         console.error('error', err)
         toast.error(`${err}`);
-        this.setData({ signStatus: false });
+        this.setData({ signStatus: false, loading: false });
         return [];
       }
     },
