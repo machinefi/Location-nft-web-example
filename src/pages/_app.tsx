@@ -2,6 +2,9 @@ import type { AppProps } from "next/app";
 import { ChainId, ThirdwebProvider } from "@thirdweb-dev/react";
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 import { Toaster } from 'react-hot-toast';
+import { WagmiProvider } from '../components/WagmiProvider';
+import { Web3ReactProvider } from '@web3-react/core';
+import { getLibrary } from '../lib/web3-react';
 import "../styles/globals.css";
 
 const colors = {
@@ -43,8 +46,12 @@ function MyApp({ Component, pageProps }: AppProps) {
       4689: "https://babel-api.mainnet.iotex.io",
      }} supportedChains={[1, 4689, 4690]}>
       <ChakraProvider theme={theme}>
-        <Toaster />
-        <Component {...pageProps} />
+        <Web3ReactProvider getLibrary={getLibrary}>
+          <WagmiProvider>
+            <Toaster />
+            <Component {...pageProps} />
+          </WagmiProvider>
+        </Web3ReactProvider>
       </ChakraProvider>
     </ThirdwebProvider>
   );
