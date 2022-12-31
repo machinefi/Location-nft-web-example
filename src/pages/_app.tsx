@@ -39,21 +39,21 @@ const theme = extendTheme({ colors, styles: {
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ThirdwebProvider desiredChainId={1} chainRpc={{ 
-      [ChainId.Mainnet]: "https://babel-api.mainnet.iotex.io",
-      // @ts-ignore
-      4690: "https://babel-api.testnet.iotex.io",
-      4689: "https://babel-api.mainnet.iotex.io",
-     }} supportedChains={[1, 4689, 4690]}>
-      <ChakraProvider theme={theme}>
-        <Web3ReactProvider getLibrary={getLibrary}>
-          <WagmiProvider>
+    <Web3ReactProvider getLibrary={getLibrary}>
+      <WagmiProvider>
+        <ThirdwebProvider desiredChainId={1} chainRpc={{ 
+          [ChainId.Mainnet]: "https://babel-api.mainnet.iotex.io",
+          // @ts-ignore
+          4690: "https://babel-api.testnet.iotex.io",
+          4689: "https://babel-api.mainnet.iotex.io",
+        }} supportedChains={[1, 4689, 4690]}>
+          <ChakraProvider theme={theme}>
             <Toaster />
             <Component {...pageProps} />
-          </WagmiProvider>
-        </Web3ReactProvider>
-      </ChakraProvider>
-    </ThirdwebProvider>
+          </ChakraProvider>
+        </ThirdwebProvider>
+      </WagmiProvider>
+    </Web3ReactProvider>
   );
 }
 

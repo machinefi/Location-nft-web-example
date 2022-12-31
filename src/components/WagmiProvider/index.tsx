@@ -12,7 +12,6 @@ import { SiweMessage } from 'siwe';
 import { toast } from 'react-hot-toast';
 
 const createSiweMessage = async (address: string, chainId: number) => {
-  const res = await axios.get(`/api/auth/nonce`);
   const message = new SiweMessage({
     address,
     chainId,
@@ -20,7 +19,6 @@ const createSiweMessage = async (address: string, chainId: number) => {
     domain: window.location.host,
     uri: window.location.origin,
     version: '1',
-    nonce: res.data.nonce
   });
   return message.prepareMessage();
 };
@@ -107,14 +105,7 @@ const Wallet = observer(() => {
       try {
         const address = god.currentNetwork.account;
         const chainId = god.currentNetwork.currentChain.chainId;
-        const message = await createSiweMessage(address, chainId);
-        const signature = await signMessageAsync({
-          message
-        });
-        const tokenRes = await axios.post(`/api/auth/jwt`, { message, signature });
-        if (tokenRes.data) {
-          user.token.save(tokenRes.data.token);
-          user.tokenAddress.save(address);
+        if (address) {
           eventBus.emit('wallet.onToken');
         }
       } catch (error) {

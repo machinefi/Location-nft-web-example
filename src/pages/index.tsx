@@ -76,6 +76,8 @@ const Home = observer(() => {
             {!address && (
               <WalletSelecter />
             )}
+
+            <ConnectWallet />
             
             <Box>
               {mpStore.initLoadinng ? (
