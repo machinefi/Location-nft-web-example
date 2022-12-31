@@ -85,3 +85,18 @@ body {
   }
 }
 
+#injected {
+  background-image: url('/images/iopay.png') !important;
+  background-position: 1rem 16px;
+  background-size: 24px 24px;
+  background-repeat: no-repeat !important;
+  padding-left: 48px !important;
+}
+
+#injected svg {
+  display: none !important;
+}
+
+#injected::after {
+  content: 'IoPay';
+}

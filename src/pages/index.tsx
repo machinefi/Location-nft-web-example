@@ -1,26 +1,29 @@
 import { ConnectWallet,  useContract, useSDK, useAddress, useChainId, useMetamask, useWalletConnect } from "@thirdweb-dev/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useStore } from "../store/index";
 import { Button, Flex, Text, Menu, MenuButton, MenuList, MenuItem, Box, Spinner, Image } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 import {metamaskUtils} from '../store/metaskUtils'
-import { WalletSelecter } from '../components/WalletSelecter'
 import Head from 'next/head'
+import Script from 'next/script'
+
 
 
 const Home = observer(() => {
   const toast = useToast();
   const { mpStore } = useStore();
 
-  const [address, chainId, sdk, connectWithMetamask, connectWithWalletConnect] = [useAddress(), useChainId(), useSDK(), useMetamask(), useWalletConnect()];
+  const [address, chainId, sdk] = [useAddress(), useChainId(), useSDK(), useMetamask(), useWalletConnect()];
   const { address: contractAddress, abi: contractAbi } = mpStore.contract.LocationNFT[chainId as number] || {};
   const { contract } = useContract(contractAddress, contractAbi);
 
-  useEffect(() => {
-    // injected
-    if (typeof window !== 'undefined' && document.getElementById('injected'))  document.getElementById('injected').innerHTML = `<img src="images/iopay.png" alt="" style="width: 24px; height: 24px;" /> IoPay`;
-  }, []);
+
+  useMemo(() => {
+    if (typeof window !== 'undefined' && document.getElementById('injected'))  {
+      document.getElementById('injected').innerHTML = `<img src="images/iopay.png" alt="" style="width: 24px; height: 24px;" /> IoPay`;
+    }
+  }, [])
 
 
   useEffect(() => {
@@ -53,6 +56,10 @@ const Home = observer(() => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <link href="https://fonts.googlefonts.cn/css?family=Prompt" rel="stylesheet" />
       </Head>
+      <Script strategy="afterInteractive">
+
+
+      </Script>
       <Flex flexDirection={'column'} w="100vw" h="100vh" overflow={{base: "auto", lg: 'hidden'}} bgImage={{base: "url(images/bg_mobile.png)", lg: "url(images/bg.png)"}} bgSize={{base: "100%", lg: "100% 100%"}} bgPosition={{base: "0 210px", lg: "0 0"}} bgRepeat="no-repeat">
         {/* logos */}
         <Flex justifyContent={{base: "center", lg: "flex-start"}} ml={{base: "0", md: "5%", xl: "15%"}} mt={{base: "4rem", lg: "3rem", xl: "4rem", "2xl": "6rem"}} mb={{base: "2rem", md: "2rem", lg: "3rem", "2xl": "4rem"}} alignItems={'center'}>
