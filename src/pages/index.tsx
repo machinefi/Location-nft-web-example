@@ -85,9 +85,14 @@ const Home = observer(() => {
          {/* title */}
          <Box textAlign={{base: "center", lg: 'left'}} py={{base: "40px", lg: 0}} w={{base: "90%", lg: "auto"}}>
           <Text display={{base:"none", lg:"block"}} whiteSpace={'pre-line'} fontSize={{base: "3.5rem", lg: "3rem", "2xl": "3.75rem"}} fontWeight={700} lineHeight={{md: "4rem", xl: "4rem", "2xl": "4.5rem"}} fontFamily={'Prompt'}>{`Claim Your CES-\nW3bstream NFT`}</Text>
-          <Text display={{base:"none", lg:"block"}} whiteSpace={'pre-line'} fontSize="1.25rem" fontWeight={300} mt={{base: "1rem", lg: "1rem", "2xl": "1.5625rem"}} mb={{base: "1.5rem", lg: "1.5rem", "2xl": "2.5rem"}} fontFamily={'Helvetica'}>
-            {`Simply download and register Meta-Pebble.\nSubmit your location to claim the NFT reward!`}
+          <Text display={{base:"none", lg:"block"}} whiteSpace={'pre-line'} fontSize="1.25rem" fontWeight={300} mt={{base: "1rem", lg: "1rem", "2xl": "1.5625rem"}} fontFamily={'Helvetica'}>
+            {`Simply download ioPay wallet and connect your \n location  to claim the NFT!`}
           </Text>
+          <a href="https://docs.google.com/document/d/1kchVOHNmRUy5JfqLfeprCufgNmxnJlcj8M3_cnFrXyo/edit?usp=sharing">
+            <Text mt="0.5rem" display={{base:"none", lg:"block"}} whiteSpace={'pre-line'} fontSize="1.25rem" fontWeight={300} mb={{base: "1.5rem", lg: "1.5rem", "2xl": "2.5rem"}} fontFamily={'Helvetica'}>
+              {`View claim instructions >>>`}
+            </Text>
+          </a>
             {!address  ? (
                <ConnectWallet className="walletBtn" />
               ): <Box>
@@ -150,9 +155,7 @@ const Home = observer(() => {
           <Image display={{base: "block", lg: "none"}} src="images/down.png" alt="" width="2rem" h="2rem" flex="none" my="1rem"></Image>
           <Box w={{base: "90%", lg: "21.875rem"}} textAlign={'center'}>
             <Image src="images/step2.png" alt="" width="4rem" mb="1rem" mx="auto"></Image>
-            <a href="https://docs.google.com/document/d/1kchVOHNmRUy5JfqLfeprCufgNmxnJlcj8M3_cnFrXyo/edit?usp=sharing">
-              <Text whiteSpace={{base: "normal", lg: "pre-line"}}>{`Enable W3bstream in ioPay \n Bind Geo Location to Wallet`}</Text>
-            </a>
+            <Text whiteSpace={{base: "normal", lg: "pre-line"}}>{`Enable W3bstream in ioPay \n Bind Geo Location to Wallet`}</Text>
           </Box>
           <Image display={{base: "none", lg: "block"}} src="images/right.png" alt="" width="2rem" h="2rem" flex="none" mx="1rem"></Image>
           <Image display={{base: "block", lg: "none"}} src="images/down.png" alt="" width="2rem" h="2rem" flex="none" my="1rem"></Image>
