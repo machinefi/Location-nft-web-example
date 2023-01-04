@@ -40,7 +40,7 @@ export class MpStore {
       },
       4689: {
         abi: LocationNFTABI,
-        address: "0xfCeD441036d0616fe0618B09945fF0Eaf9978444",
+        address: "0x68E1099c384a2D341d23D5e946138835882AF3ee",
         API_URL:"https://geo.w3bstream.com"
       }
     },
