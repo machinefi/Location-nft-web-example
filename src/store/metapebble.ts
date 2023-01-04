@@ -56,7 +56,6 @@ export class MpStore {
   chainId: number = 4689;
   loading: boolean = true;
   claimIndex: number = 0;
-  isConnected: boolean = false;
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
