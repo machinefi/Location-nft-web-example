@@ -54,6 +54,7 @@ export class MpStore {
   balance: number = 0;
   chainId: number = 4689;
   loading: boolean = true;
+  claimIndex: number = 0;
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
@@ -208,7 +209,8 @@ export class MpStore {
   // claim NFT
   claimNFT = new PromiseState({
     name: "claim NFT",
-    function: async (item: SIGN_DATA) => {
+    function: async (item: SIGN_DATA, index: number) => {
+      this.setData({claimIndex: index})
       const contract = this.contractInstance;
       try {
         const { scaled_latitude, scaled_longitude, distance, devicehash, from, to, signature } = item;

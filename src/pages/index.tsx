@@ -122,7 +122,7 @@ const Home = observer(() => {
                               }}>Claimed</Text>
                             </Button>
                           ) : (
-                            <Button isLoading={mpStore.claimNFT.loading.value} onClick={() => mpStore.claimNFT.call(item)} bg="white" size="sm">
+                            <Button isLoading={mpStore.claimNFT.loading.value && mpStore.claimIndex === oindex} onClick={() => mpStore.claimNFT.call(item, oindex)} bg="white" size="sm">
                               <Text bg="linear-gradient(107.56deg, #00C2FF 0%, #CC00FF 100%)" fontSize="0.875rem" fontWeight={700} fontFamily="Helvetica" backgroundClip={'text'} css={{
                                 textFillColor: "transparent"
                               }}>Claim</Text>
@@ -149,7 +149,9 @@ const Home = observer(() => {
           <Image display={{base: "block", lg: "none"}} src="images/down.png" alt="" width="2rem" h="2rem" flex="none" my="1rem"></Image>
           <Box w={{base: "90%", lg: "21.875rem"}} textAlign={'center'}>
             <Image src="images/step2.png" alt="" width="4rem" mb="1rem" mx="auto"></Image>
-            <Text whiteSpace={{base: "normal", lg: "pre-line"}}>{`Enable W3bstream in ioPay \n Bind Geo Location to Wallet`}</Text>
+            <a href="https://docs.google.com/document/d/1kchVOHNmRUy5JfqLfeprCufgNmxnJlcj8M3_cnFrXyo/edit?usp=sharing">
+              <Text whiteSpace={{base: "normal", lg: "pre-line"}}>{`Enable W3bstream in ioPay \n Bind Geo Location to Wallet`}</Text>
+            </a>
           </Box>
           <Image display={{base: "none", lg: "block"}} src="images/right.png" alt="" width="2rem" h="2rem" flex="none" mx="1rem"></Image>
           <Image display={{base: "block", lg: "none"}} src="images/down.png" alt="" width="2rem" h="2rem" flex="none" my="1rem"></Image>
