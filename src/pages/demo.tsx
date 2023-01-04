@@ -96,7 +96,7 @@ const Home = observer(() => {
                         Claimed
                       </Button>
                     ) : (
-                      <Button isLoading={mpStore.claimNFT.loading.value} colorScheme="purple" ml="1rem" size="sm" onClick={() => mpStore.claimNFT.call(item)}>
+                      <Button isLoading={mpStore.claimNFT.loading.value} colorScheme="purple" ml="1rem" size="sm" onClick={() => mpStore.claimNFT.call(item, oindex)}>
                         Claim
                       </Button>
                     )}
