@@ -71,9 +71,14 @@ const Home = observer(() => {
         {/* mobile title */}
         <Box display={{base:"block", lg:"none"}} textAlign='center'>
           <Text whiteSpace={'pre-line'} fontSize={{base: "28px", lg: "3rem", xl: "3.75rem"}} fontWeight={700} lineHeight={{base: "34px", lg: "4.5rem"}} fontFamily={'Prompt'}>{`Claim Your CES-\nW3bstream NFT`}</Text>
-          <Text whiteSpace={'pre-line'} fontSize={{base: "11px", lg: "1.25rem"}} fontWeight={300} mt={{base: "11px", lg: "1.2rem", xl: "1.5625rem"}} mb={{base: "35px", lg: "1.5rem", xl: "2.5rem"}} fontFamily={'Helvetica'}>
-            {`Simply download and register Meta-Pebble.\nSubmit your location to claim the NFT reward!`}
+          <Text whiteSpace={'pre-line'} fontSize={{base: "11px", lg: "1.25rem"}} fontWeight={300} mt={{base: "11px", lg: "1.2rem", xl: "1.5625rem"}} fontFamily={'Helvetica'}>
+            {`Simply download ioPay wallet and connect \n your location  to claim the NFT!`}
           </Text>
+          <a href="https://docs.google.com/document/d/1kchVOHNmRUy5JfqLfeprCufgNmxnJlcj8M3_cnFrXyo/edit?usp=sharing">
+          <Text whiteSpace={'pre-line'} fontSize={{base: "11px", lg: "1.25rem"}} fontWeight={300} mb={{base: "35px", lg: "1.5rem", xl: "2.5rem"}} fontFamily={'Helvetica'}>
+              {`View claim instructions >>>`}
+            </Text>
+          </a>
         </Box>
 
         {/* center */}
@@ -144,7 +149,7 @@ const Home = observer(() => {
          </Box>
         </Flex>
         {/* steps */}
-        <Flex w="100%" flexDirection={{base: "column", lg: "row"}} py={{base: "40px", lg: "2rem"}} bg="rgba(255, 255, 255, 0.1);" justifyContent={"center"} alignItems="center" fontFamily={'Helvetica'} fontSize={'1.25rem'} fontWeight={400}>
+        <Flex w="100%" flexDirection={{base: "column", lg: "row"}} pt={{base: "40px", lg: "2rem"}} pb={{base: "6rem", lg: '2rem'}} bg="rgba(255, 255, 255, 0.1);" justifyContent={"center"} alignItems="center" fontFamily={'Helvetica'} fontSize={'1.25rem'} fontWeight={400}>
           <Box w={{base: "90%", lg: "21.875rem"}} textAlign={'center'} pb="24px">
             <Image src="images/step1.png" alt="" width="4rem" mb="1rem" mx="auto"></Image>
             <a href="https://iopay.me" rel="noreferrer" target="_blank">
