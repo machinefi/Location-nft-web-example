@@ -48,13 +48,15 @@ export class MpStore {
 
   contractInstance: any;
   sdk: any;
+  disconnect: any;
 
-  signStatus: boolean = true;
+  signStatus: boolean = false;
   owner: string = "";
   balance: number = 0;
   chainId: number = 4689;
   loading: boolean = true;
   claimIndex: number = 0;
+  isConnected: boolean = false;
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
@@ -66,7 +68,7 @@ export class MpStore {
   }
 
   // Main function
-  async init({ contract, chainId, address, sdk }: any) {
+  async init({ contract, chainId, address, sdk, disconnect }: any) {
     console.log('chainId===', chainId, address)
     this.setData({
       loading: true,
@@ -74,11 +76,16 @@ export class MpStore {
       chainId,
       owner: address,
       sdk,
+      disconnect
     });
     await this.nftBalance.call();
     await this.places.call();
     await this.claimFee.call();
-    const { message, sign } = await this.signInWithMetamask();
+    const signResult = await this.signInWithMetamask();
+    console.log('signResult', signResult)
+    if(!signResult) return false;
+    const { message, sign } = signResult;
+    console.log('message', message, sign)
     await this.signData.call(message, sign);
     await this.claimLists.call();
     console.log("init===", this.claimFee.value);
@@ -102,10 +109,16 @@ export class MpStore {
 
   // sign in with metamask
   signInWithMetamask = async () => {
-    const message = this.createSiweMessage();
-    const sign = await this.sdk?.wallet.sign(message);
-    console.log("message===", JSON.stringify(message));
-    return { message, sign };
+    try {
+      const message = this.createSiweMessage();
+      const sign = await this.sdk?.wallet.sign(message);
+      return { message, sign };
+    } catch (err) {
+      this.disconnect();
+      this.setData({ loading: false })
+      console.log("err===", err);
+      return null
+    }
   };
 
   // init loading
@@ -124,7 +137,6 @@ export class MpStore {
         _.range(0, count).map(async (i) => {
           const hash = await contract?.call("placesHash", i);
           const item = await contract?.call("places", hash);
-          console.log("item===", item.lat.toNumber(), item.long.toNumber());
           return {
             from: item.startTimestamp.toNumber(),
             to: item.endTimestamp.toNumber(),
@@ -146,7 +158,6 @@ export class MpStore {
     function: async (message: string, signature: string, contract = this.contractInstance) => {
       const places = this.places.value ? JSON.parse(JSON.stringify(this.places.value)).map(e => { delete e.feature; return e}) : [];
       console.log("places===", places);
-     
       try {
         const response = await axios.post(`${this.contract.LocationNFT[this.chainId].API_URL}/api/pol`, {
           signature,

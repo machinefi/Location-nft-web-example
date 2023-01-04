@@ -1,4 +1,4 @@
-import { ConnectWallet,  useContract, useSDK, useAddress, useChainId, useMetamask, useWalletConnect } from "@thirdweb-dev/react";
+import { ConnectWallet,  useContract, useSDK, useAddress, useChainId, useMetamask, useWalletConnect, useDisconnect } from "@thirdweb-dev/react";
 import { useEffect, useMemo } from "react";
 import { useStore } from "../store/index";
 import { Button, Flex, Text, Menu, MenuButton, MenuList, MenuItem, Box, Spinner, Image } from "@chakra-ui/react";
@@ -14,7 +14,7 @@ const Home = observer(() => {
   const toast = useToast();
   const { mpStore } = useStore();
 
-  const [address, chainId, sdk] = [useAddress(), useChainId(), useSDK(), useMetamask(), useWalletConnect()];
+  const [address, chainId, sdk, disconnect] = [useAddress(), useChainId(), useSDK(), useDisconnect()];
   const { address: contractAddress, abi: contractAbi } = mpStore.contract.LocationNFT[chainId as number] || {};
   const { contract } = useContract(contractAddress, contractAbi);
 
@@ -28,9 +28,11 @@ const Home = observer(() => {
 
   useEffect(() => {
     if (address && contract && chainId) {
-      mpStore.init({ contract, address, chainId, sdk });
+      mpStore.init({ contract, address, chainId, sdk, disconnect });
     }
   }, [contract, chainId, address]);
+
+
 
   useEffect(() => {
     // TODO: request metamask switch network
@@ -62,8 +64,8 @@ const Home = observer(() => {
       </Script>
       <Flex flexDirection={'column'} w="100vw" h="100vh" overflow={{base: "auto", lg: 'hidden'}} bgImage={{base: "url(images/bg_mobile.png)", lg: "url(images/bg_pc.png)"}} bgSize={{base: "100%", lg: "100% 100%"}} bgPosition={{base: "0 210px", lg: "0 0"}} bgRepeat="no-repeat">
         {/* logos */}
-        <Flex justifyContent={{base: "center", lg: "flex-start"}} ml={{base: "0", md: "5%", xl: "15%"}} mt={{base: "4rem", lg: "3rem", xl: "4rem", "2xl": "6rem"}} mb={{base: "2rem", md: "2rem", lg: "3rem", "2xl": "4rem"}} alignItems={'center'}>
-          <Image flex="none" src="images/logo.png" mr="4.375rem" alt="" h="2.5rem"></Image>
+        <Flex justifyContent={{base: "center", lg: "flex-start"}} ml={{base: "0", md: "5%", xl: "15%"}} mt={{base: "2.5rem", lg: "3rem", xl: "2rem", "2xl": "6rem"}} mb={{base: "2rem", md: "2rem", lg: "2rem", xl: "2rem", "2xl": "4rem"}} alignItems={'center'}>
+          <Image flex="none" src="images/logo.png" mr={{base: "1.5rem", lg: "4.375rem"}} alt="" h="2.5rem"></Image>
           <Image flex="none" src="images/logo_CES.png" alt="" h="3.5rem"></Image>
         </Flex>
         {/* mobile title */}
@@ -77,21 +79,19 @@ const Home = observer(() => {
         {/* center */}
         <Flex flex={{base: "none", lg: "1"}} ml={{base: "0", md: "5%", xl: "15%"}} flexDirection={{base: "column", lg: "row"}} justifyContent={{base: "center", lg: "flex-start"}} alignItems={{base: "center", lg: "flex-start"}}>
          {/* badge */}
-         <Box bgImage={"url(images/bg_nft_pic.png)"} bgSize="100% 100%" flex="none" w={{base: "300px", lg: "22.5rem"}} h={{base: "330px", lg: "24.75rem"}} maxWidth={'22.5rem'} mr={{base: "0", lg: "4rem"}}>
+         <Box bgImage={"url(images/bg_nft_pic.png)"} bgSize="100% 100%" flex="none" w={{base: "300px", lg: "20rem", "2xl": "22.5rem"}} h={{base: "330px", lg: "22rem", "2xl": "24.75rem"}} maxWidth={'22.5rem'} mr={{base: "0", lg: "4rem"}}>
           <Image className="badgeAnimate" src="images/badge.png" alt="" w={{base: "221px", lg: "16.6rem"}} mx="auto" mt="3.4181rem"></Image>
          </Box>
          {/* title */}
-         <Box textAlign={{base: "center", lg: 'left'}} py={{base: "80px", lg: 0}} w={{base: "90%", lg: "auto"}}>
-          <Text display={{base:"none", lg:"block"}} whiteSpace={'pre-line'} fontSize={{base: "3.5rem", lg: "3rem", xl: "3.75rem"}} fontWeight={700} lineHeight="4.5rem" fontFamily={'Prompt'}>{`Claim Your CES-\nW3bstream NFT`}</Text>
-          <Text display={{base:"none", lg:"block"}} whiteSpace={'pre-line'} fontSize="1.25rem" fontWeight={300} mt={{base: "1rem", lg: "1.2rem", xl: "1.5625rem"}} mb={{base: "1.5rem", lg: "1.5rem", xl: "2.5rem"}} fontFamily={'Helvetica'}>
+         <Box textAlign={{base: "center", lg: 'left'}} py={{base: "40px", lg: 0}} w={{base: "90%", lg: "auto"}}>
+          <Text display={{base:"none", lg:"block"}} whiteSpace={'pre-line'} fontSize={{base: "3.5rem", lg: "3rem", "2xl": "3.75rem"}} fontWeight={700} lineHeight={{md: "4rem", xl: "4rem", "2xl": "4.5rem"}} fontFamily={'Prompt'}>{`Claim Your CES-\nW3bstream NFT`}</Text>
+          <Text display={{base:"none", lg:"block"}} whiteSpace={'pre-line'} fontSize="1.25rem" fontWeight={300} mt={{base: "1rem", lg: "1rem", "2xl": "1.5625rem"}} mb={{base: "1.5rem", lg: "1.5rem", "2xl": "2.5rem"}} fontFamily={'Helvetica'}>
             {`Simply download and register Meta-Pebble.\nSubmit your location to claim the NFT reward!`}
           </Text>
-            {!address && (
+            {!address  ? (
                <ConnectWallet className="walletBtn" />
-            )}
-
-            <Box>
-              {address && mpStore.loading ? (
+              ): <Box>
+              {mpStore.loading ? (
                 <Spinner size="xl" color="linear-gradient(107.56deg, #00C2FF 0%, #CC00FF 100%)" />
               ) : (
                 address &&
@@ -135,6 +135,7 @@ const Home = observer(() => {
                 ))
               )}
             </Box>
+            }
          </Box>
         </Flex>
         {/* steps */}
