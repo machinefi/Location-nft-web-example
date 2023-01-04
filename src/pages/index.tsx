@@ -102,7 +102,7 @@ const Home = observer(() => {
                     }}>Sign Failed</Text>
                   </Button>
                 ) : mpStore.claimLists.value?.length === 0 ? (
-                  <Button isLoading={true} w={{base: "14.275rem", lg: "20rem"}} h={{base: "50px", lg: "4rem"}} borderRadius={0} disabled bg="white">
+                  <Button w={{base: "14.275rem", lg: "20rem"}} h={{base: "50px", lg: "4rem"}} borderRadius={0} disabled bg="white">
                     <Text bg="linear-gradient(107.56deg, #00C2FF 0%, #CC00FF 100%)" fontSize={{base: "1rem", lg:"1.5rem"}} fontWeight={700} fontFamily="Helvetica" backgroundClip={'text'} css={{
                       textFillColor: "transparent"
                     }}>Not Eligible</Text>
