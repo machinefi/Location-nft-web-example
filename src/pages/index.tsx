@@ -70,8 +70,8 @@ const Home = observer(() => {
         </Flex>
         {/* mobile title */}
         <Box display={{base:"block", lg:"none"}} textAlign='center'>
-          <Text whiteSpace={'pre-line'} fontSize={{base: "28px", lg: "3rem", xl: "3.75rem"}} fontWeight={700} lineHeight={{base: "34px", lg: "4.5rem"}} fontFamily={'Prompt'}>{`Claim Your CES-\nW3bstream NFT`}</Text>
-          <Text whiteSpace={'pre-line'} fontSize={{base: "11px", lg: "1.25rem"}} fontWeight={300} mt={{base: "11px", lg: "1.2rem", xl: "1.5625rem"}} fontFamily={'Helvetica'}>
+          <Text whiteSpace={'pre-line'} fontSize={{base: "30px", lg: "3rem", xl: "3.75rem"}} fontWeight={700} lineHeight={{base: "34px", lg: "4.5rem"}} fontFamily={'Prompt'}>{`Claim Your CES-\nW3bstream NFT`}</Text>
+          <Text whiteSpace={'pre-line'} fontSize={{base: "14px", lg: "1.25rem"}} fontWeight={300} mt={{base: "11px", lg: "1.2rem", xl: "1.5625rem"}} fontFamily={'Helvetica'}>
             {`Simply download ioPay wallet and connect \n your location  to claim the NFT!`}
           </Text>
           <a href="https://docs.google.com/document/d/1kchVOHNmRUy5JfqLfeprCufgNmxnJlcj8M3_cnFrXyo/edit?usp=sharing">
