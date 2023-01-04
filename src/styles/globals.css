@@ -24,7 +24,7 @@ body {
 }
 
 .badgeAnimate {
-  animation: downUp 2s linear infinite alternate running;
+  animation: downUp 4s linear infinite alternate running;
 }
 
 @keyframes downUp {

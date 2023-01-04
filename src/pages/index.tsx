@@ -149,7 +149,7 @@ const Home = observer(() => {
           <Image display={{base: "block", lg: "none"}} src="images/down.png" alt="" width="2rem" h="2rem" flex="none" my="1rem"></Image>
           <Box w={{base: "90%", lg: "21.875rem"}} textAlign={'center'}>
             <Image src="images/step2.png" alt="" width="4rem" mb="1rem" mx="auto"></Image>
-            <Text whiteSpace={{base: "normal", lg: "pre-line"}}>{`Enbale W3bstream in ioPay \n Bind Geo Location to Wallet`}</Text>
+            <Text whiteSpace={{base: "normal", lg: "pre-line"}}>{`Enable W3bstream in ioPay \n Bind Geo Location to Wallet`}</Text>
           </Box>
           <Image display={{base: "none", lg: "block"}} src="images/right.png" alt="" width="2rem" h="2rem" flex="none" mx="1rem"></Image>
           <Image display={{base: "block", lg: "none"}} src="images/down.png" alt="" width="2rem" h="2rem" flex="none" my="1rem"></Image>
