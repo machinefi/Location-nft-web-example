@@ -131,7 +131,7 @@ export class MpStore {
             scaled_latitude: new BigNumber(item.lat.toString()).toNumber(),
             scaled_longitude: new BigNumber(item.long.toString()).toNumber(),
             distance: item.maxDistance.toNumber(),
-            feature: `from ${item.startTimestamp.toNumber()} to ${item.endTimestamp.toNumber()} within ${item.maxDistance.toNumber()} from [${new BigNumber(item.lat.toString()).div(1e6).toNumber()}, ${new BigNumber(item.long.toString()).div(1e6).toNumber()}]`
+            feature: `from ${item.startTimestamp.toNumber()} to ${item.endTimestamp.toNumber()} within ${item.maxDistance.toNumber()} meter from [${new BigNumber(item.lat.toString()).div(1e6).toNumber()}, ${new BigNumber(item.long.toString()).div(1e6).toNumber()}]`
           };
         })
       );

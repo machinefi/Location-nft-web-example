@@ -100,3 +100,7 @@ body {
 #injected::after {
   content: 'IoPay';
 }
+
+.chakra-button .chakra-spinner {
+  color:  #000 !important;
+}

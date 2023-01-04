@@ -60,7 +60,7 @@ const Home = observer(() => {
 
 
       </Script>
-      <Flex flexDirection={'column'} w="100vw" h="100vh" overflow={{base: "auto", lg: 'hidden'}} bgImage={{base: "url(images/bg_mobile.png)", lg: "url(images/bg.png)"}} bgSize={{base: "100%", lg: "100% 100%"}} bgPosition={{base: "0 210px", lg: "0 0"}} bgRepeat="no-repeat">
+      <Flex flexDirection={'column'} w="100vw" h="100vh" overflow={{base: "auto", lg: 'hidden'}} bgImage={{base: "url(images/bg_mobile.png)", lg: "url(images/bg_pc.png)"}} bgSize={{base: "100%", lg: "100% 100%"}} bgPosition={{base: "0 210px", lg: "0 0"}} bgRepeat="no-repeat">
         {/* logos */}
         <Flex justifyContent={{base: "center", lg: "flex-start"}} ml={{base: "0", md: "5%", xl: "15%"}} mt={{base: "4rem", lg: "3rem", xl: "4rem", "2xl": "6rem"}} mb={{base: "2rem", md: "2rem", lg: "3rem", "2xl": "4rem"}} alignItems={'center'}>
           <Image flex="none" src="images/logo.png" mr="4.375rem" alt="" h="2.5rem"></Image>
@@ -77,7 +77,7 @@ const Home = observer(() => {
         {/* center */}
         <Flex flex={{base: "none", lg: "1"}} ml={{base: "0", md: "5%", xl: "15%"}} flexDirection={{base: "column", lg: "row"}} justifyContent={{base: "center", lg: "flex-start"}} alignItems={{base: "center", lg: "flex-start"}}>
          {/* badge */}
-         <Box bgImage={"url(images/bg_nft.png)"} bgSize="100% 100%" flex="none" w={{base: "300px", lg: "22.5rem"}} h={{base: "330px", lg: "24.75rem"}} maxWidth={'22.5rem'} mr={{base: "0", lg: "4rem"}}>
+         <Box bgImage={"url(images/bg_nft_pic.png)"} bgSize="100% 100%" flex="none" w={{base: "300px", lg: "22.5rem"}} h={{base: "330px", lg: "24.75rem"}} maxWidth={'22.5rem'} mr={{base: "0", lg: "4rem"}}>
           <Image className="badgeAnimate" src="images/badge.png" alt="" w={{base: "221px", lg: "16.6rem"}} mx="auto" mt="3.4181rem"></Image>
          </Box>
          {/* title */}
@@ -102,7 +102,7 @@ const Home = observer(() => {
                     }}>Sign Failed</Text>
                   </Button>
                 ) : mpStore.claimLists.value?.length === 0 ? (
-                  <Button w={{base: "14.275rem", lg: "20rem"}} h={{base: "50px", lg: "4rem"}} borderRadius={0} disabled bg="white">
+                  <Button isLoading={true} w={{base: "14.275rem", lg: "20rem"}} h={{base: "50px", lg: "4rem"}} borderRadius={0} disabled bg="white">
                     <Text bg="linear-gradient(107.56deg, #00C2FF 0%, #CC00FF 100%)" fontSize={{base: "1rem", lg:"1.5rem"}} fontWeight={700} fontFamily="Helvetica" backgroundClip={'text'} css={{
                       textFillColor: "transparent"
                     }}>Not Eligible</Text>
