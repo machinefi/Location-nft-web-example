@@ -71,7 +71,7 @@ export class erc20Store {
     },
     "contract": {
       "4690": {
-        "abi": [
+        "abi":[
           {
             "inputs": [
               {
@@ -87,6 +87,16 @@ export class erc20Store {
               {
                 "internalType": "uint256",
                 "name": "_maxDistance",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "_startTimestamp",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "_endTimestamp",
                 "type": "uint256"
               },
               {
@@ -163,11 +173,6 @@ export class erc20Store {
           {
             "inputs": [
               {
-                "internalType": "address payable",
-                "name": "holder",
-                "type": "address"
-              },
-              {
                 "internalType": "uint256",
                 "name": "distance",
                 "type": "uint256"
@@ -176,16 +181,6 @@ export class erc20Store {
                 "internalType": "bytes32",
                 "name": "deviceHash",
                 "type": "bytes32"
-              },
-              {
-                "internalType": "uint256",
-                "name": "startTimestamp",
-                "type": "uint256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "endTimestamp",
-                "type": "uint256"
               },
               {
                 "internalType": "bytes",
@@ -201,6 +196,11 @@ export class erc20Store {
           {
             "inputs": [
               {
+                "internalType": "address payable",
+                "name": "holder",
+                "type": "address"
+              },
+              {
                 "internalType": "uint256",
                 "name": "distance",
                 "type": "uint256"
@@ -209,16 +209,6 @@ export class erc20Store {
                 "internalType": "bytes32",
                 "name": "deviceHash",
                 "type": "bytes32"
-              },
-              {
-                "internalType": "uint256",
-                "name": "startTimestamp",
-                "type": "uint256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "endTimestamp",
-                "type": "uint256"
               },
               {
                 "internalType": "bytes",
@@ -271,6 +261,19 @@ export class erc20Store {
                 "internalType": "bool",
                 "name": "",
                 "type": "bool"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "endTimestamp",
+            "outputs": [
+              {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
               }
             ],
             "stateMutability": "view",
@@ -343,6 +346,19 @@ export class erc20Store {
             "type": "function"
           },
           {
+            "inputs": [],
+            "name": "startTimestamp",
+            "outputs": [
+              {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
             "inputs": [
               {
                 "internalType": "address",
@@ -373,7 +389,7 @@ export class erc20Store {
             "type": "receive"
           }
         ],
-        "address": "0x8e0dD6d904ab04f1E91475A905b5dbd04d8bBe6e",
+        "address": "0x5F20fB1baA05c4E9975EF26eb73778557bB26ED7",
         "API_URL":""
       },
       "4689": {

@@ -12,7 +12,7 @@ import Script from 'next/script'
 
 const Template = observer(() => {
   const toast = useToast();
-  const { mpStore } = useStore();
+  const { mpStore, erc20Store } = useStore();
 
   const [address, chainId, sdk, disconnect] = [useAddress(), useChainId(), useSDK(), useDisconnect()];
   const { address: contractAddress, abi: contractAbi } = mpStore.contract.LocationNFT[chainId as number] || {};
