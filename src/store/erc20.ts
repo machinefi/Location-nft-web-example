@@ -473,7 +473,7 @@ export class erc20Store {
         lat,
         long,
         maxDistance,
-        feature: `from ${startTimestamp.toNumber()} to ${endTimestamp.toNumber()} within ${maxDistance.toNumber()} meter from [${new BigNumber(lat.toString()).div(1e6).toNumber()}, ${new BigNumber(item.long.toString()).div(1e6).toNumber()}]`
+        feature: `from ${startTimestamp.toNumber()} to ${endTimestamp.toNumber()} within ${maxDistance.toNumber()} meter from [${new BigNumber(lat.toString()).div(1e6).toNumber()}, ${new BigNumber(long.toString()).div(1e6).toNumber()}]`
       }
       return place;
     },
