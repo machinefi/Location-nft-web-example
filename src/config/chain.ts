@@ -124,7 +124,7 @@ export const rpcs = {
 export const contracts = {
   CesToken: {
     4690: {
-      address: "0x2e0cecb8c8b65a87491f5813150bb46f84f02f3"
+      address: "0x9Ef768a5b5D5fb2c68C26f8e1661d76f33E661cf"
     },
   },
 };

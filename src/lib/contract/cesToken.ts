@@ -13,6 +13,19 @@ export class CesToken {
   get address () {
     return contracts.CesToken[this.chainId].address
   }
+  async claimed({
+    deviceHash
+  }) {
+    const query = gql`
+      query {
+        MetapebbleVerifiedDrop(calls: [{ address: "${this.address}", chainId: ${this.chainId} }]) {
+          claimed(deviceHash_: "${deviceHash}")
+        }
+      }
+    `;
+    const { MetapebbleVerifiedDrop: [ { claimed } ] } = await request(api_url, query);
+    return claimed === 'true'
+  }
   async mint({
     deviceHash,
     distance,
@@ -21,15 +34,15 @@ export class CesToken {
   }) {
     const query = gql`
       query {
-        CesToken(calls: { address: ${this.address}, chainId: ${this.chainId} }) {
-          claim(deviceHash: ${deviceHash}, distance: ${distance}, holder: ${holder}, signature: ${signature})
+        MetapebbleVerifiedDrop(calls: [{ address: "${this.address}", chainId: ${this.chainId} }]) {
+          claim(deviceHash: "${deviceHash}", distance: "${distance}", holder: "${holder}", signature: "${signature}")
         }
       }
     `;
-    const data = await request(api_url, query);
+    const {MetapebbleVerifiedDrop: [{claim}]} = await request(api_url, query);
     this.signer.sendTransaction({
-      data,
-      address: "0x5F20fB1baA05c4E9975EF26eb73778557bB26ED7",
+      data: claim,
+      address: this.address,
     });
   }
 }
