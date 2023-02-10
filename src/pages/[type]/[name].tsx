@@ -60,7 +60,8 @@ const Template = observer(() => {
   }, [chainId, sdk]);
 
   return (
-    <Box w="100vw" h="100vh" overflow={'hidden'} bg="linear-gradient(0deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)), linear-gradient(107.56deg, #00C2FF 0%, #CC00FF 100%);">
+    // @ts-ignore
+    <Box w="100vw" h="100vh" overflow={'hidden'} bg={curStore.data?.ui?.bgColor}>
       <Head>
         <title>{curStore.data.ui.title}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />

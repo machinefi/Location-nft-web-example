@@ -34,6 +34,7 @@ export class erc20Store {
   data = {
     "type": "erc20",
     "ui": {
+      "bgColor": 'linear-gradient(0deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)), linear-gradient(107.56deg, #26BD7E 0%, #0F33B2 100%);',
       "logos": [
         "/images/logo.png",
       ],
@@ -47,25 +48,25 @@ export class erc20Store {
         {
           "title": "Step 1",
           "description": "Download ioPay wallet",
-          "image": "/images/step1.png",
+          "image": "/images/step_11.png",
           "href": "https://iopay.me/",
         },
         {
           "title": "Step 2",
           "description": "Enable W3bstream in ioPay Bind Geo Location to Wallet",
-          "image": "/images/step2.png",
+          "image": "/images/step_22.png",
           "href": null
         },
         {
           "title": "Step 3",
           "description": "Claim Token",
-          "image": "/images/step3.png",
+          "image": "/images/step_33.png",
           "href": null
         }
       ],
       "icon": {
-        "image": "http://localhost:3000/images/badge.png",
-        "bg": "http://localhost:3000/images/bg_nft_pic.png"
+        "image": "/images/iotex_nft.png",
+        "bg": "/images/bg_nft_pic.png"
       }
     },
     "contract": {
