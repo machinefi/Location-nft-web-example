@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import { PromiseState } from "./standard/PromiseState";
 import LocationNFTABI from "../constants/abis/LocationNFTABI.json";
 import _ from "lodash";
-
+import { request, gql } from 'graphql-request'
 
 type DEVICE_ITEM = {
   latitude: number;
@@ -398,7 +398,6 @@ export class erc20Store {
       }
     }
   }
-  contractInstance: any;
   sdk: any;
   disconnect: any;
 
@@ -419,11 +418,10 @@ export class erc20Store {
   }
 
   // Main function
-  async init({ contract, chainId, address, sdk, disconnect }: any) {
+  async init({ chainId, address, sdk, disconnect }: any) {
     console.log('chainId===', chainId, address)
     this.setData({
       loading: true,
-      contractInstance: contract,
       chainId,
       owner: address,
       sdk,
@@ -431,7 +429,6 @@ export class erc20Store {
     });
     await this.places.call();
     console.log('this.placesTest.value', this.places.value)
-    await this.claimFee.call();
     const signResult = await this.signInWithMetamask();
     console.log('signResult', signResult)
     if(!signResult) return false;
@@ -481,29 +478,19 @@ export class erc20Store {
   places = new PromiseState({
     name: "get places from contract",
     function: async () => {
-      let response = await fetch("https://smartgraph.one/metapebble_demo/graphql", {
-        "headers": {
-          "accept": "application/json, multipart/mixed",
-          "accept-language": "zh-CN,zh;q=0.9,en;q=0.8",
-          "content-type": "application/json",
-          "sec-ch-ua": "\"Not_A Brand\";v=\"99\", \"Google Chrome\";v=\"109\", \"Chromium\";v=\"109\"",
-          "sec-ch-ua-mobile": "?0",
-          "sec-ch-ua-platform": "\"macOS\"",
-          "sec-fetch-dest": "empty",
-          "sec-fetch-mode": "cors",
-          "sec-fetch-site": "same-origin"
-        },
-        "referrer": "https://smartgraph.one/metapebble_demo/graphql?query=query+MyQuery+%7B%0A++MetapebbleVerifiedDrop%28calls%3A%5B%7Baddress%3A%220x9Ef768a5b5D5fb2c68C26f8e1661d76f33E661cf%22%2CchainId%3A+4690%7D%5D%29+%7B%0A++++lat%0A++++long%0A++++startTimestamp%0A++++endTimestamp%0A++++maxDistance%0A++%7D%0A%7D",
-        "referrerPolicy": "strict-origin-when-cross-origin",
-        "body": `{\"query\":\"query MyQuery {\\n  MetapebbleVerifiedDrop(\\n    calls: [{address: \\\"${this.data.contract[this.chainId].address}\\\", chainId: ${this.chainId}}]\\n  ) {\\n    lat\\n    long\\n    startTimestamp\\n    endTimestamp\\n    maxDistance\\n  }\\n}\",\"variables\":null,\"operationName\":\"MyQuery\",\"extensions\":{\"headers\":null}}`,
-        "method": "POST",
-        "mode": "cors",
-        "credentials": "omit"
-      })
-      let data = await response.json()
-      console.log('data', data)
+      const query = gql`{
+        MetapebbleVerifiedDrop(calls:[{address: "${this.data.contract[this.chainId].address}", chainId: ${this.chainId}}]) {
+            lat
+            long
+            startTimestamp
+            endTimestamp
+            maxDistance
+          }
+        }
+      `
+      let data = await request('https://smartgraph.one/metapebble_demo/graphql', query)
       if(data) {
-       let places = data.data.MetapebbleVerifiedDrop.map((item) => {
+       let places = data.MetapebbleVerifiedDrop.map((item) => {
         return {
           imei: "123456789012345",
           from: Number(item.startTimestamp),
@@ -523,7 +510,7 @@ export class erc20Store {
   signData = new PromiseState({
     name: "get sign data from Metapebble API",
     value: [] as SIGN_DATA[],
-    function: async (message: string, signature: string, contract = this.contractInstance) => {
+    function: async (message: string, signature: string) => {
       const places = this.places.value ? JSON.parse(JSON.stringify(this.places.value)).map(e => { delete e.feature; return e}) : [];
       console.log('places-----', this.places.value)
       try {
@@ -554,10 +541,10 @@ export class erc20Store {
     value: [] as DEVICE_ITEM[],
     function: async () => {
       if (!this.signData.value) return [];
-      const contract = this.contractInstance;
       const list = await Promise.all(
         this.signData.value?.map(async (item) => {
           await this.claimedStatus.call(item.devicehash)
+          console.log(this.claimedStatus.value)
           return {
             ...item,
             claimed: this.claimedStatus.value,
@@ -573,50 +560,16 @@ export class erc20Store {
     name: "check claimed status",
     value: false,
     function: async (devicehash: string) => {
-      let response = await fetch("https://smartgraph.one/metapebble_demo/graphql", {
-        "headers": {
-          "accept": "application/json, multipart/mixed",
-          "accept-language": "zh-CN,zh;q=0.9,en;q=0.8",
-          "content-type": "application/json",
-          "sec-ch-ua": "\"Not_A Brand\";v=\"99\", \"Google Chrome\";v=\"109\", \"Chromium\";v=\"109\"",
-          "sec-ch-ua-mobile": "?0",
-          "sec-ch-ua-platform": "\"macOS\"",
-          "sec-fetch-dest": "empty",
-          "sec-fetch-mode": "cors",
-          "sec-fetch-site": "same-origin"
-        },
-        "referrer": "https://smartgraph.one/metapebble_demo/graphql?query=query+MyQuery+%7B%0A++MetapebbleVerifiedDrop%28calls%3A%5B%7Baddress%3A%220x5F20fB1baA05c4E9975EF26eb73778557bB26ED7%22%2CchainId%3A+4690%7D%5D%29+%7B%0A++++claimed%28deviceHash_%3A+%220x8e642b423ec2a61a6431558018ea2f478ad53f3c3375b17e2d9bf902aba75fb6%22%29%0A++%7D%0A%7D",
-        "referrerPolicy": "strict-origin-when-cross-origin",
-        "body": `{\"query\":\"query MyQuery {\\n  MetapebbleVerifiedDrop(\\n    calls: [{address: \\\"${this.data.contract[this.chainId].address}\\\", chainId: ${this.chainId}}]\\n  ) {\\n    claimed(\\n      deviceHash_: \\\"${devicehash}\\\"\\n    )\\n  }\\n}\",\"variables\":null,\"operationName\":\"MyQuery\",\"extensions\":{\"headers\":null}}`,
-        "method": "POST",
-        "mode": "cors",
-        "credentials": "omit"
-      });
-      let data = await response.json()
-      console.log('claimedStatus', data)
-      return data.data.MetapebbleVerifiedDrop.claimed
+      const query = gql`{
+        MetapebbleVerifiedDrop(calls:[{address: "${this.data.contract[this.chainId].address}",chainId: ${this.chainId}}]) {
+            claimed(deviceHash_: "${devicehash}")
+          }
+        }
+      `
+      let data = await request('https://smartgraph.one/metapebble_demo/graphql', query)
+      return data.MetapebbleVerifiedDrop[0].claimed
     }
   })
-
-  nftBalance = new PromiseState({
-    name: "get nft balance",
-    value: 0,
-    function: async () => {
-      const contract = this.contractInstance;
-      const balance = await contract?.call("balanceOf", this.owner);
-      return balance.toNumber();
-    },
-  });
-
-  claimFee = new PromiseState({
-    name: "get claim fee",
-    value: 0,
-    function: async () => {
-      const contract = this.contractInstance;
-      const fee = await contract?.call("claimFee");
-      return fee
-    },
-  });
 
   // claim token
   claimNFT = new PromiseState({
