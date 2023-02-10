@@ -505,6 +505,7 @@ export class erc20Store {
       if(data) {
        let places = data.data.MetapebbleVerifiedDrop.map((item) => {
         return {
+          imei: "123456789012345",
           from: Number(item.startTimestamp),
           to: Number(item.endTimestamp),
           scaled_latitude: new BigNumber(item.lat.toString()).toNumber(),
@@ -625,11 +626,11 @@ export class erc20Store {
       try {
         const {  distance, devicehash, signature } = item;
         // `${this.data.contract[this.chainId].API_URL}/api/mint`
-        const response = await axios.post("https://095b-103-138-75-215.ap.ngrok.io/api/mint", {
+        const response = await axios.post("/api/mint", {
           holder: this.owner,
-          devicehash,
+          deviceHash:devicehash,
           signature,
-          distance
+          distance: 900
         });
         console.log(response);
         if (response) {
