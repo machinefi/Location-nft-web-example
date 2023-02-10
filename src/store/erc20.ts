@@ -493,7 +493,7 @@ export class erc20Store {
       if(data) {
        let places = data.MetapebbleVerifiedDrop.map((item) => {
         return {
-          imei: "123456789012345",
+          imei: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
           from: Number(item.startTimestamp),
           to: Number(item.endTimestamp),
           scaled_latitude: new BigNumber(item.lat.toString()).toNumber(),
@@ -545,10 +545,10 @@ export class erc20Store {
       const list = await Promise.all(
         this.signData.value?.map(async (item) => {
           await this.claimedStatus.call(item.devicehash)
-          console.log(this.claimedStatus.value)
+          console.log('typeof', typeof this.claimedStatus.value !== "boolean" ?  JSON.parse(`${this.claimedStatus.value}`) :  this.claimedStatus.value)
           return {
             ...item,
-            claimed: this.claimedStatus.value,
+            claimed: typeof this.claimedStatus.value !== "boolean" ?  JSON.parse(`${this.claimedStatus.value}`) :  this.claimedStatus.value,
           };
         })
       );
