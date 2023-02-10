@@ -1,18 +1,26 @@
 import { ConnectWallet,  useContract, useSDK, useAddress, useChainId, useMetamask, useWalletConnect, useDisconnect } from "@thirdweb-dev/react";
 import { useEffect, useMemo } from "react";
-import { useStore } from "../store/index";
+import { useStore } from "../../store/index";
 import { Button, Flex, Text, Menu, MenuButton, MenuList, MenuItem, Box, Spinner, Image } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
-import {metamaskUtils} from '../store/metaskUtils'
+import {metamaskUtils} from '../../store/metaskUtils'
 import Head from 'next/head'
 import Script from 'next/script'
+import { useRouter } from 'next/router'
 
 
 
 const Template = observer(() => {
   const toast = useToast();
   const { mpStore, erc20Store } = useStore();
+  
+  const router = useRouter()
+  const type = router.query.type as string
+  const name = router.query.name as string
+
+  console.log(type, name)
+  const curStore = type === 'token' ? erc20Store : mpStore
 
   const [address, chainId, sdk, disconnect] = [useAddress(), useChainId(), useSDK(), useDisconnect()];
   const { address: contractAddress, abi: contractAbi } = mpStore.contract.LocationNFT[chainId as number] || {};
