@@ -630,7 +630,7 @@ export class erc20Store {
           holder: this.owner,
           deviceHash:devicehash,
           signature,
-          distance: 900
+          distance: distance
         });
         console.log(response);
         if (response) {
