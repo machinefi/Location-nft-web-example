@@ -21,6 +21,7 @@ const Home = observer(() => {
 
   useMemo(() => {
     if (typeof window !== 'undefined' && document.getElementById('injected'))  {
+      // @ts-ignore
       document.getElementById('injected').innerHTML = `<img src="images/iopay.png" alt="" style="width: 24px; height: 24px;" /> IoPay`;
     }
   }, [])
