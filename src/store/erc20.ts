@@ -386,12 +386,12 @@ export class erc20Store {
           }
         ],
         "address": "0x5F20fB1baA05c4E9975EF26eb73778557bB26ED7",
-        "API_URL":""
+        "API_URL":"https://geo-test.w3bstream.com"
       },
       "4689": {
         "abi": [],
         "address": "",
-        "API_URL":""
+        "API_URL":"https://geo.w3bstream.com"
       }
     }
   }
@@ -428,6 +428,7 @@ export class erc20Store {
     });
     await this.place.call();
     await this.claimFee.call();
+    console.log(this.place.value)
     const signResult = await this.signInWithMetamask();
     console.log('signResult', signResult)
     if(!signResult) return false;
@@ -476,15 +477,19 @@ export class erc20Store {
     name: "get query places from contract",
     function: async () => {
       const contract = this.contractInstance;
+      console.log('lat', contract)
       const lat = await contract?.call("lat");
+      console.log('lat', lat)
       const long = await contract?.call("long");
       const maxDistance = await contract?.call("maxDistance");
       const startTimestamp = await contract?.call("startTimestamp");
       const endTimestamp = await contract?.call("endTimestamp");
       let place = {
-        lat,
-        long,
-        maxDistance,
+        from: startTimestamp.toNumber(),
+        to: endTimestamp.toNumber(),
+        scaled_latitude: new BigNumber(long.toString()).toNumber(),
+        scaled_longitude: new BigNumber(lat.toString()).toNumber(),
+        distance: maxDistance.toNumber(),
         feature: `from ${startTimestamp.toNumber()} to ${endTimestamp.toNumber()} within ${maxDistance.toNumber()} meter from [${new BigNumber(lat.toString()).div(1e6).toNumber()}, ${new BigNumber(long.toString()).div(1e6).toNumber()}]`
       }
       return place;
@@ -496,14 +501,14 @@ export class erc20Store {
     name: "get sign data from Metapebble API",
     value: [] as SIGN_DATA[],
     function: async (message: string, signature: string, contract = this.contractInstance) => {
-      const places = this.place.value ? JSON.parse(JSON.stringify(this.place.value)).map(e => { delete e.feature; return e}) : [];
-      console.log("places===", places);
+      // @ts-ignore
+      delete this.place.value?.feature
       try {
         const response = await axios.post(`${this.data.contract[this.chainId].API_URL}/api/pol`, {
           signature,
           message,
           owner: this.owner,
-          locations: places,
+          locations: [this.place.value],
         });
         const signData: SIGN_DATA[] = response.data.result.data;
         this.setData({ signStatus: true, loading: false });

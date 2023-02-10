@@ -1559,7 +1559,7 @@ export class nftStore {
     await this.nftBalance.call();
     await this.places.call();
     await this.claimFee.call();
-    console.log(this.places, this.nftBalance, this.claimFee)
+    console.log('something', this.places.value, this.nftBalance.value, this.claimFee.value)
     const signResult = await this.signInWithMetamask();
     console.log('signResult', signResult)
     if(!signResult) return false;

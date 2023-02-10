@@ -40,7 +40,7 @@ const theme = extendTheme({ colors, styles: {
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ThirdwebProvider desiredChainId={1} chainRpc={{ 
-      [ChainId.Mainnet]: "https://babel-api.mainnet.iotex.io",
+      [ChainId.Mainnet]: "https://babel-api.testnet.iotex.io",
       // @ts-ignore
       4690: "https://babel-api.testnet.iotex.io",
       4689: "https://babel-api.mainnet.iotex.io",

@@ -26,6 +26,7 @@ const Template = observer(() => {
   const [address, chainId, sdk, disconnect] = [useAddress(), useChainId(), useSDK(), useDisconnect()];
   const { address: contractAddress, abi: contractAbi } = curStore.data.contract[chainId as number] || {};
   const { contract } = useContract(contractAddress, contractAbi);
+  console.log('contract', contract)
 
 
   useMemo(() => {
@@ -37,10 +38,10 @@ const Template = observer(() => {
 
 
   useEffect(() => {
-    if (address && contract && chainId) {
+    if (type && name && address && contract && chainId) {
       curStore.init({ contract, address, chainId, sdk, disconnect });
     }
-  }, [contract, chainId, address]);
+  }, [type, name, contract, chainId, address]);
 
 
 
