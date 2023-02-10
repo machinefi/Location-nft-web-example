@@ -35,11 +35,10 @@ export class erc20Store {
     "type": "erc20",
     "ui": {
       "logos": [
-        "http://localhost:3000/images/logo.png",
-        "http://localhost:3000/images/logo_CES.png"
+        "/images/logo.png",
       ],
-      "title": "Claim Your CES- \n W3bstream NFT",
-      "subtitle": "Simply download ioPay wallet and connect your location to claim the NFT!",
+      "title": "Claim Your AES- \n W3bstream Token",
+      "subtitle": "Simply download ioPay wallet and connect \n your location to claim the Token!",
       "tips": {
         "name": "View claim instructions >>>",
         "url": "https://docs.google.com/document/d/1kchVOHNmRUy5JfqLfeprCufgNmxnJlcj8M3_cnFrXyo/edit"
@@ -48,26 +47,23 @@ export class erc20Store {
         {
           "title": "Step 1",
           "description": "Download ioPay wallet",
-          "image": "http://localhost:3000/images/step1.png",
-          "href": "https://iopay.me/"
+          "image": "/images/step1.png",
+          "href": "https://iopay.me/",
         },
         {
           "title": "Step 2",
           "description": "Enable W3bstream in ioPay Bind Geo Location to Wallet",
-          "image": "http://localhost:3000/images/step2.png",
+          "image": "/images/step2.png",
           "href": null
         },
         {
           "title": "Step 3",
-          "description": "Claim NFT",
-          "image": "http://localhost:3000/images/step3.png",
+          "description": "Claim Token",
+          "image": "/images/step3.png",
           "href": null
         }
       ],
-      "nft": {
-        "image": "http://localhost:3000/images/badge.png",
-        "background": "http://localhost:3000/images/bg_nft_pic.png"
-      }
+      "nft": null
     },
     "contract": {
       "4690": {
@@ -438,8 +434,8 @@ export class erc20Store {
     const { message, sign } = signResult;
     console.log('message', message, sign)
     await this.signData.call(message, sign);
-    await this.claimLists.call();
-    console.log("init===", this.claimFee.value);
+    // await this.claimLists.call();
+    // console.log("init===", this.claimFee.value);
   }
 
   // create siwe message
@@ -447,7 +443,7 @@ export class erc20Store {
     const message = new SiweMessage({
       domain: globalThis.location.host,
       address: this.owner,
-      statement: `Sign in Location Based NFT The application will know if you were located in one of the following regions in the time range below:locations:${this.place.value.feature}`,
+      statement: `Sign in Location Based NFT The application will know if you were located in one of the following regions in the time range below:locations:${this.place.value?.feature}`,
       uri: globalThis.location.origin,
       version: "1",
       chainId: this.chainId,
