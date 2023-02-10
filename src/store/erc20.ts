@@ -561,6 +561,7 @@ export class erc20Store {
     name: "check claimed status",
     value: false,
     function: async (devicehash: string) => {
+      console.log('devicehash', devicehash)
       const query = gql`{
         MetapebbleVerifiedDrop(calls:[{address: "${this.data.contract[this.chainId].address}",chainId: ${this.chainId}}]) {
             claimed(deviceHash_: "${devicehash}")
