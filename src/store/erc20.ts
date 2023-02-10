@@ -493,7 +493,7 @@ export class erc20Store {
       if(data) {
        let places = data.MetapebbleVerifiedDrop.map((item) => {
         return {
-          imei: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
+          imei:`1938473${Math.floor(Math.random() * 10)}`,
           from: Number(item.startTimestamp),
           to: Number(item.endTimestamp),
           scaled_latitude: new BigNumber(item.lat.toString()).toNumber(),
@@ -590,7 +590,9 @@ export class erc20Store {
         console.log(response);
         if (response) {
           toast.success('Claimed Success!');
-          await this.claimLists.call();
+          setTimeout(async () => {
+            await this.claimLists.call();
+          }, 5000)
         }
       } catch (err) {
         console.log("error", err);
