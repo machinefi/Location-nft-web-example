@@ -1,4 +1,4 @@
-import { publicConfig } from './public';
+import { publicConfig } from "./public";
 
 export type NetworkObject = {
   name: string;
@@ -10,108 +10,121 @@ export type NetworkObject = {
   nativeCoin: string;
   // blockPerSeconds: number;
   // multicallAddr: string;
-  type: 'mainnet' | 'testnet';
+  type: "mainnet" | "testnet";
 };
 
 export const defaultNetworks: NetworkObject[] = [
   {
-    name: 'ETH',
+    name: "ETH",
     chainId: 1,
     rpcUrl: `https://rpc.ankr.com/eth`,
-    logoUrl: 'https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1a63530be6e374711a8554f31b17e4cb92c25fa5/svg/icon/eth.svg',
-    explorerUrl: 'https://etherscan.io',
-    explorerName: 'EtherScan',
-    nativeCoin: 'ETH',
-    type: 'mainnet'
+    logoUrl: "https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1a63530be6e374711a8554f31b17e4cb92c25fa5/svg/icon/eth.svg",
+    explorerUrl: "https://etherscan.io",
+    explorerName: "EtherScan",
+    nativeCoin: "ETH",
+    type: "mainnet",
   },
   {
-    name: 'Polygon',
+    name: "Polygon",
     chainId: 137,
-    logoUrl: 'https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1a63530be6e374711a8554f31b17e4cb92c25fa5/svg/icon/matic.svg',
-    rpcUrl: 'https://polygon-rpc.com/',
-    explorerUrl: 'https://explorer-mainnet.maticvigil.com/',
-    explorerName: 'PolygonScan',
-    nativeCoin: 'MATIC',
-    type: 'mainnet'
+    logoUrl: "https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1a63530be6e374711a8554f31b17e4cb92c25fa5/svg/icon/matic.svg",
+    rpcUrl: "https://polygon-rpc.com/",
+    explorerUrl: "https://explorer-mainnet.maticvigil.com/",
+    explorerName: "PolygonScan",
+    nativeCoin: "MATIC",
+    type: "mainnet",
   },
   {
-    name: 'BSC',
+    name: "BSC",
     chainId: 56,
-    rpcUrl: 'https://rpc.ankr.com/bsc',
-    logoUrl: 'https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1a63530be6e374711a8554f31b17e4cb92c25fa5/svg/icon/bnb.svg',
-    explorerUrl: 'https://bscscan.com',
-    explorerName: 'BscScan',
-    nativeCoin: 'BNB',
-    type: 'mainnet'
+    rpcUrl: "https://rpc.ankr.com/bsc",
+    logoUrl: "https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1a63530be6e374711a8554f31b17e4cb92c25fa5/svg/icon/bnb.svg",
+    explorerUrl: "https://bscscan.com",
+    explorerName: "BscScan",
+    nativeCoin: "BNB",
+    type: "mainnet",
   },
   {
-    name: 'IoTeX',
+    name: "IoTeX",
     chainId: 4689,
-    rpcUrl: 'https://babel-api.mainnet.iotex.io/',
-    logoUrl: 'https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1a63530be6e374711a8554f31b17e4cb92c25fa5/svg/icon/iotx.svg',
-    explorerUrl: 'https://iotexscan.io',
-    explorerName: 'IotexScan',
-    nativeCoin: 'IOTX',
-    type: 'mainnet'
+    rpcUrl: "https://babel-api.mainnet.iotex.io/",
+    logoUrl: "https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1a63530be6e374711a8554f31b17e4cb92c25fa5/svg/icon/iotx.svg",
+    explorerUrl: "https://iotexscan.io",
+    explorerName: "IotexScan",
+    nativeCoin: "IOTX",
+    type: "mainnet",
   },
   {
-    name: 'Avalanche',
+    name: "Avalanche",
     chainId: 43114,
-    rpcUrl: 'https://rpc.ankr.com/avalanche',
-    logoUrl: 'https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1a63530be6e374711a8554f31b17e4cb92c25fa5/svg/icon/avax.svg',
-    explorerUrl: 'https://subnets.avax.network/',
-    explorerName: 'AVAXScan',
-    nativeCoin: 'AVAX',
-    type: 'mainnet'
+    rpcUrl: "https://rpc.ankr.com/avalanche",
+    logoUrl: "https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1a63530be6e374711a8554f31b17e4cb92c25fa5/svg/icon/avax.svg",
+    explorerUrl: "https://subnets.avax.network/",
+    explorerName: "AVAXScan",
+    nativeCoin: "AVAX",
+    type: "mainnet",
   },
   {
-    name: 'Fantom',
+    name: "Fantom",
     chainId: 250,
-    rpcUrl: 'https://rpc.ankr.com/fantom',
-    logoUrl: 'https://cryptologos.cc/logos/fantom-ftm-logo.svg',
-    explorerUrl: 'https://ftmscan.com/',
-    explorerName: 'FTMScan',
-    nativeCoin: 'FTM',
-    type: 'mainnet'
+    rpcUrl: "https://rpc.ankr.com/fantom",
+    logoUrl: "https://cryptologos.cc/logos/fantom-ftm-logo.svg",
+    explorerUrl: "https://ftmscan.com/",
+    explorerName: "FTMScan",
+    nativeCoin: "FTM",
+    type: "mainnet",
   },
   {
-    name: 'BSC Testnet',
+    name: "BSC Testnet",
     chainId: 97,
-    rpcUrl: 'https://data-seed-prebsc-1-s1.binance.org:8545',
-    logoUrl: 'https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1a63530be6e374711a8554f31b17e4cb92c25fa5/svg/icon/bnb.svg',
-    explorerUrl: 'https://testnet.bscscan.com',
-    explorerName: 'BscScan',
-    nativeCoin: 'BNB',
-    type: 'testnet'
+    rpcUrl: "https://data-seed-prebsc-1-s1.binance.org:8545",
+    logoUrl: "https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1a63530be6e374711a8554f31b17e4cb92c25fa5/svg/icon/bnb.svg",
+    explorerUrl: "https://testnet.bscscan.com",
+    explorerName: "BscScan",
+    nativeCoin: "BNB",
+    type: "testnet",
   },
   {
-    name: 'ETH Kovan',
+    name: "ETH Kovan",
     chainId: 42,
     rpcUrl: `https://kovan.infura.io/v3/${publicConfig.infuraId}`,
-    logoUrl: 'https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1a63530be6e374711a8554f31b17e4cb92c25fa5/svg/icon/eth.svg',
-    explorerUrl: 'https://kovan.etherscan.io',
-    explorerName: 'EtherScan',
-    nativeCoin: 'ETH',
-    type: 'testnet'
+    logoUrl: "https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1a63530be6e374711a8554f31b17e4cb92c25fa5/svg/icon/eth.svg",
+    explorerUrl: "https://kovan.etherscan.io",
+    explorerName: "EtherScan",
+    nativeCoin: "ETH",
+    type: "testnet",
   },
   {
-    name: 'ETH Rinkeby',
+    name: "ETH Rinkeby",
     chainId: 4,
     rpcUrl: `https://rinkeby.infura.io/v3/${publicConfig.infuraId}`,
-    logoUrl: 'https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1a63530be6e374711a8554f31b17e4cb92c25fa5/svg/icon/eth.svg',
-    explorerUrl: 'https://rinkeby.etherscan.io',
-    explorerName: 'EtherScan',
-    nativeCoin: 'ETH',
-    type: 'testnet'
+    logoUrl: "https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1a63530be6e374711a8554f31b17e4cb92c25fa5/svg/icon/eth.svg",
+    explorerUrl: "https://rinkeby.etherscan.io",
+    explorerName: "EtherScan",
+    nativeCoin: "ETH",
+    type: "testnet",
   },
   {
-    name: 'IoTeX Testnet',
+    name: "IoTeX Testnet",
     chainId: 4690,
     rpcUrl: `https://babel-api.testnet.iotex.io`,
-    logoUrl: 'https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1a63530be6e374711a8554f31b17e4cb92c25fa5/svg/icon/iotx.svg',
-    explorerUrl: 'https://testnet.iotexscan.io',
-    explorerName: 'IotexScan',
-    nativeCoin: 'IOTX',
-    type: 'testnet'
-  }
+    logoUrl: "https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1a63530be6e374711a8554f31b17e4cb92c25fa5/svg/icon/iotx.svg",
+    explorerUrl: "https://testnet.iotexscan.io",
+    explorerName: "IotexScan",
+    nativeCoin: "IOTX",
+    type: "testnet",
+  },
 ];
+
+export const rpcs = {
+  4689: "https://babel-api.mainnet.iotex.io/",
+  4690: `https://babel-api.testnet.iotex.io`,
+};
+
+export const contracts = {
+  CesToken: {
+    4690: {
+      address: "0x2e0cecb8c8b65a87491f5813150bb46f84f02f3"
+    },
+  },
+};
