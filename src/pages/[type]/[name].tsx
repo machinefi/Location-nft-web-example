@@ -82,7 +82,7 @@ const Template = observer(() => {
         </Flex>
         {/* mobile title */}
         <Box display={{base:"block", lg:"none"}} textAlign='center'>
-          <Text whiteSpace={'pre-line'} fontSize={{base: "30px", lg: "3rem", xl: "3.75rem"}} fontWeight={700} lineHeight={{base: "34px", lg: "4.5rem"}} fontFamily={'Prompt'}>{`Claim Your CES-\nW3bstream NFT`}</Text>
+          <Text whiteSpace={'pre-line'} fontSize={{base: "30px", lg: "3rem", xl: "3.75rem"}} fontWeight={700} lineHeight={{base: "34px", lg: "4.5rem"}} fontFamily={'Prompt'}>{curStore.data.ui.title}</Text>
           <Text whiteSpace={'pre-line'} fontSize={{base: "14px", lg: "1.25rem"}} fontWeight={300} mt={{base: "11px", lg: "1.2rem", xl: "1.5625rem"}} fontFamily={'Helvetica'}>
             {curStore.data.ui.subtitle}
           </Text>
@@ -96,12 +96,12 @@ const Template = observer(() => {
         {/* center */}
         <Flex flex={{base: "none", lg: "1"}} ml={{base: "0", md: "5%", xl: "15%"}} flexDirection={{base: "column", lg: "row"}} justifyContent={{base: "center", lg: "flex-start"}} alignItems={{base: "center", lg: "flex-start"}}>
          {/* badge */}
-         {curStore.data.ui.nft && <Box bgImage={`url(${curStore.data.ui.nft.bg})`} bgSize="100% 100%" flex="none" w={{base: "300px", lg: "20rem", "2xl": "22.5rem"}} h={{base: "330px", lg: "22rem", "2xl": "24.75rem"}} maxWidth={'22.5rem'} mr={{base: "0", lg: "4rem"}}>
-          <Image className="badgeAnimate" src={`${curStore.data.ui.nft.image}`} alt="" w={{base: "221px", lg: "16.6rem"}} mx="auto" mt="3.4181rem"></Image>
+         {curStore.data.ui.icon && <Box bgImage={`url(${curStore.data.ui.icon.bg})`} bgSize="100% 100%" flex="none" w={{base: "300px", lg: "20rem", "2xl": "22.5rem"}} h={{base: "330px", lg: "22rem", "2xl": "24.75rem"}} maxWidth={'22.5rem'} mr={{base: "0", lg: "4rem"}}>
+          <Image className="badgeAnimate" src={`${curStore.data.ui.icon.image}`} alt="" w={{base: "221px", lg: "16.6rem"}} mx="auto" mt="3.4181rem"></Image>
          </Box>}
          {/* title */}
          <Box textAlign={{base: "center", lg: 'left'}} py={{base: "40px", lg: 0}} w={{base: "90%", lg: "auto"}}>
-          <Text display={{base:"none", lg:"block"}} whiteSpace={'pre-line'} fontSize={{base: "3.5rem", lg: "3rem", "2xl": "3.75rem"}} fontWeight={700} lineHeight={{md: "4rem", xl: "4rem", "2xl": "4.5rem"}} fontFamily={'Prompt'}>{`Claim Your CES-\nW3bstream NFT`}</Text>
+          <Text display={{base:"none", lg:"block"}} whiteSpace={'pre-line'} fontSize={{base: "3.5rem", lg: "3rem", "2xl": "3.75rem"}} fontWeight={700} lineHeight={{md: "4rem", xl: "4rem", "2xl": "4.5rem"}} fontFamily={'Prompt'}>{curStore.data.ui.title}</Text>
           <Text display={{base:"none", lg:"block"}} whiteSpace={'pre-line'} fontSize="1.25rem" fontWeight={300} mt={{base: "1rem", lg: "1rem", "2xl": "1.5625rem"}} fontFamily={'Helvetica'}>
           {curStore.data.ui.subtitle}
           </Text>

@@ -63,7 +63,10 @@ export class erc20Store {
           "href": null
         }
       ],
-      "nft": null
+      "icon": {
+        "image": "http://localhost:3000/images/badge.png",
+        "bg": "http://localhost:3000/images/bg_nft_pic.png"
+      }
     },
     "contract": {
       "4690": {
@@ -385,7 +388,7 @@ export class erc20Store {
             "type": "receive"
           }
         ],
-        "address": "0x5F20fB1baA05c4E9975EF26eb73778557bB26ED7",
+        "address": "0x9Ef768a5b5D5fb2c68C26f8e1661d76f33E661cf",
         "API_URL":"https://geo-test.w3bstream.com"
       },
       "4689": {
@@ -426,25 +429,27 @@ export class erc20Store {
       sdk,
       disconnect
     });
-    await this.place.call();
+    await this.places.call();
+    console.log('this.placesTest.value', this.places.value)
     await this.claimFee.call();
-    console.log(this.place.value)
     const signResult = await this.signInWithMetamask();
     console.log('signResult', signResult)
     if(!signResult) return false;
     const { message, sign } = signResult;
     console.log('message', message, sign)
     await this.signData.call(message, sign);
-    // await this.claimLists.call();
-    // console.log("init===", this.claimFee.value);
+    await this.claimLists.call();
   }
 
   // create siwe message
   createSiweMessage = () => {
+    // @ts-ignore
+    const locations = this.places.value && this.places.value.length > 0 ? this.places.value.map(item => item.feature) : []
+    console.log("locations===", locations);
     const message = new SiweMessage({
       domain: globalThis.location.host,
       address: this.owner,
-      statement: `Sign in Location Based NFT The application will know if you were located in one of the following regions in the time range below:locations:${this.place.value?.feature}`,
+      statement: `Sign in Location Based NFT The application will know if you were located in one of the following regions in the time range below:locations:${locations.join(',')}`,
       uri: globalThis.location.origin,
       version: "1",
       chainId: this.chainId,
@@ -452,7 +457,6 @@ export class erc20Store {
     });
     return message.prepareMessage();
   };
-
   // sign in with metamask
   signInWithMetamask = async () => {
     try {
@@ -469,46 +473,65 @@ export class erc20Store {
 
   // init loading
   get initLoadinng() {
-    return  this.place.loading.value || this.signData.loading.value;
+    return  this.places.loading.value || this.signData.loading.value;
   }
 
+
   // get places from contract and format places
-  place = new PromiseState({
-    name: "get query places from contract",
+  places = new PromiseState({
+    name: "get places from contract",
     function: async () => {
-      const contract = this.contractInstance;
-      console.log('lat', contract)
-      const lat = await contract?.call("lat");
-      console.log('lat', lat)
-      const long = await contract?.call("long");
-      const maxDistance = await contract?.call("maxDistance");
-      const startTimestamp = await contract?.call("startTimestamp");
-      const endTimestamp = await contract?.call("endTimestamp");
-      let place = {
-        from: startTimestamp.toNumber(),
-        to: endTimestamp.toNumber(),
-        scaled_latitude: new BigNumber(long.toString()).toNumber(),
-        scaled_longitude: new BigNumber(lat.toString()).toNumber(),
-        distance: maxDistance.toNumber(),
-        feature: `from ${startTimestamp.toNumber()} to ${endTimestamp.toNumber()} within ${maxDistance.toNumber()} meter from [${new BigNumber(lat.toString()).div(1e6).toNumber()}, ${new BigNumber(long.toString()).div(1e6).toNumber()}]`
+      let response = await fetch("https://smartgraph.one/metapebble_demo/graphql", {
+        "headers": {
+          "accept": "application/json, multipart/mixed",
+          "accept-language": "zh-CN,zh;q=0.9,en;q=0.8",
+          "content-type": "application/json",
+          "sec-ch-ua": "\"Not_A Brand\";v=\"99\", \"Google Chrome\";v=\"109\", \"Chromium\";v=\"109\"",
+          "sec-ch-ua-mobile": "?0",
+          "sec-ch-ua-platform": "\"macOS\"",
+          "sec-fetch-dest": "empty",
+          "sec-fetch-mode": "cors",
+          "sec-fetch-site": "same-origin"
+        },
+        "referrer": "https://smartgraph.one/metapebble_demo/graphql?query=query+MyQuery+%7B%0A++MetapebbleVerifiedDrop%28calls%3A%5B%7Baddress%3A%220x9Ef768a5b5D5fb2c68C26f8e1661d76f33E661cf%22%2CchainId%3A+4690%7D%5D%29+%7B%0A++++lat%0A++++long%0A++++startTimestamp%0A++++endTimestamp%0A++++maxDistance%0A++%7D%0A%7D",
+        "referrerPolicy": "strict-origin-when-cross-origin",
+        "body": `{\"query\":\"query MyQuery {\\n  MetapebbleVerifiedDrop(\\n    calls: [{address: \\\"${this.data.contract[this.chainId].address}\\\", chainId: ${this.chainId}}]\\n  ) {\\n    lat\\n    long\\n    startTimestamp\\n    endTimestamp\\n    maxDistance\\n  }\\n}\",\"variables\":null,\"operationName\":\"MyQuery\",\"extensions\":{\"headers\":null}}`,
+        "method": "POST",
+        "mode": "cors",
+        "credentials": "omit"
+      })
+      let data = await response.json()
+      console.log('data', data)
+      if(data) {
+       let places = data.data.MetapebbleVerifiedDrop.map((item) => {
+        return {
+          from: Number(item.startTimestamp),
+          to: Number(item.endTimestamp),
+          scaled_latitude: new BigNumber(item.lat.toString()).toNumber(),
+          scaled_longitude: new BigNumber(item.long.toString()).toNumber(),
+          distance: Number(item.maxDistance),
+          feature: `from ${item.startTimestamp} to ${item.endTimestamp} within ${item.maxDistance} meter from [${new BigNumber(item.lat.toString()).div(1e6).toNumber()}, ${new BigNumber(item.long.toString()).div(1e6).toNumber()}]`
+          }
+        })
+        return places
       }
-      return place;
-    },
-  });
+    }
+  })
 
   // get claim origin list
   signData = new PromiseState({
     name: "get sign data from Metapebble API",
     value: [] as SIGN_DATA[],
     function: async (message: string, signature: string, contract = this.contractInstance) => {
-      // @ts-ignore
-      delete this.place.value?.feature
+      const places = this.places.value ? JSON.parse(JSON.stringify(this.places.value)).map(e => { delete e.feature; return e}) : [];
+      console.log('places-----', this.places.value)
       try {
-        const response = await axios.post(`${this.data.contract[this.chainId].API_URL}/api/pol`, {
-          signature,
-          message,
+        const response = await axios.post(`${this.data.contract[this.chainId].API_URL}/api/pol_auth`, {
+          // signature,
+          // message,
+          adminToken: '0x0ba6a6ce7712f69fbc560793f567f2c7c32b75ce83d37f565f184632c88d7fbb',
           owner: this.owner,
-          locations: [this.place.value],
+          locations: places
         });
         const signData: SIGN_DATA[] = response.data.result.data;
         this.setData({ signStatus: true, loading: false });
@@ -523,6 +546,8 @@ export class erc20Store {
       }
     },
   });
+
+
   claimLists = new PromiseState({
     name: "check claim list from contract",
     value: [] as DEVICE_ITEM[],
@@ -531,9 +556,10 @@ export class erc20Store {
       const contract = this.contractInstance;
       const list = await Promise.all(
         this.signData.value?.map(async (item) => {
+          await this.claimedStatus.call(item.devicehash)
           return {
             ...item,
-            claimed: await contract?.call("claimed", item.devicehash),
+            claimed: this.claimedStatus.value,
           };
         })
       );
@@ -541,6 +567,35 @@ export class erc20Store {
       return list;
     },
   });
+
+  claimedStatus = new PromiseState({
+    name: "check claimed status",
+    value: false,
+    function: async (devicehash: string) => {
+      let response = await fetch("https://smartgraph.one/metapebble_demo/graphql", {
+        "headers": {
+          "accept": "application/json, multipart/mixed",
+          "accept-language": "zh-CN,zh;q=0.9,en;q=0.8",
+          "content-type": "application/json",
+          "sec-ch-ua": "\"Not_A Brand\";v=\"99\", \"Google Chrome\";v=\"109\", \"Chromium\";v=\"109\"",
+          "sec-ch-ua-mobile": "?0",
+          "sec-ch-ua-platform": "\"macOS\"",
+          "sec-fetch-dest": "empty",
+          "sec-fetch-mode": "cors",
+          "sec-fetch-site": "same-origin"
+        },
+        "referrer": "https://smartgraph.one/metapebble_demo/graphql?query=query+MyQuery+%7B%0A++MetapebbleVerifiedDrop%28calls%3A%5B%7Baddress%3A%220x5F20fB1baA05c4E9975EF26eb73778557bB26ED7%22%2CchainId%3A+4690%7D%5D%29+%7B%0A++++claimed%28deviceHash_%3A+%220x8e642b423ec2a61a6431558018ea2f478ad53f3c3375b17e2d9bf902aba75fb6%22%29%0A++%7D%0A%7D",
+        "referrerPolicy": "strict-origin-when-cross-origin",
+        "body": `{\"query\":\"query MyQuery {\\n  MetapebbleVerifiedDrop(\\n    calls: [{address: \\\"${this.data.contract[this.chainId].address}\\\", chainId: ${this.chainId}}]\\n  ) {\\n    claimed(\\n      deviceHash_: \\\"${devicehash}\\\"\\n    )\\n  }\\n}\",\"variables\":null,\"operationName\":\"MyQuery\",\"extensions\":{\"headers\":null}}`,
+        "method": "POST",
+        "mode": "cors",
+        "credentials": "omit"
+      });
+      let data = await response.json()
+      console.log('claimedStatus', data)
+      return data.data.MetapebbleVerifiedDrop.claimed
+    }
+  })
 
   nftBalance = new PromiseState({
     name: "get nft balance",
@@ -562,22 +617,23 @@ export class erc20Store {
     },
   });
 
-  // claim NFT
+  // claim token
   claimNFT = new PromiseState({
-    name: "claim NFT",
+    name: "claim token",
     function: async (item: SIGN_DATA, index: number) => {
       this.setData({claimIndex: index})
-      const contract = this.contractInstance;
       try {
-        const { scaled_latitude, scaled_longitude, distance, devicehash, from, to, signature } = item;
-        const res = await contract?.call("claim", scaled_latitude, scaled_longitude, distance, devicehash, from, to, signature, {
-          value: this.claimFee.value
+        const {  distance, devicehash, signature } = item;
+        // `${this.data.contract[this.chainId].API_URL}/api/mint`
+        const response = await axios.post("https://095b-103-138-75-215.ap.ngrok.io/api/mint", {
+          holder: this.owner,
+          devicehash,
+          signature,
+          distance
         });
-
-        if (res.receipt) {
-          console.log("Receipt", res.receipt.blockHash);
+        console.log(response);
+        if (response) {
           toast.success('Claimed Success!');
-          await this.nftBalance.call();
           await this.claimLists.call();
         }
       } catch (err) {

@@ -64,7 +64,7 @@ export class nftStore {
           "href": null
         }
       ],
-      "nft": {
+      "icon": {
         "image": "http://localhost:3000/images/badge.png",
         "bg": "http://localhost:3000/images/bg_nft_pic.png"
       }
@@ -1657,6 +1657,7 @@ export class nftStore {
       }
     },
   });
+
   claimLists = new PromiseState({
     name: "check claim list from contract",
     value: [] as DEVICE_ITEM[],
