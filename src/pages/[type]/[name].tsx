@@ -36,26 +36,16 @@ const Template = observer(() => {
 
   useEffect(() => {
     if (type && name && address && chainId) {
-      curStore.init({  address, chainId, sdk, disconnect });
+      curStore.init({  address, chainId, sdk, disconnect, name });
     }
   }, [type, name, chainId, address]);
 
 
 
   useEffect(() => {
-    // TODO: request metamask switch network
-    if (chainId && chainId !== 4690 && chainId !== 4689 ) {
-       metamaskUtils.setupNetwork({
-        chainId: 4689,
-        blockExplorerUrls: ['https://iotexscan.io'],
-        chainName: 'IoTeX',
-        nativeCurrency: {
-          decimals:  18,
-          name: 'IOTX Mainnet',
-          symbol: 'IOTX'
-        },
-        rpcUrls: ['https://babel-api.mainnet.iotex.io/']
-      });
+    // TODO: request metamask switch network chainId !== 4690 &&
+    if (chainId && chainId !== 4689 ) {
+       metamaskUtils.setupNetwork(curStore.config.testnet);
     }
   }, [chainId, sdk]);
 
@@ -86,7 +76,7 @@ const Template = observer(() => {
           </Text>
           <a href={curStore.data.ui.tips.url}>
           <Text whiteSpace={'pre-line'} fontSize={{base: "11px", lg: "1.25rem"}} fontWeight={300} mb={{base: "35px", lg: "1.5rem", xl: "2.5rem"}} fontFamily={'Helvetica'}>
-              {curStore.data.ui.tips.name}({curStore.claimLists.value?.length}{curStore.claimLists.loading.value ? 0 : 1})
+              {curStore.data.ui.tips.name}
             </Text>
           </a>
         </Box>

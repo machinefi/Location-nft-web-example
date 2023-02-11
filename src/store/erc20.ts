@@ -71,335 +71,67 @@ export class erc20Store {
       }
     },
     "contract": {
-      "4690": {
-        "abi":[
-          {
-            "inputs": [
-              {
-                "internalType": "int256",
-                "name": "_lat",
-                "type": "int256"
-              },
-              {
-                "internalType": "int256",
-                "name": "_long",
-                "type": "int256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "_maxDistance",
-                "type": "uint256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "_startTimestamp",
-                "type": "uint256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "_endTimestamp",
-                "type": "uint256"
-              },
-              {
-                "internalType": "address",
-                "name": "_verifier",
-                "type": "address"
-              },
-              {
-                "internalType": "uint256",
-                "name": "_amount",
-                "type": "uint256"
-              }
-            ],
-            "stateMutability": "nonpayable",
-            "type": "constructor"
-          },
-          {
-            "anonymous": false,
-            "inputs": [
-              {
-                "indexed": true,
-                "internalType": "address",
-                "name": "holder",
-                "type": "address"
-              },
-              {
-                "indexed": true,
-                "internalType": "bytes32",
-                "name": "deviceHash",
-                "type": "bytes32"
-              },
-              {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256"
-              }
-            ],
-            "name": "Claimed",
-            "type": "event"
-          },
-          {
-            "anonymous": false,
-            "inputs": [
-              {
-                "indexed": true,
-                "internalType": "address",
-                "name": "previousOwner",
-                "type": "address"
-              },
-              {
-                "indexed": true,
-                "internalType": "address",
-                "name": "newOwner",
-                "type": "address"
-              }
-            ],
-            "name": "OwnershipTransferred",
-            "type": "event"
-          },
-          {
-            "inputs": [],
-            "name": "AMOUNT_PER_DEVICE",
-            "outputs": [
-              {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "uint256",
-                "name": "distance",
-                "type": "uint256"
-              },
-              {
-                "internalType": "bytes32",
-                "name": "deviceHash",
-                "type": "bytes32"
-              },
-              {
-                "internalType": "bytes",
-                "name": "signature",
-                "type": "bytes"
-              }
-            ],
-            "name": "claim",
-            "outputs": [],
-            "stateMutability": "payable",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "address payable",
-                "name": "holder",
-                "type": "address"
-              },
-              {
-                "internalType": "uint256",
-                "name": "distance",
-                "type": "uint256"
-              },
-              {
-                "internalType": "bytes32",
-                "name": "deviceHash",
-                "type": "bytes32"
-              },
-              {
-                "internalType": "bytes",
-                "name": "signature",
-                "type": "bytes"
-              }
-            ],
-            "name": "claim",
-            "outputs": [],
-            "stateMutability": "payable",
-            "type": "function"
-          },
-          {
-            "inputs": [],
-            "name": "claimFee",
-            "outputs": [
-              {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [],
-            "name": "claimable",
-            "outputs": [
-              {
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "bytes32",
-                "name": "deviceHash_",
-                "type": "bytes32"
-              }
-            ],
-            "name": "claimed",
-            "outputs": [
-              {
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [],
-            "name": "endTimestamp",
-            "outputs": [
-              {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [],
-            "name": "lat",
-            "outputs": [
-              {
-                "internalType": "int256",
-                "name": "",
-                "type": "int256"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [],
-            "name": "long",
-            "outputs": [
-              {
-                "internalType": "int256",
-                "name": "",
-                "type": "int256"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [],
-            "name": "maxDistance",
-            "outputs": [
-              {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [],
-            "name": "owner",
-            "outputs": [
-              {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [],
-            "name": "refund",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          },
-          {
-            "inputs": [],
-            "name": "renounceOwnership",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          },
-          {
-            "inputs": [],
-            "name": "startTimestamp",
-            "outputs": [
-              {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "address",
-                "name": "newOwner",
-                "type": "address"
-              }
-            ],
-            "name": "transferOwnership",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          },
-          {
-            "inputs": [],
-            "name": "verifier",
-            "outputs": [
-              {
-                "internalType": "contract IMetapebbleDataVerifier",
-                "name": "",
-                "type": "address"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "stateMutability": "payable",
-            "type": "receive"
-          }
-        ],
-        "address": "0x9Ef768a5b5D5fb2c68C26f8e1661d76f33E661cf",
-        "API_URL":"https://geo-test.w3bstream.com"
+      "aes": {
+        "4690": {
+          "address": "0x9Ef768a5b5D5fb2c68C26f8e1661d76f33E661cf",
+          "API_URL":"https://geo-test.w3bstream.com"
+        },
+        "4689": {
+          "address": "0x270F2f9BfCd5Ae62df36411db1beD8a6d917c639",
+          "API_URL":"https://geo.w3bstream.com"
+        }
       },
-      "4689": {
-        "abi": [],
-        "address": "",
-        "API_URL":"https://geo.w3bstream.com"
+      "maintest": {
+        "4690": {
+          "address": "0x9Ef768a5b5D5fb2c68C26f8e1661d76f33E661cf",
+          "API_URL":"https://geo-test.w3bstream.com"
+        },
+        "4689": {
+          "address": "0x270F2f9BfCd5Ae62df36411db1beD8a6d917c639",
+          "API_URL":"https://geo.w3bstream.com"
+        }
+      },
+      "airdrop": {
+        "4690": {
+          "address": "",
+          "API_URL":"https://geo-test.w3bstream.com"
+        },
+        "4689": {
+          "address": "",
+          "API_URL":"https://geo.w3bstream.com"
+        }
       }
     }
   }
+
+  config = {
+    testnet: {
+      chainId: 4690,
+      blockExplorerUrls: ['https://testnet.iotexscan.io'],
+      chainName: 'IOTX Testnet',
+      nativeCurrency: {
+        decimals:  18,
+        name: 'IOTX Testnet',
+        symbol: 'IOTX'
+      },
+      rpcUrls: ['https://babel-api.testnet.iotex.io/']
+    },
+    mainnet: {
+      chainId: 4689,
+      blockExplorerUrls: ['https://iotexscan.io'],
+      chainName: 'IoTeX',
+      nativeCurrency: {
+        decimals:  18,
+        name: 'IOTX Mainnet',
+        symbol: 'IOTX'
+      },
+      rpcUrls: ['https://babel-api.mainnet.iotex.io/']
+    }
+  }
+
+
+
+  contractInstance: any;
   sdk: any;
   disconnect: any;
 
@@ -420,14 +152,16 @@ export class erc20Store {
   }
 
   // Main function
-  async init({ chainId, address, sdk, disconnect }: any) {
-    console.log('chainId===', chainId, address)
+  async init({ chainId, address, sdk, disconnect, name }: any) {
+    console.log('chainId===', chainId, address, name)
+    if(name === '') return;
     this.setData({
       loading: true,
       chainId,
       owner: address,
       sdk,
-      disconnect
+      disconnect,
+      contractInstance: this.data.contract[name]
     });
     await this.places.call();
     console.log('this.placesTest.value', this.places.value)
@@ -481,7 +215,7 @@ export class erc20Store {
     name: "get places from contract",
     function: async () => {
       const query = gql`{
-        MetapebbleVerifiedDrop(calls:[{address: "${this.data.contract[this.chainId].address}", chainId: ${this.chainId}}]) {
+        MetapebbleVerifiedDrop(calls:[{address: "${this.contractInstance[this.chainId].address}", chainId: ${this.chainId}}]) {
             lat
             long
             startTimestamp
@@ -494,7 +228,7 @@ export class erc20Store {
       if(data) {
        let places = data.MetapebbleVerifiedDrop.map((item) => {
         return {
-          imei:`1938473${Math.floor(Math.random() * 10)}`,
+          imei:`1938473${Math.floor(Math.random() * 100)}`,
           from: Number(item.startTimestamp),
           to: Number(item.endTimestamp),
           scaled_latitude: new BigNumber(item.lat.toString()).toNumber(),
@@ -516,16 +250,20 @@ export class erc20Store {
       const places = this.places.value ? JSON.parse(JSON.stringify(this.places.value)).map(e => { delete e.feature; return e}) : [];
       console.log('places-----', this.places.value)
       try {
-        const response = await axios.post(`${this.data.contract[this.chainId].API_URL}/api/pol_auth`, {
-          // signature,
-          // message,
+        let data = {
+          signature,
+          message,
+          owner: this.owner,
+          locations: places
+        }
+        const response = await axios.post(`${this.contractInstance[this.chainId].API_URL}/api/pol_auth`, {
           adminToken: '0x0ba6a6ce7712f69fbc560793f567f2c7c32b75ce83d37f565f184632c88d7fbb',
           owner: this.owner,
           locations: places
         });
         const signData: SIGN_DATA[] = response.data.result.data;
         this.setData({ signStatus: true, loading: false });
-        toast.success(`${signData}`);
+        
         return signData;
       } catch (error: any) {
         const err = error.response.data.error.message
@@ -564,7 +302,7 @@ export class erc20Store {
     function: async (devicehash: string) => {
       console.log('devicehash', devicehash)
       const query = gql`{
-        MetapebbleVerifiedDrop(calls:[{address: "${this.data.contract[this.chainId].address}",chainId: ${this.chainId}}]) {
+        MetapebbleVerifiedDrop(calls:[{address: "${this.contractInstance[this.chainId].address}",chainId: ${this.chainId}}]) {
             claimed(deviceHash_: "${devicehash}")
           }
         }
@@ -581,7 +319,7 @@ export class erc20Store {
       this.setData({claimIndex: index})
       try {
         const {  distance, devicehash, signature } = item;
-        // `${this.data.contract[this.chainId].API_URL}/api/mint`
+        // `${this.contractInstance[this.chainId].API_URL}/api/mint`
         const response = await axios.post("/api/mint", {
           holder: this.owner,
           deviceHash:devicehash,
@@ -590,9 +328,7 @@ export class erc20Store {
         });
         if (response) {
           toast.success('Claimed Success!');
-          setTimeout(async () => {
-            await this.claimLists.call();
-          }, 5000)
+          await this.claimLists.call();
         }
       } catch (err) {
         console.log("error", err);

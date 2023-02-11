@@ -1526,6 +1526,31 @@ export class nftStore {
     }
   }
 
+  config = {
+    testnet: {
+      chainId: 4690,
+      blockExplorerUrls: ['https://testnet.iotexscan.io'],
+      chainName: 'IOTX Testnet',
+      nativeCurrency: {
+        decimals:  18,
+        name: 'IOTX Testnet',
+        symbol: 'IOTX'
+      },
+      rpcUrls: ['https://babel-api.testnet.iotex.io/']
+    },
+    mainnet: {
+      chainId: 4689,
+      blockExplorerUrls: ['https://iotexscan.io'],
+      chainName: 'IoTeX',
+      nativeCurrency: {
+        decimals:  18,
+        name: 'IOTX Mainnet',
+        symbol: 'IOTX'
+      },
+      rpcUrls: ['https://babel-api.mainnet.iotex.io/']
+    }
+  }
+
   contractInstance: any;
   sdk: any;
   disconnect: any;
