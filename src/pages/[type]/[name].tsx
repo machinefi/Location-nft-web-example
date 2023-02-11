@@ -86,7 +86,7 @@ const Template = observer(() => {
           </Text>
           <a href={curStore.data.ui.tips.url}>
           <Text whiteSpace={'pre-line'} fontSize={{base: "11px", lg: "1.25rem"}} fontWeight={300} mb={{base: "35px", lg: "1.5rem", xl: "2.5rem"}} fontFamily={'Helvetica'}>
-              {curStore.data.ui.tips.name}
+              {curStore.data.ui.tips.name}({curStore.claimLists.value?.length})
             </Text>
           </a>
         </Box>
@@ -105,7 +105,7 @@ const Template = observer(() => {
           </Text>
           <a href="https://docs.google.com/document/d/1kchVOHNmRUy5JfqLfeprCufgNmxnJlcj8M3_cnFrXyo/edit?usp=sharing">
             <Text mt="0.5rem" display={{base:"none", lg:"block"}} whiteSpace={'pre-line'} fontSize="1.25rem" fontWeight={300} mb={{base: "1.5rem", lg: "1.5rem", "2xl": "2.5rem"}} fontFamily={'Helvetica'}>
-            {curStore.data.ui.tips.name}
+            {curStore.data.ui.tips.name}({curStore.claimLists.value?.length})
             </Text>
           </a>
             {!address  ? (
