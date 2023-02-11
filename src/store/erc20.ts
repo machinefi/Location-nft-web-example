@@ -105,7 +105,7 @@ export class erc20Store {
   }
 
   networkConfig = {
-    default: 4689,
+    default: 4690,
     4690: {
       chainId: 4690,
       blockExplorerUrls: ['https://testnet.iotexscan.io'],
