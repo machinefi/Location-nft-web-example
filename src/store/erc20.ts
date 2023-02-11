@@ -104,8 +104,9 @@ export class erc20Store {
     }
   }
 
-  config = {
-    testnet: {
+  networkConfig = {
+    default: 4689,
+    4690: {
       chainId: 4690,
       blockExplorerUrls: ['https://testnet.iotexscan.io'],
       chainName: 'IOTX Testnet',
@@ -116,7 +117,7 @@ export class erc20Store {
       },
       rpcUrls: ['https://babel-api.testnet.iotex.io/']
     },
-    mainnet: {
+    4689: {
       chainId: 4689,
       blockExplorerUrls: ['https://iotexscan.io'],
       chainName: 'IoTeX',
@@ -263,7 +264,7 @@ export class erc20Store {
         });
         const signData: SIGN_DATA[] = response.data.result.data;
         this.setData({ signStatus: true, loading: false });
-        
+
         return signData;
       } catch (error: any) {
         const err = error.response.data.error.message

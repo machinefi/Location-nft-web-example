@@ -45,7 +45,7 @@ const Template = observer(() => {
   useEffect(() => {
     // TODO: request metamask switch network chainId !== 4690 &&
     if (chainId && chainId !== 4689 ) {
-       metamaskUtils.setupNetwork(curStore.config.testnet);
+       metamaskUtils.setupNetwork(curStore.networkConfig[curStore.networkConfig.default]);
     }
   }, [chainId, sdk]);
 
