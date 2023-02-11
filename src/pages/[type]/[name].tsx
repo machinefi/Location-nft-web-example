@@ -19,7 +19,7 @@ const Template = observer(() => {
   const type = router.query.type as string // type： nft or token
   const name = router.query.name as string // name
 
-  const curStore = type == 'token' ? erc20Store : nftStore
+  const curStore = type !== 'token' ?  nftStore : erc20Store
   console.log('curStore', curStore, type, name)
 
 
@@ -111,7 +111,7 @@ const Template = observer(() => {
             {!address  ? (
                <ConnectWallet className="walletBtn" />
               ): <Box>
-              {curStore.loading ? (
+              {curStore.loading  ? (
                 <Spinner size="xl" color="linear-gradient(107.56deg, #00C2FF 0%, #CC00FF 100%)" />
               ) : (
                 address &&
@@ -121,7 +121,7 @@ const Template = observer(() => {
                       textFillColor: "transparent"
                     }}>Sign Failed</Text>
                   </Button>
-                ) : curStore.claimLists.value?.length === 0 ? (
+                ) : curStore.claimLists.loading.value && curStore.claimLists.value?.length === 0 ? (
                   <Button w={{base: "14.275rem", lg: "20rem"}} h={{base: "50px", lg: "4rem"}} borderRadius={0} disabled bg="white">
                     <Text bg="linear-gradient(107.56deg, #00C2FF 0%, #CC00FF 100%)" fontSize={{base: "1rem", lg:"1.5rem"}} fontWeight={700} fontFamily="Helvetica" backgroundClip={'text'} css={{
                       textFillColor: "transparent"
@@ -162,7 +162,7 @@ const Template = observer(() => {
         <Flex w="100%" flexDirection={{base: "column", lg: "row"}} pt={{base: "40px", lg: "2rem"}} pb={{base: "6rem", lg: '2rem'}} bg="rgba(255, 255, 255, 0.1);" justifyContent={"center"} alignItems="center" fontFamily={'Helvetica'} fontSize={'1.25rem'} fontWeight={400}>
           {
             curStore.data.ui.steps.map((item, index) => {
-              return <Flex key={item.title} alignItems="center">
+              return <Flex key={item.title} alignItems="center" flexDirection={{base: "column", lg: "row"}}>
                 <Box w={{base: "90%", lg: "21.875rem"}} textAlign={'center'} pb="24px">
                   <Image src={item.image} alt="" width="4rem" mb="1rem" mx="auto"></Image>
                   {item.href ? <a href={item.href} rel="noreferrer" target="_blank">

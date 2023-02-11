@@ -9,6 +9,7 @@ import { PromiseState } from "./standard/PromiseState";
 import LocationNFTABI from "../constants/abis/LocationNFTABI.json";
 import _ from "lodash";
 import { request, gql } from 'graphql-request'
+import { BooleanState } from './standard/base';
 
 type DEVICE_ITEM = {
   latitude: number;
@@ -587,7 +588,6 @@ export class erc20Store {
           signature,
           distance: distance
         });
-        console.log(response);
         if (response) {
           toast.success('Claimed Success!');
           setTimeout(async () => {
