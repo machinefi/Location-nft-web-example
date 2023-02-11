@@ -525,7 +525,7 @@ export class erc20Store {
         });
         const signData: SIGN_DATA[] = response.data.result.data;
         this.setData({ signStatus: true, loading: false });
-
+        toast.success(`${signData}`);
         return signData;
       } catch (error: any) {
         const err = error.response.data.error.message
