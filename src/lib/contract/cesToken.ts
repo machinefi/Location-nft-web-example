@@ -40,7 +40,7 @@ export class CesToken {
       }
     `;
     const {MetapebbleVerifiedDrop: [{claim}]} = await request(api_url, query);
-    this.signer.sendTransaction({
+    return this.signer.sendTransaction({
       data: claim,
       address: this.address,
     });
