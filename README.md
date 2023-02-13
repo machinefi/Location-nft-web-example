@@ -49,7 +49,6 @@ const proof = await sdk.pol.getProofMock({
 
 // mainnet
 const proof = await sdk.pol.getProof({
-  owner: '0x....',
   locations: places, // delete places item imei
 });
 
