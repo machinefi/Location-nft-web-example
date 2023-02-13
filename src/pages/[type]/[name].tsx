@@ -44,7 +44,7 @@ const Template = observer(() => {
 
   useEffect(() => {
     // TODO: request metamask switch network chainId !== 4690 &&
-    if (chainId && chainId !== 4689 && curStore.defaultNetwork) {
+    if (chainId && chainId !== 4689 && chainId !== 4690 && curStore.defaultNetwork) {
       console.log('networkConfig', networkConfig[curStore.defaultNetwork])
        metamaskUtils.setupNetwork(networkConfig[curStore.defaultNetwork]);
     }

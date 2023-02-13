@@ -32,7 +32,7 @@ type SIGN_DATA = {
 
 export class erc20Store {
   rootStore: RootStore;
-  defaultNetwork: 4690
+  defaultNetwork: 4689
   data = {
     "type": "erc20",
     "ui": {
