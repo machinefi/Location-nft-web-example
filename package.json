@@ -25,7 +25,7 @@
     "@smartgraph/plugins": "0.2.2",
     "@thirdweb-dev/react": "^3",
     "@thirdweb-dev/sdk": "^3",
-    "@w3bstream/geostream": "0.1.8",
+    "@w3bstream/geostream": "0.1.10",
     "@web3-react/core": "6.1.9",
     "@web3-react/injected-connector": "^6.0.7",
     "axios": "^1.1.3",
