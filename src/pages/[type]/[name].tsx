@@ -57,10 +57,6 @@ const Template = observer(() => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <link href="https://fonts.googlefonts.cn/css?family=Prompt" rel="stylesheet" />
       </Head>
-      <Script strategy="afterInteractive">
-
-
-      </Script>
       <Flex flexDirection={'column'} w="100vw" h="100vh" overflow={{base: "auto", lg: 'hidden'}} bgImage={{base: "url(/images/bg_mobile.png)", lg: "url(/images/bg_pc.png)"}} bgSize={{base: "100%", lg: "100% 100%"}} bgPosition={{base: "0 210px", lg: "0 0"}} bgRepeat="no-repeat">
         {/* logos */}
         <Flex justifyContent={{base: "center", lg: "flex-start"}} ml={{base: "0", md: "5%", xl: "15%"}} mt={{base: "2.5rem", lg: "3rem", xl: "2rem", "2xl": "6rem"}} mb={{base: "2rem", md: "2rem", lg: "2rem", xl: "2rem", "2xl": "4rem"}} alignItems={'center'}>
