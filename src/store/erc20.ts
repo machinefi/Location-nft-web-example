@@ -205,14 +205,18 @@ export class erc20Store {
       let data = await request('https://smartgraph.one/metapebble_demo/graphql', query)
       if(data) {
        let places = data.MetapebbleVerifiedDrop.map((item) => {
-        return {
-          imei:`1938473${Math.floor(Math.random() * 100)}`,
+        let option = {
           from: Number(item.startTimestamp),
           to: Number(item.endTimestamp),
           scaled_latitude: new BigNumber(item.lat.toString()).toNumber(),
           scaled_longitude: new BigNumber(item.long.toString()).toNumber(),
           distance: Number(item.maxDistance),
           feature: `from ${item.startTimestamp} to ${item.endTimestamp} within ${item.maxDistance} meter from [${new BigNumber(item.lat.toString()).div(1e6).toNumber()}, ${new BigNumber(item.long.toString()).div(1e6).toNumber()}]`
+        }
+        // @ts-ignore
+        return this.defaultNetwork === 4689 ? option : {
+            imei:`1938473${Math.floor(Math.random() * 100)}`,
+            ...option,
           }
         })
         return places
@@ -234,7 +238,8 @@ export class erc20Store {
           owner: this.owner,
           locations: places
         }
-        const response = await axios.post(`${this.contractInstance[this.chainId].API_URL}/api/pol_auth`, {
+        // @ts-ignore
+        const response = await axios.post(`${this.contractInstance[this.chainId].API_URL}/api/pol_auth`, this.defaultNetwork === 4689 ? data : {
           adminToken: '0x0ba6a6ce7712f69fbc560793f567f2c7c32b75ce83d37f565f184632c88d7fbb',
           owner: this.owner,
           locations: places

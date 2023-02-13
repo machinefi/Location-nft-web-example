@@ -126,6 +126,9 @@ export const contracts = {
     4690: {
       address: "0x9Ef768a5b5D5fb2c68C26f8e1661d76f33E661cf"
     },
+    4689: {
+      address: "0x270F2f9BfCd5Ae62df36411db1beD8a6d917c639"
+    }
   },
 };
 
