@@ -128,3 +128,29 @@ export const contracts = {
     },
   },
 };
+
+
+export const networkConfig = {
+  4690: {
+    chainId: 4690,
+    blockExplorerUrls: ['https://testnet.iotexscan.io'],
+    chainName: 'IOTX Testnet',
+    nativeCurrency: {
+      decimals:  18,
+      name: 'IOTX Testnet',
+      symbol: 'IOTX'
+    },
+    rpcUrls: ['https://babel-api.testnet.iotex.io/']
+  },
+  4689: {
+    chainId: 4689,
+    blockExplorerUrls: ['https://iotexscan.io'],
+    chainName: 'IoTeX',
+    nativeCurrency: {
+      decimals:  18,
+      name: 'IOTX Mainnet',
+      symbol: 'IOTX'
+    },
+    rpcUrls: ['https://babel-api.mainnet.iotex.io/']
+  }
+}

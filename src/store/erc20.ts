@@ -32,6 +32,7 @@ type SIGN_DATA = {
 
 export class erc20Store {
   rootStore: RootStore;
+  defaultNetwork: 4690
   data = {
     "type": "erc20",
     "ui": {
@@ -104,31 +105,7 @@ export class erc20Store {
     }
   }
 
-  networkConfig = {
-    default: 4690,
-    4690: {
-      chainId: 4690,
-      blockExplorerUrls: ['https://testnet.iotexscan.io'],
-      chainName: 'IOTX Testnet',
-      nativeCurrency: {
-        decimals:  18,
-        name: 'IOTX Testnet',
-        symbol: 'IOTX'
-      },
-      rpcUrls: ['https://babel-api.testnet.iotex.io/']
-    },
-    4689: {
-      chainId: 4689,
-      blockExplorerUrls: ['https://iotexscan.io'],
-      chainName: 'IoTeX',
-      nativeCurrency: {
-        decimals:  18,
-        name: 'IOTX Mainnet',
-        symbol: 'IOTX'
-      },
-      rpcUrls: ['https://babel-api.mainnet.iotex.io/']
-    }
-  }
+
 
 
 

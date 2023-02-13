@@ -8,7 +8,7 @@ import {metamaskUtils} from '../../store/metaskUtils'
 import Head from 'next/head'
 import Script from 'next/script'
 import { useRouter } from 'next/router'
-
+import {networkConfig} from '../../config/chain'
 
 
 const Template = observer(() => {
@@ -45,7 +45,7 @@ const Template = observer(() => {
   useEffect(() => {
     // TODO: request metamask switch network chainId !== 4690 &&
     if (chainId && chainId !== 4689 ) {
-       metamaskUtils.setupNetwork(curStore.networkConfig[curStore.networkConfig.default]);
+       metamaskUtils.setupNetwork(networkConfig[curStore.defaultNetwork]);
     }
   }, [chainId, sdk]);
 

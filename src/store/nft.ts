@@ -31,6 +31,7 @@ type SIGN_DATA = {
 
 export class nftStore {
   rootStore: RootStore;
+  defaultNetwork: 4690
   data = {
     "bgColor": "linear-gradient(0deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)), linear-gradient(107.56deg, #00C2FF 0%, #CC00FF 100%)",
     "type": "nft",
@@ -1523,32 +1524,6 @@ export class nftStore {
         "address": "0xbe050178c28885a0204fcfaC2A1039C34164f466",
         "API_URL":"https://geo.w3bstream.com"
       }
-    }
-  }
-
-  networkConfig = {
-    default: 4690,
-    4690: {
-      chainId: 4690,
-      blockExplorerUrls: ['https://testnet.iotexscan.io'],
-      chainName: 'IOTX Testnet',
-      nativeCurrency: {
-        decimals:  18,
-        name: 'IOTX Testnet',
-        symbol: 'IOTX'
-      },
-      rpcUrls: ['https://babel-api.testnet.iotex.io/']
-    },
-    4689: {
-      chainId: 4689,
-      blockExplorerUrls: ['https://iotexscan.io'],
-      chainName: 'IoTeX',
-      nativeCurrency: {
-        decimals:  18,
-        name: 'IOTX Mainnet',
-        symbol: 'IOTX'
-      },
-      rpcUrls: ['https://babel-api.mainnet.iotex.io/']
     }
   }
 
