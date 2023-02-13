@@ -10,6 +10,8 @@ import LocationNFTABI from "../constants/abis/LocationNFTABI.json";
 import _ from "lodash";
 import { request, gql } from 'graphql-request'
 import { BooleanState } from './standard/base';
+import { erc20Data } from '../config/chain'
+import {GeostreamSDK} from '@w3bstream/geostream'
 
 type DEVICE_ITEM = {
   latitude: number;
@@ -32,82 +34,8 @@ type SIGN_DATA = {
 
 export class erc20Store {
   rootStore: RootStore;
-  defaultNetwork: 4689
-  data = {
-    "type": "erc20",
-    "ui": {
-      "bgColor": 'linear-gradient(0deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)), linear-gradient(107.56deg, #26BD7E 0%, #0F33B2 100%);',
-      "logos": [
-        "/images/logo.png",
-      ],
-      "title": "Claim Your AES- \n W3bstream Token",
-      "subtitle": "Simply download ioPay wallet and connect \n your location to claim the Token!",
-      "tips": {
-        "name": "View claim instructions >>>",
-        "url": "https://docs.google.com/document/d/1kchVOHNmRUy5JfqLfeprCufgNmxnJlcj8M3_cnFrXyo/edit"
-      },
-      "steps": [
-        {
-          "title": "Step 1",
-          "description": "Download ioPay wallet",
-          "image": "/images/step_11.png",
-          "href": "https://iopay.me/",
-        },
-        {
-          "title": "Step 2",
-          "description": "Enable W3bstream in ioPay Bind Geo Location to Wallet",
-          "image": "/images/step_22.png",
-          "href": null
-        },
-        {
-          "title": "Step 3",
-          "description": "Claim Token",
-          "image": "/images/step_33.png",
-          "href": null
-        }
-      ],
-      "icon": {
-        "image": "/images/iotex_nft.png",
-        "bg": "/images/bg_nft_pic.png"
-      }
-    },
-    "contract": {
-      "aes": {
-        "4690": {
-          "address": "0x9Ef768a5b5D5fb2c68C26f8e1661d76f33E661cf",
-          "API_URL":"https://geo-test.w3bstream.com"
-        },
-        "4689": {
-          "address": "0x270F2f9BfCd5Ae62df36411db1beD8a6d917c639",
-          "API_URL":"https://geo.w3bstream.com"
-        }
-      },
-      "maintest": {
-        "4690": {
-          "address": "0x9Ef768a5b5D5fb2c68C26f8e1661d76f33E661cf",
-          "API_URL":"https://geo-test.w3bstream.com"
-        },
-        "4689": {
-          "address": "0x270F2f9BfCd5Ae62df36411db1beD8a6d917c639",
-          "API_URL":"https://geo.w3bstream.com"
-        }
-      },
-      "airdrop": {
-        "4690": {
-          "address": "",
-          "API_URL":"https://geo-test.w3bstream.com"
-        },
-        "4689": {
-          "address": "",
-          "API_URL":"https://geo.w3bstream.com"
-        }
-      }
-    }
-  }
-
-
-
-
+  defaultChainId: 4689
+  data = erc20Data
 
   contractInstance: any;
   sdk: any;
@@ -120,6 +48,9 @@ export class erc20Store {
   loading: boolean = true;
   claimIndex: number = 0;
 
+  geoStreamSdk: GeostreamSDK
+
+
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
     makeAutoObservable(this);
@@ -130,63 +61,23 @@ export class erc20Store {
   }
 
   // Main function
-  async init({ chainId, address, sdk, disconnect, name }: any) {
-    console.log('chainId===', chainId, address, name)
-    if(name === '') return;
+  async init({ address, chainId,  sdk, disconnect, name }: any) {
     this.setData({
-      loading: true,
-      chainId,
-      owner: address,
-      sdk,
-      disconnect,
+      sdk, owner:address, chainId, disconnect, loading: true,
       contractInstance: this.data.contract[name]
     });
+    // @ts-ignore
+    this.geoStreamSdk = new GeostreamSDK({mode: chainId === 4689 ? 'prod' : 'dev', signer: {signMessage: (data) => this.sdk.wallet.sign(data), getAddress: () => address}});
+    console.log('geoStreamSdk', this.geoStreamSdk)
     await this.places.call();
-    console.log('this.placesTest.value', this.places.value)
-    const signResult = await this.signInWithMetamask();
-    console.log('signResult', signResult)
-    if(!signResult) return false;
-    const { message, sign } = signResult;
-    console.log('message', message, sign)
-    await this.signData.call(message, sign);
+    await this.signAndGetProf.call();
     await this.claimLists.call();
   }
 
-  // create siwe message
-  createSiweMessage = () => {
-    // @ts-ignore
-    const locations = this.places.value && this.places.value.length > 0 ? this.places.value.map(item => item.feature) : []
-    console.log("locations===", locations);
-    const message = new SiweMessage({
-      domain: globalThis.location.host,
-      address: this.owner,
-      statement: `Sign in Location Based NFT The application will know if you were located in one of the following regions in the time range below:locations:${locations.join(',')}`,
-      uri: globalThis.location.origin,
-      version: "1",
-      chainId: this.chainId,
-      expirationTime: moment().add(1, "minutes").toISOString(),
-    });
-    return message.prepareMessage();
-  };
-  // sign in with metamask
-  signInWithMetamask = async () => {
-    try {
-      const message = this.createSiweMessage();
-      const sign = await this.sdk?.wallet.sign(message);
-      return { message, sign };
-    } catch (err) {
-      this.disconnect();
-      this.setData({ loading: false })
-      console.log("err===", err);
-      return null
-    }
-  };
-
   // init loading
   get initLoadinng() {
-    return  this.places.loading.value || this.signData.loading.value;
+    return  this.places.loading.value || this.signAndGetProf.loading.value;
   }
-
 
   // get places from contract and format places
   places = new PromiseState({
@@ -202,56 +93,44 @@ export class erc20Store {
           }
         }
       `
-      let data = await request('https://smartgraph.one/metapebble_demo/graphql', query)
+      const data = await request('https://smartgraph.one/metapebble_demo/graphql', query)
       if(data) {
-       let places = data.MetapebbleVerifiedDrop.map((item) => {
-        let option = {
-          from: Number(item.startTimestamp),
-          to: Number(item.endTimestamp),
-          scaled_latitude: new BigNumber(item.lat.toString()).toNumber(),
-          scaled_longitude: new BigNumber(item.long.toString()).toNumber(),
-          distance: Number(item.maxDistance),
-          feature: `from ${item.startTimestamp} to ${item.endTimestamp} within ${item.maxDistance} meter from [${new BigNumber(item.lat.toString()).div(1e6).toNumber()}, ${new BigNumber(item.long.toString()).div(1e6).toNumber()}]`
-        }
-        // @ts-ignore
-        return this.defaultNetwork === 4689 ? option : {
-            imei:`1938473${Math.floor(Math.random() * 100)}`,
-            ...option,
-          }
+        const places = data.MetapebbleVerifiedDrop.map((item) => {
+          return {
+              from: Number(item.startTimestamp),
+              to: Number(item.endTimestamp),
+              scaled_latitude: new BigNumber(item.lat.toString()).toNumber(),
+              scaled_longitude: new BigNumber(item.long.toString()).toNumber(),
+              distance: Number(item.maxDistance),
+            }
         })
         return places
       }
     }
   })
 
-  // get claim origin list
-  signData = new PromiseState({
+  // sign and getProf
+  signAndGetProf = new PromiseState({
     name: "get sign data from Metapebble API",
     value: [] as SIGN_DATA[],
-    function: async (message: string, signature: string) => {
-      const places = this.places.value ? JSON.parse(JSON.stringify(this.places.value)).map(e => { delete e.feature; return e}) : [];
-      console.log('places-----', this.places.value)
+    function: async () => {
       try {
-        let data = {
-          signature,
-          message,
-          owner: this.owner,
-          locations: places
-        }
-        // @ts-ignore
-        const response = await axios.post(`${this.contractInstance[this.chainId].API_URL}/api/pol_auth`, this.defaultNetwork === 4689 ? data : {
-          adminToken: process.env.ADMIN_TOKEN,
-          owner: this.owner,
-          locations: places
-        });
-        const signData: SIGN_DATA[] = response.data.result.data;
+        const places = this.chainId === 4690 ? this.places.value.map(o => ({...o, imei:`1938473${Math.floor(Math.random() * 1000)}`})) : this.places.value
+        console.log('signAndGetProf', places)
+
+        let data = { locations: places}
+        
+        const result = this.chainId === 4690 ? await this.geoStreamSdk.pol.getMockProof(data) : await this.geoStreamSdk.pol.getProof(data);
+        console.log('result', result)
+        const signData: SIGN_DATA[] = result
         this.setData({ signStatus: true, loading: false });
 
         return signData;
       } catch (error: any) {
+        console.error('error', error)
         const err = error.response.data.error.message
-        console.error('error', err)
         toast.error(`${err}`);
+        this.disconnect();
         this.setData({ signStatus: false, loading: false });
         return [];
       }
@@ -259,15 +138,15 @@ export class erc20Store {
   });
 
 
+  // format claim Lists
   claimLists = new PromiseState({
     name: "check claim list from contract",
     value: [] as DEVICE_ITEM[],
     function: async () => {
-      if (!this.signData.value) return [];
+      if (!this.signAndGetProf.value) return [];
       const list = await Promise.all(
-        this.signData.value?.map(async (item) => {
+        this.signAndGetProf.value?.map(async (item) => {
           await this.claimedStatus.call(item.devicehash)
-          console.log('typeof', typeof this.claimedStatus.value !== "boolean" ?  JSON.parse(`${this.claimedStatus.value}`) :  this.claimedStatus.value)
           return {
             ...item,
             claimed: typeof this.claimedStatus.value !== "boolean" ?  JSON.parse(`${this.claimedStatus.value}`) :  this.claimedStatus.value,
@@ -279,11 +158,11 @@ export class erc20Store {
     },
   });
 
+  // get device claimed status
   claimedStatus = new PromiseState({
     name: "check claimed status",
     value: false,
     function: async (devicehash: string) => {
-      console.log('devicehash', devicehash)
       const query = gql`{
         MetapebbleVerifiedDrop(calls:[{address: "${this.contractInstance[this.chainId].address}",chainId: ${this.chainId}}]) {
             claimed(deviceHash_: "${devicehash}")
@@ -301,8 +180,7 @@ export class erc20Store {
     function: async (item: SIGN_DATA, index: number) => {
       this.setData({claimIndex: index})
       try {
-        const {  distance, devicehash, signature } = item;
-        // `${this.contractInstance[this.chainId].API_URL}/api/mint`
+        const { distance, devicehash, signature } = item;
         const response = await axios.post("/api/mint", {
           holder: this.owner,
           deviceHash:devicehash,

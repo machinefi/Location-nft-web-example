@@ -117,20 +117,81 @@ export const defaultNetworks: NetworkObject[] = [
 ];
 
 export const rpcs = {
-  4689: "https://babel-api.mainnet.iotex.io/",
+  4689: "https://babel-api.mainnet.iotex.io",
   4690: `https://babel-api.testnet.iotex.io`,
 };
 
-export const contracts = {
-  CesToken: {
-    4690: {
-      address: "0x9Ef768a5b5D5fb2c68C26f8e1661d76f33E661cf"
+export const erc20Data = {
+  "type": "erc20",
+  "ui": {
+    "bgColor": 'linear-gradient(0deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)), linear-gradient(107.56deg, #26BD7E 0%, #0F33B2 100%);',
+    "logos": [
+      "/images/logo.png",
+    ],
+    "title": "Claim Your AES- \n W3bstream Token",
+    "subtitle": "Simply download ioPay wallet and connect \n your location to claim the Token!",
+    "tips": {
+      "name": "View claim instructions >>>",
+      "url": "https://docs.google.com/document/d/1kchVOHNmRUy5JfqLfeprCufgNmxnJlcj8M3_cnFrXyo/edit"
     },
-    4689: {
-      address: "0x270F2f9BfCd5Ae62df36411db1beD8a6d917c639"
+    "steps": [
+      {
+        "title": "Step 1",
+        "description": "Download ioPay wallet",
+        "image": "/images/step_11.png",
+        "href": "https://iopay.me/",
+      },
+      {
+        "title": "Step 2",
+        "description": "Enable W3bstream in ioPay Bind Geo Location to Wallet",
+        "image": "/images/step_22.png",
+        "href": null
+      },
+      {
+        "title": "Step 3",
+        "description": "Claim Token",
+        "image": "/images/step_33.png",
+        "href": null
+      }
+    ],
+    "icon": {
+      "image": "/images/iotex_nft.png",
+      "bg": "/images/bg_nft_pic.png"
     }
   },
-};
+  "contract": {
+    "aes": {
+      "4690": {
+        "address": "0x9Ef768a5b5D5fb2c68C26f8e1661d76f33E661cf",
+        "API_URL":"https://geo-test.w3bstream.com"
+      },
+      "4689": {
+        "address": "0x270F2f9BfCd5Ae62df36411db1beD8a6d917c639",
+        "API_URL":"https://geo.w3bstream.com"
+      }
+    },
+    "maintest": {
+      "4690": {
+        "address": "0x9Ef768a5b5D5fb2c68C26f8e1661d76f33E661cf",
+        "API_URL":"https://geo-test.w3bstream.com"
+      },
+      "4689": {
+        "address": "0x270F2f9BfCd5Ae62df36411db1beD8a6d917c639",
+        "API_URL":"https://geo.w3bstream.com"
+      }
+    },
+    "airdrop": {
+      "4690": {
+        "address": "",
+        "API_URL":"https://geo-test.w3bstream.com"
+      },
+      "4689": {
+        "address": "",
+        "API_URL":"https://geo.w3bstream.com"
+      }
+    }
+  }
+}
 
 
 export const networkConfig = {

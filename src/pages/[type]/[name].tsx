@@ -43,10 +43,8 @@ const Template = observer(() => {
 
 
   useEffect(() => {
-    // TODO: request metamask switch network chainId !== 4690 &&
-    if (chainId && chainId !== 4689 && chainId !== 4690 && curStore.defaultNetwork) {
-      console.log('networkConfig', networkConfig[curStore.defaultNetwork])
-       metamaskUtils.setupNetwork(networkConfig[curStore.defaultNetwork]);
+    if (chainId && chainId !== 4689 && chainId !== 4690 && curStore.defaultChainId) {
+      metamaskUtils.setupNetwork(networkConfig[curStore.defaultChainId]);
     }
   }, [chainId, sdk]);
 
@@ -161,24 +159,6 @@ const Template = observer(() => {
               </Flex>
             })
           }
-          {/* <Box w={{base: "90%", lg: "21.875rem"}} textAlign={'center'} pb="24px">
-            <Image src="/images/step1.png" alt="" width="4rem" mb="1rem" mx="auto"></Image>
-            <a href="https://iopay.me" rel="noreferrer" target="_blank">
-              <Text whiteSpace={{base: "normal", lg: "pre-line"}}>{`Download ioPay Wallet`}</Text>
-            </a>
-          </Box>
-          <Image display={{base: "none", lg: "block"}} src="/images/right.png" alt="" width="2rem" h="2rem" flex="none" mx="1rem"></Image>
-          <Image display={{base: "block", lg: "none"}} src="/images/down.png" alt="" width="2rem" h="2rem" flex="none" my="1rem"></Image>
-          <Box w={{base: "90%", lg: "21.875rem"}} textAlign={'center'}>
-            <Image src="/images/step2.png" alt="" width="4rem" mb="1rem" mx="auto"></Image>
-            <Text whiteSpace={{base: "normal", lg: "pre-line"}}>{`Enable W3bstream in ioPay \n Bind Geo Location to Wallet`}</Text>
-          </Box>
-          <Image display={{base: "none", lg: "block"}} src="/images/right.png" alt="" width="2rem" h="2rem" flex="none" mx="1rem"></Image>
-          <Image display={{base: "block", lg: "none"}} src="/images/down.png" alt="" width="2rem" h="2rem" flex="none" my="1rem"></Image>
-          <Box w={{base: "90%", lg: "21.875rem"}} textAlign={'center'} pb="24px">
-            <Image src="/images/step3.png" alt="" width="4rem" mb="1rem" mx="auto"></Image>
-            Claim NFT
-          </Box> */}
         </Flex>
       </Flex>
     </Box>

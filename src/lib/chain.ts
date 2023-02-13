@@ -9,7 +9,7 @@ export class SmartSigner {
   constructor({ chainId }: { chainId: number }) {
     this.chainId = chainId
     this.init({
-        chainId
+      chainId
     })
   }
 

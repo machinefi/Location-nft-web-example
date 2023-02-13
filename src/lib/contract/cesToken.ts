@@ -1,7 +1,8 @@
-import { contracts } from "config/chain";
+import { erc20Data } from "config/chain";
 import request, { gql } from "graphql-request";
 import { SmartSigner } from "../chain";
 const api_url = "https://smartgraph.one/metapebble_demo/graphql";
+
 export class CesToken {
   signer: SmartSigner;
   constructor({ signer }: { signer: SmartSigner }) {
@@ -11,7 +12,7 @@ export class CesToken {
     return this.signer.chainId
   }
   get address () {
-    return contracts.CesToken[this.chainId].address
+    return erc20Data.contract['aes'][this.chainId].address
   }
   async claimed({
     deviceHash

@@ -31,7 +31,7 @@ type SIGN_DATA = {
 
 export class nftStore {
   rootStore: RootStore;
-  defaultNetwork: 4689
+  defaultChainId: 4689
   data = {
     "bgColor": "linear-gradient(0deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)), linear-gradient(107.56deg, #00C2FF 0%, #CC00FF 100%)",
     "type": "nft",

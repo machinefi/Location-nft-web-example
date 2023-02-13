@@ -14,7 +14,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const cesToken = new CesToken({ signer });
     const claimed = await cesToken.claimed({
       deviceHash: deviceHash,
-      
     })
     console.dir(res)
     if (claimed) {
