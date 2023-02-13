@@ -240,7 +240,7 @@ export class erc20Store {
         }
         // @ts-ignore
         const response = await axios.post(`${this.contractInstance[this.chainId].API_URL}/api/pol_auth`, this.defaultNetwork === 4689 ? data : {
-          adminToken: '0x0ba6a6ce7712f69fbc560793f567f2c7c32b75ce83d37f565f184632c88d7fbb',
+          adminToken: process.env.ADMIN_TOKEN,
           owner: this.owner,
           locations: places
         });
