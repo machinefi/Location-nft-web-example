@@ -38,7 +38,7 @@ const Map = (props) => {
 
   
   return (
-    <MapContainer center={{ lat: 30.27, lng: 120.04 }} zoom={15} ref={mapRef}>
+    <MapContainer center={{ lat: 30.27, lng: 120.04 }} zoom={13} ref={mapRef}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
