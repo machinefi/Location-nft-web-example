@@ -93,8 +93,8 @@ dependencies:
   axios: 1.3.4
   bignumber.js: 9.1.1
   ethers: 5.7.2
-  framer-motion: 7.6.7_biqbaboplfbrettd7655fr4n2y
-  iotex-antenna: 0.31.6_@babel+core@7.20.12
+  framer-motion: 7.10.3_biqbaboplfbrettd7655fr4n2y
+  iotex-antenna: 0.31.6_@babel+core@7.21.0
   leaflet: 1.9.3
   leaflet-geosearch: 3.7.0
   leaflet-overpass-layer: 2.9.0
@@ -102,7 +102,8 @@ dependencies:
   mobx: 6.8.0
   mobx-react-lite: 3.4.0_kiblcxorqzvvo7hewmdixbkuei
   moment: 2.29.4
-  next: 12.3.3_pjwopsidmaokadturxaafygjp4
+  next: 12.3.4_6m24vuloj5ihw4zc5lbsktc4fu
+  next-global-css: 1.3.1
   nexus: 1.3.0_graphql@16.6.0
   numeral: 2.0.6
   postgres: 3.3.3
@@ -117,7 +118,8 @@ dependencies:
   tabler-icons-react: 1.56.0_react@18.2.0
   typed-emitter: 2.1.0
   uuid: 8.3.2
-  wagmi: 0.8.10_w7t7ug76nqyxxxyjwppy6ummby
+  wagmi: 0.8.10_fanhxvkqvr7yl3745yxsuoyj4q
+  webpack-node-externals: 3.0.0
 
 devDependencies:
   '@babel/core': 7.21.0
@@ -5860,7 +5862,7 @@ packages:
   /axios/0.21.4_debug@4.3.4:
     resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
     dependencies:
-      follow-redirects: 1.15.2
+      follow-redirects: 1.15.2_debug@4.3.4
     transitivePeerDependencies:
       - debug
     dev: false
@@ -7611,7 +7613,7 @@ packages:
       imurmurhash: 0.1.4
       is-glob: 4.0.3
       is-path-inside: 3.0.3
-      js-sdsl: 4.3.0
+      js-sdsl: 4.2.0
       js-yaml: 4.1.0
       json-stable-stringify-without-jsonify: 1.0.1
       levn: 0.4.1
@@ -7739,7 +7741,7 @@ packages:
     resolution: {integrity: sha512-ArJ7x1WcWOlSpzdoTBX8vkwlkSQ85CjjifSZtV4co64vWxSV8geWfPI9x4SVYu3DSxnX4yWFVTtGL+j9DUFLNw==}
     dependencies:
       bn.js: 4.12.0
-      elliptic: 6.5.3
+      elliptic: 6.5.4
       xhr-request-promise: 0.1.3
     dev: false
 
@@ -9474,6 +9476,10 @@ packages:
       '@sideway/address': 4.1.4
       '@sideway/formula': 3.0.1
       '@sideway/pinpoint': 2.0.0
+
+  /js-clipper/1.0.1:
+    resolution: {integrity: sha512-0XYAS0ZoCki5K0fWwj8j8ug4mgxHXReW3ayPbVqr4zXPJuIs2pyvemL1sALadsEiAywZwW5Ify1XfU4bNJvokg==}
+    dev: false
 
   /js-sdsl/4.2.0:
     resolution: {integrity: sha512-dyBIzQBDkCqCu+0upx25Y2jGdbTGxE9fshMsCdK0ViOongpV+n5tXRcZY9v7CaVQ79AGS9KA1KHtojxiM7aXSQ==}
@@ -11525,8 +11531,50 @@ packages:
   /react-is/18.2.0:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
 
-  /react-native-codegen/0.71.3_@babel+preset-env@7.20.2:
-    resolution: {integrity: sha512-5AvdHVU1sAaXg05i0dG664ZTaCaIFaY1znV5vNsj+wUu6MGxNEUNbDKk9dxKUkkxOyk2KZOK5uhzWL0p5H5yZQ==}
+  /react-leaflet-geosearch/0.3.4_nd7mppcscjmkm3s5w32a73qabq:
+    resolution: {integrity: sha512-hI1QfdZ4AAKSij9e6HCfAVDVgBuCGqqRN40WOCNfXOvbLH9dzNpzmrGSp/GY2euDCqOTdGqYa0jfy8hwCxKDWg==}
+    peerDependencies:
+      leaflet: ^1.7.1
+      leaflet-geosearch: ^2.7.0
+      react: ^15.0.0 || ^16.0.0 || ^17.0.0
+      react-dom: ^15.0.0 || ^16.0.0 || ^17.0.0
+      react-leaflet: ^3.0.5
+    dependencies:
+      leaflet: 1.9.3
+      leaflet-geosearch: 3.7.0
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      react-leaflet: 4.2.0_yydtlhsdonbqao6vgvkwhv2zki
+    dev: false
+
+  /react-leaflet-search/2.0.1_wxqjdekrmljiqiednc3nts4niq:
+    resolution: {integrity: sha512-doOcPPUgQVO2CJrO5kg0o14qCC/iD4gQwIclZt4xfvO353yUVRGkBAt5LOhjFLgLzxWjI54VkBKK3EK1ps6clA==}
+    peerDependencies:
+      leaflet: ^1.6.0
+      prop-types: ^15.7.2
+      react: ^16.12.0
+      react-leaflet: ^2.6.0
+    dependencies:
+      leaflet: 1.9.3
+      react: 18.2.0
+      react-leaflet: 4.2.0_yydtlhsdonbqao6vgvkwhv2zki
+    dev: false
+
+  /react-leaflet/4.2.0_yydtlhsdonbqao6vgvkwhv2zki:
+    resolution: {integrity: sha512-9d8T7hzYrQA5GLe3vn0qtRLJzQKgjr080NKa45yArGwuSl1nH/6aK9gp7DeYdktpdO1vKGSUTGW5AsUS064X0A==}
+    peerDependencies:
+      leaflet: ^1.9.0
+      react: ^18.0.0
+      react-dom: ^18.0.0
+    dependencies:
+      '@react-leaflet/core': 2.1.0_yydtlhsdonbqao6vgvkwhv2zki
+      leaflet: 1.9.3
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
+
+  /react-native-codegen/0.71.5_@babel+preset-env@7.20.2:
+    resolution: {integrity: sha512-rfsuc0zkuUuMjFnrT55I1mDZ+pBRp2zAiRwxck3m6qeGJBGK5OV5JH66eDQ4aa+3m0of316CqrJDRzVlYufzIg==}
     dependencies:
       '@babel/parser': 7.21.1
       flow-parser: 0.185.2
@@ -13623,9 +13671,9 @@ packages:
   /webidl-conversions/3.0.1:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
 
-  /webidl-conversions/5.0.0:
-    resolution: {integrity: sha512-VlZwKPCkYKxQgeSbH5EyngOmRp7Ww7I9rQLERETtf5ofd9pGeswWiOtogpEO850jziPRarreGxn5QIiTqpb2wA==}
-    engines: {node: '>=8'}
+  /webpack-node-externals/3.0.0:
+    resolution: {integrity: sha512-LnL6Z3GGDPht/AigwRh2dvL9PQPFQ8skEpVrWZXLWBYmqcaojHNN0onvHzie6rq7EWKrrBfPYqNEzTJgiwEQDQ==}
+    engines: {node: '>=6'}
     dev: false
 
   /websocket/1.0.34:

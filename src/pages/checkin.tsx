@@ -53,7 +53,7 @@ const Checkin = observer(() => {
         {/* logos */}
         <Flex
           justifyContent={{ base: "center", lg: "flex-start" }}
-          ml={{ base: "0", md: "5%", xl: "15%" }}
+          ml={{ base: "0", md: "5%", xl: "10%" }}
           mt={{ base: "2.5rem", lg: "3rem", xl: "2rem", "2xl": "6rem" }}
           mb={{ base: "2rem", md: "2rem", lg: "2rem", xl: "2rem", "2xl": "4rem" }}
           alignItems={"center"}
@@ -66,17 +66,18 @@ const Checkin = observer(() => {
         {/* center */}
         <Flex
           flex={{ base: "none", lg: "1" }}
-          ml={{ base: "0", md: "5%", xl: "15%" }}
+          mt="3rem"
+          ml={{ base: "0", md: "5%", xl: "10%" }}
           flexDirection={{ base: "column", lg: "row" }}
           justifyContent={{ base: "center", lg: "flex-start" }}
           alignItems={{ base: "center", lg: "flex-start" }}
         >
-          <Box width="45%" height="45vh" mr="5%">
+          <Box width="40%" height="50vh" mr="3%">
             <OpenStreetMap curStore={checkInStore} />
           </Box>
-          <Box textAlign={{ base: "center", lg: "left" }} py={{ base: "40px", lg: 0 }} w={{ base: "90%", lg: "48%" }}>
+          <Box textAlign={{ base: "center", lg: "left" }} py={{ base: "40px", lg: 0 }} w={{ base: "90%", lg: "40%" }}>
             <Text display={{base:"none", lg:"block"}} whiteSpace={'pre-line'} fontSize={{base: "3.5rem", lg: "3rem", "2xl": "3.75rem"}} fontWeight={700} lineHeight={{md: "4rem", xl: "4rem", "2xl": "4.5rem"}} fontFamily={'Prompt'}>{`Location NFT`}</Text>
-            <Text mb="1rem" display={{base:"none", lg:"block"}} whiteSpace={'pre-line'} fontSize="1.25rem" fontWeight={300} mt={{base: "1rem", lg: "1rem", "2xl": "1.5625rem"}} fontFamily={'Helvetica'}>
+            <Text mb="2rem" display={{base:"none", lg:"block"}} whiteSpace={'pre-line'} fontSize="1.25rem" fontWeight={300} mt={{base: "1rem", lg: "1rem", "2xl": "1.5625rem"}} fontFamily={'Helvetica'}>
               {`Simply download ioPay wallet and connect your \n location  to claim the NFT!`}
             </Text>
             {!address ? (<ConnectWallet className="walletBtn" />) : (
@@ -103,7 +104,7 @@ const Checkin = observer(() => {
                     <Box flexDirection="column" alignItems={"center"} w="full">
                       {checkInStore.mapPlaces.value?.map((item: any, oindex: number) => {
                         return (
-                          <Flex key={item.lat} mb="1rem" w="100%" alignItems={"center"} justifyContent={"space-between"}>
+                          <Flex key={item.lat} mb="1rem" w="90%" alignItems={"center"} justifyContent={"space-between"}>
                             <Text>Place ID: {item.osm_id}</Text>
                             {item.claimed ? (
                               <Button bg="white" disabled size="sm">

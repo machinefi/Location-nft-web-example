@@ -2,12 +2,12 @@ import { useEffect } from "react";
 import { useMap } from "react-leaflet";
 // @ts-ignore
 import { GeoSearchControl } from "leaflet-geosearch";
-import L from "leaflet";
 
 const SearchControl = props => {
   const map = useMap();
 
   useEffect(() => {
+    // @ts-ignore
     const searchControl = new GeoSearchControl({
       provider: props.provider,
       ...props,
