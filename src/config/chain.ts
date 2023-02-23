@@ -170,6 +170,16 @@ export const erc20Data = {
         "API_URL":"https://geo.w3bstream.com"
       }
     },
+    "map": {
+      "4690": {
+        "address": "0x9Ef768a5b5D5fb2c68C26f8e1661d76f33E661cf",
+        "API_URL":"https://geo-test.w3bstream.com"
+      },
+      "4689": {
+        "address": "0x270F2f9BfCd5Ae62df36411db1beD8a6d917c639",
+        "API_URL":"https://geo.w3bstream.com"
+      }
+    },
     "maintest": {
       "4690": {
         "address": "0x9Ef768a5b5D5fb2c68C26f8e1661d76f33E661cf",
@@ -190,6 +200,69 @@ export const erc20Data = {
         "API_URL":"https://geo.w3bstream.com"
       }
     }
+  }
+}
+
+export const nftData = {
+  "type": "nft",
+  "ui": {
+    "bgColor": "linear-gradient(0deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)), linear-gradient(107.56deg, #00C2FF 0%, #CC00FF 100%)",
+    "logos": [
+      "http://localhost:3000/images/logo.png",
+      "http://localhost:3000/images/logo_CES.png"
+    ],
+    "title": "Claim Your CES- \n W3bstream NFT",
+    "subtitle": "Simply download ioPay wallet and connect your location to claim the NFT!",
+    "tips": {
+      "name": "View claim instructions >>>",
+      "url": "https://docs.google.com/document/d/1kchVOHNmRUy5JfqLfeprCufgNmxnJlcj8M3_cnFrXyo/edit"
+    },
+    "steps": [
+      {
+        "title": "Step 1",
+        "description": "Download ioPay wallet",
+        "image": "http://localhost:3000/images/step1.png",
+        "href": "https://iopay.me/"
+      },
+      {
+        "title": "Step 2",
+        "description": "Enable W3bstream in ioPay Bind Geo Location to Wallet",
+        "image": "http://localhost:3000/images/step2.png",
+        "href": null
+      },
+      {
+        "title": "Step 3",
+        "description": "Claim NFT",
+        "image": "http://localhost:3000/images/step3.png",
+        "href": null
+      }
+    ],
+    "icon": {
+      "image": "http://localhost:3000/images/badge.png",
+      "bg": "http://localhost:3000/images/bg_nft_pic.png"
+    }
+  },
+  "contract":{
+    "ces": {
+      "4690": {
+        "address": "0x775B56a6E3b13A19404FC186098f564B19715Ab9",
+        "API_URL":"https://geo-test.w3bstream.com"
+      },
+      "4689": {
+        "address": "0xbe050178c28885a0204fcfaC2A1039C34164f466",
+        "API_URL":"https://geo.w3bstream.com"
+      }
+    },
+    "map": {
+      "4690": {
+        "address": "0x9Ef768a5b5D5fb2c68C26f8e1661d76f33E661cf",
+        "API_URL":"https://geo-test.w3bstream.com"
+      },
+      "4689": {
+        "address": "0x270F2f9BfCd5Ae62df36411db1beD8a6d917c639",
+        "API_URL":"https://geo.w3bstream.com"
+      }
+    },
   }
 }
 

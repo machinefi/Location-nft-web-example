@@ -1,14 +1,13 @@
-import axios from "axios";
-import moment from "moment";
 import { makeAutoObservable } from "mobx";
 import RootStore from "./root";
-import { SiweMessage } from "siwe";
+import { request, gql } from 'graphql-request'
 import { BigNumber } from "bignumber.js";
 import toast from "react-hot-toast";
 import { PromiseState } from "./standard/PromiseState";
-import LocationNFTABI from "../constants/abis/LocationNFTABI.json";
+import {nftData} from '../config/chain'
 import _ from "lodash";
-
+import {GeostreamSDK} from '@w3bstream/geostream'
+import axios from "axios"
 
 type DEVICE_ITEM = {
   latitude: number;
@@ -31,1501 +30,8 @@ type SIGN_DATA = {
 
 export class nftStore {
   rootStore: RootStore;
-  defaultChainId: 4689
-  data = {
-    "bgColor": "linear-gradient(0deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)), linear-gradient(107.56deg, #00C2FF 0%, #CC00FF 100%)",
-    "type": "nft",
-    "ui": {
-      "logos": [
-        "http://localhost:3000/images/logo.png",
-        "http://localhost:3000/images/logo_CES.png"
-      ],
-      "title": "Claim Your CES- \n W3bstream NFT",
-      "subtitle": "Simply download ioPay wallet and connect your location to claim the NFT!",
-      "tips": {
-        "name": "View claim instructions >>>",
-        "url": "https://docs.google.com/document/d/1kchVOHNmRUy5JfqLfeprCufgNmxnJlcj8M3_cnFrXyo/edit"
-      },
-      "steps": [
-        {
-          "title": "Step 1",
-          "description": "Download ioPay wallet",
-          "image": "http://localhost:3000/images/step1.png",
-          "href": "https://iopay.me/"
-        },
-        {
-          "title": "Step 2",
-          "description": "Enable W3bstream in ioPay Bind Geo Location to Wallet",
-          "image": "http://localhost:3000/images/step2.png",
-          "href": null
-        },
-        {
-          "title": "Step 3",
-          "description": "Claim NFT",
-          "image": "http://localhost:3000/images/step3.png",
-          "href": null
-        }
-      ],
-      "icon": {
-        "image": "http://localhost:3000/images/badge.png",
-        "bg": "http://localhost:3000/images/bg_nft_pic.png"
-      }
-    },
-    "contract":{
-      "4690": {
-        "abi": [
-          {
-            "inputs": [
-              {
-                "internalType": "int256[]",
-                "name": "_lats",
-                "type": "int256[]"
-              },
-              {
-                "internalType": "int256[]",
-                "name": "_longs",
-                "type": "int256[]"
-              },
-              {
-                "internalType": "uint256[]",
-                "name": "_maxDistances",
-                "type": "uint256[]"
-              },
-              {
-                "internalType": "uint256[]",
-                "name": "_startTimestamps",
-                "type": "uint256[]"
-              },
-              {
-                "internalType": "uint256[]",
-                "name": "_endTimestamps",
-                "type": "uint256[]"
-              },
-              {
-                "internalType": "address",
-                "name": "_verifier",
-                "type": "address"
-              },
-              {
-                "internalType": "string",
-                "name": "_name",
-                "type": "string"
-              },
-              {
-                "internalType": "string",
-                "name": "_symbol",
-                "type": "string"
-              }
-            ],
-            "stateMutability": "nonpayable",
-            "type": "constructor"
-          },
-          {
-            "anonymous": false,
-            "inputs": [
-              {
-                "indexed": true,
-                "internalType": "address",
-                "name": "owner",
-                "type": "address"
-              },
-              {
-                "indexed": true,
-                "internalType": "address",
-                "name": "approved",
-                "type": "address"
-              },
-              {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "tokenId",
-                "type": "uint256"
-              }
-            ],
-            "name": "Approval",
-            "type": "event"
-          },
-          {
-            "anonymous": false,
-            "inputs": [
-              {
-                "indexed": true,
-                "internalType": "address",
-                "name": "owner",
-                "type": "address"
-              },
-              {
-                "indexed": true,
-                "internalType": "address",
-                "name": "operator",
-                "type": "address"
-              },
-              {
-                "indexed": false,
-                "internalType": "bool",
-                "name": "approved",
-                "type": "bool"
-              }
-            ],
-            "name": "ApprovalForAll",
-            "type": "event"
-          },
-          {
-            "anonymous": false,
-            "inputs": [
-              {
-                "indexed": true,
-                "internalType": "address",
-                "name": "holder",
-                "type": "address"
-              },
-              {
-                "indexed": true,
-                "internalType": "bytes32",
-                "name": "deviceHash",
-                "type": "bytes32"
-              },
-              {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "tokenId",
-                "type": "uint256"
-              }
-            ],
-            "name": "Claimed",
-            "type": "event"
-          },
-          {
-            "anonymous": false,
-            "inputs": [
-              {
-                "indexed": true,
-                "internalType": "address",
-                "name": "previousOwner",
-                "type": "address"
-              },
-              {
-                "indexed": true,
-                "internalType": "address",
-                "name": "newOwner",
-                "type": "address"
-              }
-            ],
-            "name": "OwnershipTransferred",
-            "type": "event"
-          },
-          {
-            "anonymous": false,
-            "inputs": [
-              {
-                "indexed": true,
-                "internalType": "address",
-                "name": "from",
-                "type": "address"
-              },
-              {
-                "indexed": true,
-                "internalType": "address",
-                "name": "to",
-                "type": "address"
-              },
-              {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "tokenId",
-                "type": "uint256"
-              }
-            ],
-            "name": "Transfer",
-            "type": "event"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "int256",
-                "name": "_lat",
-                "type": "int256"
-              },
-              {
-                "internalType": "int256",
-                "name": "_long",
-                "type": "int256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "_maxDistance",
-                "type": "uint256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "_startTimestamp",
-                "type": "uint256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "_endTimestamp",
-                "type": "uint256"
-              }
-            ],
-            "name": "addPlace",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "address",
-                "name": "to",
-                "type": "address"
-              },
-              {
-                "internalType": "uint256",
-                "name": "tokenId",
-                "type": "uint256"
-              }
-            ],
-            "name": "approve",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "address",
-                "name": "owner",
-                "type": "address"
-              }
-            ],
-            "name": "balanceOf",
-            "outputs": [
-              {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "int256",
-                "name": "lat_",
-                "type": "int256"
-              },
-              {
-                "internalType": "int256",
-                "name": "long_",
-                "type": "int256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "distance_",
-                "type": "uint256"
-              },
-              {
-                "internalType": "bytes32",
-                "name": "deviceHash_",
-                "type": "bytes32"
-              },
-              {
-                "internalType": "uint256",
-                "name": "startTimestamp_",
-                "type": "uint256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "endTimestamp_",
-                "type": "uint256"
-              },
-              {
-                "internalType": "bytes",
-                "name": "signature",
-                "type": "bytes"
-              }
-            ],
-            "name": "claim",
-            "outputs": [],
-            "stateMutability": "payable",
-            "type": "function"
-          },
-          {
-            "inputs": [],
-            "name": "claimFee",
-            "outputs": [
-              {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "bytes32",
-                "name": "deviceHash_",
-                "type": "bytes32"
-              }
-            ],
-            "name": "claimed",
-            "outputs": [
-              {
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "bytes32",
-                "name": "deviceHash_",
-                "type": "bytes32"
-              }
-            ],
-            "name": "claimedUser",
-            "outputs": [
-              {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "uint256",
-                "name": "tokenId",
-                "type": "uint256"
-              }
-            ],
-            "name": "getApproved",
-            "outputs": [
-              {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "address",
-                "name": "owner",
-                "type": "address"
-              },
-              {
-                "internalType": "address",
-                "name": "operator",
-                "type": "address"
-              }
-            ],
-            "name": "isApprovedForAll",
-            "outputs": [
-              {
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [],
-            "name": "name",
-            "outputs": [
-              {
-                "internalType": "string",
-                "name": "",
-                "type": "string"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [],
-            "name": "owner",
-            "outputs": [
-              {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "uint256",
-                "name": "tokenId",
-                "type": "uint256"
-              }
-            ],
-            "name": "ownerOf",
-            "outputs": [
-              {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [],
-            "name": "palceCount",
-            "outputs": [
-              {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "bytes32",
-                "name": "",
-                "type": "bytes32"
-              }
-            ],
-            "name": "places",
-            "outputs": [
-              {
-                "internalType": "int256",
-                "name": "lat",
-                "type": "int256"
-              },
-              {
-                "internalType": "int256",
-                "name": "long",
-                "type": "int256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "maxDistance",
-                "type": "uint256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "startTimestamp",
-                "type": "uint256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "endTimestamp",
-                "type": "uint256"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-              }
-            ],
-            "name": "placesHash",
-            "outputs": [
-              {
-                "internalType": "bytes32",
-                "name": "",
-                "type": "bytes32"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [],
-            "name": "renounceOwnership",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "address",
-                "name": "from",
-                "type": "address"
-              },
-              {
-                "internalType": "address",
-                "name": "to",
-                "type": "address"
-              },
-              {
-                "internalType": "uint256",
-                "name": "tokenId",
-                "type": "uint256"
-              }
-            ],
-            "name": "safeTransferFrom",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "address",
-                "name": "from",
-                "type": "address"
-              },
-              {
-                "internalType": "address",
-                "name": "to",
-                "type": "address"
-              },
-              {
-                "internalType": "uint256",
-                "name": "tokenId",
-                "type": "uint256"
-              },
-              {
-                "internalType": "bytes",
-                "name": "data",
-                "type": "bytes"
-              }
-            ],
-            "name": "safeTransferFrom",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "address",
-                "name": "operator",
-                "type": "address"
-              },
-              {
-                "internalType": "bool",
-                "name": "approved",
-                "type": "bool"
-              }
-            ],
-            "name": "setApprovalForAll",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "bytes4",
-                "name": "interfaceId",
-                "type": "bytes4"
-              }
-            ],
-            "name": "supportsInterface",
-            "outputs": [
-              {
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [],
-            "name": "symbol",
-            "outputs": [
-              {
-                "internalType": "string",
-                "name": "",
-                "type": "string"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "uint256",
-                "name": "index",
-                "type": "uint256"
-              }
-            ],
-            "name": "tokenByIndex",
-            "outputs": [
-              {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "address",
-                "name": "owner",
-                "type": "address"
-              },
-              {
-                "internalType": "uint256",
-                "name": "index",
-                "type": "uint256"
-              }
-            ],
-            "name": "tokenOfOwnerByIndex",
-            "outputs": [
-              {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "uint256",
-                "name": "tokenId",
-                "type": "uint256"
-              }
-            ],
-            "name": "tokenURI",
-            "outputs": [
-              {
-                "internalType": "string",
-                "name": "",
-                "type": "string"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [],
-            "name": "totalSupply",
-            "outputs": [
-              {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "address",
-                "name": "from",
-                "type": "address"
-              },
-              {
-                "internalType": "address",
-                "name": "to",
-                "type": "address"
-              },
-              {
-                "internalType": "uint256",
-                "name": "tokenId",
-                "type": "uint256"
-              }
-            ],
-            "name": "transferFrom",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "address",
-                "name": "newOwner",
-                "type": "address"
-              }
-            ],
-            "name": "transferOwnership",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          },
-          {
-            "inputs": [],
-            "name": "verifier",
-            "outputs": [
-              {
-                "internalType": "contract IMetapebbleDataVerifier",
-                "name": "",
-                "type": "address"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          }
-        ],
-        "address": "0x775B56a6E3b13A19404FC186098f564B19715Ab9",
-        "API_URL":"https://geo-test.w3bstream.com"
-      },
-      "4689": {
-        "abi": [
-          {
-            "inputs": [
-              {
-                "internalType": "int256[]",
-                "name": "_lats",
-                "type": "int256[]"
-              },
-              {
-                "internalType": "int256[]",
-                "name": "_longs",
-                "type": "int256[]"
-              },
-              {
-                "internalType": "uint256[]",
-                "name": "_maxDistances",
-                "type": "uint256[]"
-              },
-              {
-                "internalType": "uint256[]",
-                "name": "_startTimestamps",
-                "type": "uint256[]"
-              },
-              {
-                "internalType": "uint256[]",
-                "name": "_endTimestamps",
-                "type": "uint256[]"
-              },
-              {
-                "internalType": "address",
-                "name": "_verifier",
-                "type": "address"
-              },
-              {
-                "internalType": "string",
-                "name": "_name",
-                "type": "string"
-              },
-              {
-                "internalType": "string",
-                "name": "_symbol",
-                "type": "string"
-              }
-            ],
-            "stateMutability": "nonpayable",
-            "type": "constructor"
-          },
-          {
-            "anonymous": false,
-            "inputs": [
-              {
-                "indexed": true,
-                "internalType": "address",
-                "name": "owner",
-                "type": "address"
-              },
-              {
-                "indexed": true,
-                "internalType": "address",
-                "name": "approved",
-                "type": "address"
-              },
-              {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "tokenId",
-                "type": "uint256"
-              }
-            ],
-            "name": "Approval",
-            "type": "event"
-          },
-          {
-            "anonymous": false,
-            "inputs": [
-              {
-                "indexed": true,
-                "internalType": "address",
-                "name": "owner",
-                "type": "address"
-              },
-              {
-                "indexed": true,
-                "internalType": "address",
-                "name": "operator",
-                "type": "address"
-              },
-              {
-                "indexed": false,
-                "internalType": "bool",
-                "name": "approved",
-                "type": "bool"
-              }
-            ],
-            "name": "ApprovalForAll",
-            "type": "event"
-          },
-          {
-            "anonymous": false,
-            "inputs": [
-              {
-                "indexed": true,
-                "internalType": "address",
-                "name": "holder",
-                "type": "address"
-              },
-              {
-                "indexed": true,
-                "internalType": "bytes32",
-                "name": "deviceHash",
-                "type": "bytes32"
-              },
-              {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "tokenId",
-                "type": "uint256"
-              }
-            ],
-            "name": "Claimed",
-            "type": "event"
-          },
-          {
-            "anonymous": false,
-            "inputs": [
-              {
-                "indexed": true,
-                "internalType": "address",
-                "name": "previousOwner",
-                "type": "address"
-              },
-              {
-                "indexed": true,
-                "internalType": "address",
-                "name": "newOwner",
-                "type": "address"
-              }
-            ],
-            "name": "OwnershipTransferred",
-            "type": "event"
-          },
-          {
-            "anonymous": false,
-            "inputs": [
-              {
-                "indexed": true,
-                "internalType": "address",
-                "name": "from",
-                "type": "address"
-              },
-              {
-                "indexed": true,
-                "internalType": "address",
-                "name": "to",
-                "type": "address"
-              },
-              {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "tokenId",
-                "type": "uint256"
-              }
-            ],
-            "name": "Transfer",
-            "type": "event"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "int256",
-                "name": "_lat",
-                "type": "int256"
-              },
-              {
-                "internalType": "int256",
-                "name": "_long",
-                "type": "int256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "_maxDistance",
-                "type": "uint256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "_startTimestamp",
-                "type": "uint256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "_endTimestamp",
-                "type": "uint256"
-              }
-            ],
-            "name": "addPlace",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "address",
-                "name": "to",
-                "type": "address"
-              },
-              {
-                "internalType": "uint256",
-                "name": "tokenId",
-                "type": "uint256"
-              }
-            ],
-            "name": "approve",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "address",
-                "name": "owner",
-                "type": "address"
-              }
-            ],
-            "name": "balanceOf",
-            "outputs": [
-              {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "int256",
-                "name": "lat_",
-                "type": "int256"
-              },
-              {
-                "internalType": "int256",
-                "name": "long_",
-                "type": "int256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "distance_",
-                "type": "uint256"
-              },
-              {
-                "internalType": "bytes32",
-                "name": "deviceHash_",
-                "type": "bytes32"
-              },
-              {
-                "internalType": "uint256",
-                "name": "startTimestamp_",
-                "type": "uint256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "endTimestamp_",
-                "type": "uint256"
-              },
-              {
-                "internalType": "bytes",
-                "name": "signature",
-                "type": "bytes"
-              }
-            ],
-            "name": "claim",
-            "outputs": [],
-            "stateMutability": "payable",
-            "type": "function"
-          },
-          {
-            "inputs": [],
-            "name": "claimFee",
-            "outputs": [
-              {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "bytes32",
-                "name": "deviceHash_",
-                "type": "bytes32"
-              }
-            ],
-            "name": "claimed",
-            "outputs": [
-              {
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "bytes32",
-                "name": "deviceHash_",
-                "type": "bytes32"
-              }
-            ],
-            "name": "claimedUser",
-            "outputs": [
-              {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "uint256",
-                "name": "tokenId",
-                "type": "uint256"
-              }
-            ],
-            "name": "getApproved",
-            "outputs": [
-              {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "address",
-                "name": "owner",
-                "type": "address"
-              },
-              {
-                "internalType": "address",
-                "name": "operator",
-                "type": "address"
-              }
-            ],
-            "name": "isApprovedForAll",
-            "outputs": [
-              {
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [],
-            "name": "name",
-            "outputs": [
-              {
-                "internalType": "string",
-                "name": "",
-                "type": "string"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [],
-            "name": "owner",
-            "outputs": [
-              {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "uint256",
-                "name": "tokenId",
-                "type": "uint256"
-              }
-            ],
-            "name": "ownerOf",
-            "outputs": [
-              {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [],
-            "name": "palceCount",
-            "outputs": [
-              {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "bytes32",
-                "name": "",
-                "type": "bytes32"
-              }
-            ],
-            "name": "places",
-            "outputs": [
-              {
-                "internalType": "int256",
-                "name": "lat",
-                "type": "int256"
-              },
-              {
-                "internalType": "int256",
-                "name": "long",
-                "type": "int256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "maxDistance",
-                "type": "uint256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "startTimestamp",
-                "type": "uint256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "endTimestamp",
-                "type": "uint256"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-              }
-            ],
-            "name": "placesHash",
-            "outputs": [
-              {
-                "internalType": "bytes32",
-                "name": "",
-                "type": "bytes32"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [],
-            "name": "renounceOwnership",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "address",
-                "name": "from",
-                "type": "address"
-              },
-              {
-                "internalType": "address",
-                "name": "to",
-                "type": "address"
-              },
-              {
-                "internalType": "uint256",
-                "name": "tokenId",
-                "type": "uint256"
-              }
-            ],
-            "name": "safeTransferFrom",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "address",
-                "name": "from",
-                "type": "address"
-              },
-              {
-                "internalType": "address",
-                "name": "to",
-                "type": "address"
-              },
-              {
-                "internalType": "uint256",
-                "name": "tokenId",
-                "type": "uint256"
-              },
-              {
-                "internalType": "bytes",
-                "name": "data",
-                "type": "bytes"
-              }
-            ],
-            "name": "safeTransferFrom",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "address",
-                "name": "operator",
-                "type": "address"
-              },
-              {
-                "internalType": "bool",
-                "name": "approved",
-                "type": "bool"
-              }
-            ],
-            "name": "setApprovalForAll",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "bytes4",
-                "name": "interfaceId",
-                "type": "bytes4"
-              }
-            ],
-            "name": "supportsInterface",
-            "outputs": [
-              {
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [],
-            "name": "symbol",
-            "outputs": [
-              {
-                "internalType": "string",
-                "name": "",
-                "type": "string"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "uint256",
-                "name": "index",
-                "type": "uint256"
-              }
-            ],
-            "name": "tokenByIndex",
-            "outputs": [
-              {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "address",
-                "name": "owner",
-                "type": "address"
-              },
-              {
-                "internalType": "uint256",
-                "name": "index",
-                "type": "uint256"
-              }
-            ],
-            "name": "tokenOfOwnerByIndex",
-            "outputs": [
-              {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "uint256",
-                "name": "tokenId",
-                "type": "uint256"
-              }
-            ],
-            "name": "tokenURI",
-            "outputs": [
-              {
-                "internalType": "string",
-                "name": "",
-                "type": "string"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [],
-            "name": "totalSupply",
-            "outputs": [
-              {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "address",
-                "name": "from",
-                "type": "address"
-              },
-              {
-                "internalType": "address",
-                "name": "to",
-                "type": "address"
-              },
-              {
-                "internalType": "uint256",
-                "name": "tokenId",
-                "type": "uint256"
-              }
-            ],
-            "name": "transferFrom",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          },
-          {
-            "inputs": [
-              {
-                "internalType": "address",
-                "name": "newOwner",
-                "type": "address"
-              }
-            ],
-            "name": "transferOwnership",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-          },
-          {
-            "inputs": [],
-            "name": "verifier",
-            "outputs": [
-              {
-                "internalType": "contract IMetapebbleDataVerifier",
-                "name": "",
-                "type": "address"
-              }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-          }
-        ],
-        "address": "0xbe050178c28885a0204fcfaC2A1039C34164f466",
-        "API_URL":"https://geo.w3bstream.com"
-      }
-    }
-  }
+  defaultChainId: 4690
+  data = nftData
 
   contractInstance: any;
   sdk: any;
@@ -1537,6 +43,9 @@ export class nftStore {
   chainId: number = 4689;
   loading: boolean = true;
   claimIndex: number = 0;
+  siteName: string = "";
+
+  geoStreamSdk: GeostreamSDK
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
@@ -1548,83 +57,99 @@ export class nftStore {
   }
 
   // Main function
-  async init({ contract, chainId, address, sdk, disconnect }: any) {
-    console.log('chainId===', chainId, address)
-    this.setData({
-      loading: true,
-      contractInstance: contract,
-      chainId,
-      owner: address,
-      sdk,
-      disconnect
-    });
-    await this.nftBalance.call();
-    await this.places.call();
-    await this.claimFee.call();
-    console.log('something', this.places.value, this.nftBalance.value, this.claimFee.value)
-    const signResult = await this.signInWithMetamask();
-    console.log('signResult', signResult)
-    if(!signResult) return false;
-    const { message, sign } = signResult;
-    console.log('message', message, sign)
-    await this.signData.call(message, sign);
-    await this.claimLists.call();
-    console.log("init===", this.claimFee.value);
-  }
-
-  // create siwe message
-  createSiweMessage = () => {
-    const locations = this.places.value && this.places.value.length > 0 ? this.places.value.map(item => item.feature) : []
-    console.log("locations===", locations);
-    const message = new SiweMessage({
-      domain: globalThis.location.host,
-      address: this.owner,
-      statement: `Sign in Location Based NFT The application will know if you were located in one of the following regions in the time range below:locations:${locations.join(',')}`,
-      uri: globalThis.location.origin,
-      version: "1",
-      chainId: this.chainId,
-      expirationTime: moment().add(1, "minutes").toISOString(),
-    });
-    return message.prepareMessage();
-  };
-
-  // sign in with metamask
-  signInWithMetamask = async () => {
-    try {
-      const message = this.createSiweMessage();
-      const sign = await this.sdk?.wallet.sign(message);
-      return { message, sign };
-    } catch (err) {
-      this.disconnect();
-      this.setData({ loading: false })
-      console.log("err===", err);
-      return null
+  async init({ address, chainId,  sdk, disconnect, name }: any) {
+    if (name == "map" && !this.mapPlaces.value) {
+      disconnect()
+      return
     }
-  };
+    this.setData({
+      siteName: name, sdk, owner:address, chainId, disconnect, loading: true,
+      contractInstance: this.data.contract[name], 
+    });
+    // @ts-ignore
+    this.geoStreamSdk = new GeostreamSDK({mode: chainId === 4689 ? 'prod' : 'dev', signer: {signMessage: (data) => this.sdk.wallet.sign(data), getAddress: () => address}});
+    
+    if(name !== 'map') {
+      await this.places.call();
+      await this.nftBalance.call();
+      await this.claimFee.call();
+      await this.signAndGetProf.call();
+    }
+    await this.claimLists.call();
+  }
 
   // init loading
   get initLoadinng() {
-    return  this.places.loading.value || this.signData.loading.value;
+    if(this.siteName === 'map') return this.mapPlaces.loading.value || this.signAndGetProf.loading.value;
+    return  this.places.loading.value || this.signAndGetProf.loading.value;
   }
+
+  // nft balance
+  nftBalance = new PromiseState({
+    name: "get nft balance",
+    value: 0,
+    function: async () => {
+      let data = await this.smartQueryFun.call(`balanceOf(owner: "${this.owner}")`, 'LocationNFT')
+      return new BigNumber(data?.balanceOf).toNumber()
+    },
+  });
+
+  claimFee = new PromiseState({
+    name: "get claim fee",
+    value: 0,
+    function: async () => {
+      let data = await this.smartQueryFun.call(`claimFee`, 'LocationNFT')
+      return new BigNumber(data?.claimFee).toNumber()
+    },
+  });
+
+  // place count
+  placeCount = new PromiseState({
+    name: "get place count",
+    function: async () => {
+      let data = await this.smartQueryFun.call(`palceCount`, 'LocationNFT')
+      return Number(data?.palceCount)
+    },
+  });
+
+  // place hash
+  placeHash = new PromiseState({
+    name: "place hash",
+    function: async (index) => {
+      console.log('index', index)
+      let data = await this.smartQueryFun.call(`placesHash(args0: "${index}")`, 'LocationNFT')
+      return data?.placesHash
+    },
+  });
+
+  // place item
+  placeItem = new PromiseState({
+    name: "place item",
+    function: async () => {
+      let data = await this.smartQueryFun.call(`places(args0: "${this.placeHash.value}")`, 'LocationNFT')
+      return data?.places
+    },
+  });
 
   // get places from contract and format places
   places = new PromiseState({
     name: "get query places from contract",
     function: async () => {
-      const contract = this.contractInstance;
-      const result = await contract?.call("palceCount");
-      const count = result.toNumber();
+      await this.placeCount.call();
+      console.log('placeCount', this.placeCount.value)
       let places = await Promise.all(
-        _.range(0, count).map(async (i) => {
-          const hash = await contract?.call("placesHash", i);
-          const item = await contract?.call("places", hash);
+        _.range(0, this.placeCount.value).map(async (i) => {
+          await this.placeHash.call(i.toString());
+          await this.placeItem.call();
+          const [lat, long, maxDistance, startTimestamp , endTimestamp] = this.placeItem.value.split(',');
+          console.log('placeItem', lat, long, maxDistance, startTimestamp, endTimestamp)
           return {
-            from: item.startTimestamp.toNumber(),
-            to: item.endTimestamp.toNumber(),
-            scaled_latitude: new BigNumber(item.lat.toString()).toNumber(),
-            scaled_longitude: new BigNumber(item.long.toString()).toNumber(),
-            distance: item.maxDistance.toNumber(),
-            feature: `from ${item.startTimestamp.toNumber()} to ${item.endTimestamp.toNumber()} within ${item.maxDistance.toNumber()} meter from [${new BigNumber(item.lat.toString()).div(1e6).toNumber()}, ${new BigNumber(item.long.toString()).div(1e6).toNumber()}]`
+            from: startTimestamp,
+            to: endTimestamp,
+            scaled_latitude: new BigNumber(lat).toNumber(),
+            scaled_longitude: new BigNumber(long).toNumber(),
+            distance: maxDistance,
+            feature: `from ${startTimestamp} to ${endTimestamp} within ${maxDistance} meter from [${new BigNumber(lat).div(1e6).toNumber()}, ${new BigNumber(long).div(1e6).toNumber()}]`
           };
         })
       );
@@ -1632,45 +157,60 @@ export class nftStore {
     },
   });
 
-  // get claim origin list
-  signData = new PromiseState({
+  // click map set location
+  mapPlaces = new PromiseState({
+    name: "map places",
+    function: async (location) => {
+      const {lat, lng} = location
+      return [{
+        from: 1670402620,
+        to: 1670403620,
+        scaled_latitude: new BigNumber((lat * 1000000).toFixed(0)).toNumber(),
+        scaled_longitude: new BigNumber((lng * 1000000).toFixed(0)).toNumber(),
+        distance: 100,
+      }]
+    }
+  })
+
+  // sign and getProf
+  signAndGetProf = new PromiseState({
     name: "get sign data from Metapebble API",
     value: [] as SIGN_DATA[],
-    function: async (message: string, signature: string, contract = this.contractInstance) => {
-      const places = this.places.value ? JSON.parse(JSON.stringify(this.places.value)).map(e => { delete e.feature; return e}) : [];
-      console.log("places===", places);
+    function: async () => {
       try {
-        const response = await axios.post(`${this.data.contract[this.chainId].API_URL}/api/pol`, {
-          signature,
-          message,
-          owner: this.owner,
-          locations: places,
-        });
-        const signData: SIGN_DATA[] = response.data.result.data;
+        const placesArr = this.siteName === 'map' ? this.mapPlaces.value : this.places.value
+        const places = this.chainId === 4690 ? placesArr.map(o => ({...o, imei:`1938473${Math.floor(Math.random() * 1000)}`})) : placesArr
+
+        let data = { locations: places}
+        const result = this.chainId === 4690 ? await this.geoStreamSdk.pol.getMockProof(data) : await this.geoStreamSdk.pol.getProof(data);
+        console.log('result', result)
+        const signData: SIGN_DATA[] = result
         this.setData({ signStatus: true, loading: false });
 
         return signData;
       } catch (error: any) {
+        console.error('error', error)
         const err = error.response.data.error.message
-        console.error('error', err)
         toast.error(`${err}`);
+        this.disconnect();
         this.setData({ signStatus: false, loading: false });
         return [];
       }
     },
   });
 
+  // format claim Lists
   claimLists = new PromiseState({
     name: "check claim list from contract",
     value: [] as DEVICE_ITEM[],
     function: async () => {
-      if (!this.signData.value) return [];
-      const contract = this.contractInstance;
+      if (!this.signAndGetProf.value) return [];
       const list = await Promise.all(
-        this.signData.value?.map(async (item) => {
+        this.signAndGetProf.value?.map(async (item) => {
+          await this.claimedStatus.call(item.devicehash)
           return {
             ...item,
-            claimed: await contract?.call("claimed", item.devicehash),
+            claimed: typeof this.claimedStatus.value !== "boolean" ?  JSON.parse(`${this.claimedStatus.value}`) :  this.claimedStatus.value,
           };
         })
       );
@@ -1679,23 +219,40 @@ export class nftStore {
     },
   });
 
-  nftBalance = new PromiseState({
-    name: "get nft balance",
-    value: 0,
-    function: async () => {
-      const contract = this.contractInstance;
-      const balance = await contract?.call("balanceOf", this.owner);
-      return balance.toNumber();
-    },
-  });
+  // get device claimed status
+  claimedStatus = new PromiseState({
+    name: "check claimed status",
+    value: false,
+    function: async (devicehash: string) => {
+      const query = gql`{
+        LocationNFT(calls:[{address: "${this.contractInstance[this.chainId].address}",chainId: ${this.chainId}}]) {
+            claimed(deviceHash_: "${devicehash}")
+          }
+        }
+      `
+      let data = await request('https://smartgraph.one/metapebble_demo/graphql', query)
+      return data.LocationNFT[0].claimed
+    }
+  })
 
-  claimFee = new PromiseState({
-    name: "get claim fee",
-    value: 0,
-    function: async () => {
-      const contract = this.contractInstance;
-      const fee = await contract?.call("claimFee");
-      return fee
+  // mint Osm NFT
+  mintOsmNFT = new PromiseState({
+    name: "mint Osm NFT",
+    function: async (item: SIGN_DATA, index: number) => {
+      this.setData({claimIndex: index})
+      try {
+       const osmData = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${new BigNumber(item.scaled_latitude).div(1e6).toNumber()}&lon=${new BigNumber(item.scaled_longitude).div(1e6).toNumber()}`)
+        console.log('osmData', osmData)
+       if(osmData) {
+        const { osm_id } = osmData.data  
+        const status = await this.smartQueryFun.call(`mint(account: "${this.owner}", id: "${osm_id}")`, 'OpenStreetMapNFT')
+        const res = await this.smartQueryFun.call(`mint(account: "${this.owner}", id: "${osm_id}")`, 'OpenStreetMapNFT')
+        console.log('res', res)
+      }
+      } catch (err) {
+        console.log("error", err);
+        toast.error("Claim failed");
+      }
     },
   });
 
@@ -1704,15 +261,22 @@ export class nftStore {
     name: "claim NFT",
     function: async (item: SIGN_DATA, index: number) => {
       this.setData({claimIndex: index})
-      const contract = this.contractInstance;
       try {
         const { scaled_latitude, scaled_longitude, distance, devicehash, from, to, signature } = item;
-        const res = await contract?.call("claim", scaled_latitude, scaled_longitude, distance, devicehash, from, to, signature, {
+        const res = await this.smartQueryFun.call(`claim(
+          deviceHash_: "${devicehash}",
+          distance_: "${distance}",
+          endTimestamp_: "${to}",
+          lat_: "${scaled_latitude}",
+          long_: "${scaled_longitude}",
+          signature: "${signature}",
+          startTimestamp_: "${from}",
+        )`, 'LocationNFT', {
           value: this.claimFee.value
-        });
-
-        if (res.receipt) {
-          console.log("Receipt", res.receipt.blockHash);
+        })
+        console.log('res', res)
+        if (res.claim) {
+          console.log("Receipt", res.claim);
           toast.success('Claimed Success!');
           await this.nftBalance.call();
           await this.claimLists.call();
@@ -1723,4 +287,18 @@ export class nftStore {
       }
     },
   });
+
+  smartQueryFun = new PromiseState({
+    name: "smart query",
+    function: async (eventName, name, value?) => {
+      const query = gql`{
+        LocationNFT(calls:[{address: "${this.contractInstance[this.chainId].address}",chainId: ${this.chainId}}]) {
+            ${eventName}
+          }
+        }
+      `
+      let data = await request('https://smartgraph.one/metapebble_demo/graphql', query, value)
+      return data[name][0]
+    }
+  })
 }

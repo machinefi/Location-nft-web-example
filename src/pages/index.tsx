@@ -145,7 +145,7 @@ const Home = observer(() => {
                   </Box>
                 ))
               )}
-            </Box>
+              </Box>
             }
          </Box>
         </Flex>

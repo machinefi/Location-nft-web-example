@@ -4,7 +4,7 @@ const nextConfig = {
       config.resolve.fallback.fs = false;
     }
     return config;
-  }
+  },
 };
 
 module.exports = nextConfig;
