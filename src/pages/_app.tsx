@@ -49,7 +49,6 @@ function MyApp({ Component, pageProps }: AppProps) {
         4690: "https://babel-api.testnet.iotex.io",
         4689: "https://babel-api.mainnet.iotex.io",
       }}
-      // @ts-ignore
       supportedChains={[1, 4689, 4690]}
     >
       <ChakraProvider theme={theme}>
