@@ -55,9 +55,8 @@ const Checkin = observer(() => {
         <Flex
           w={"full"}
           mt="3rem"
-          ml={{ base: "0", md: "5%", xl: "10%" }}
           flexDirection={{ base: "column", lg: "row" }}
-          justifyContent={{ base: "center", lg: "flex-start" }}
+          justifyContent={{ base: "center", lg: "center" }}
           alignItems={{ base: "center", lg: "flex-start" }}
         >
           <Text
@@ -69,10 +68,10 @@ const Checkin = observer(() => {
             lineHeight={{ md: "4rem", xl: "4rem", "2xl": "4.5rem" }}
             fontFamily={"Prompt"}
           >{`Mint OpenStreetMap NFT`}</Text>
-          <Box margin={"auto"} width={{ base: "100%", md: "40%" }} height="50vh" mr="3%">
+          <Box  width={{ base: "100%", md: "40%" }} height="50vh" mr={{base: 0, md: "3%"}}>
             <OpenStreetMap curStore={checkInStore} address={address} />
           </Box>
-          <Box textAlign={{ base: "center", lg: "left" }} py={{ base: "40px", lg: 0 }} w={{ base: "90%", lg: "40%" }}>
+          <Box textAlign={{ base: "center", lg: "left" }} py={{ base: "40px", lg: 0 }} w={{ base: "90%", lg: "35%" }}>
             <Text
               display={{ base: "none", lg: "block" }}
               mb="2rem"

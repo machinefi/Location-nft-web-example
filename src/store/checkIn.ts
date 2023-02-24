@@ -97,7 +97,7 @@ export class checkInStore {
       if(isClaimed) {
         const list = this.nftBalanceList.value || []
         list.push(place)
-        this.nftBalanceList.setValue(list)
+        this.nftBalanceList.setValue(Array.from(new Set(list)))
       }
       return  [place]
     }
