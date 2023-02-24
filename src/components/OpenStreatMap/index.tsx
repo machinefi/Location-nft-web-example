@@ -28,7 +28,7 @@ const LocationMarker = (props) => {
 
   useEffect(() => {
     if(chainId && address) {
-      map.locate().on("locationfound", ({latlng}) => {
+      map.locate({timeout: 1000}).on("locationfound", ({latlng}) => {
         console.log('latlng', latlng)
         setPosition(latlng)
         map.flyTo(latlng, map.getZoom())
@@ -45,7 +45,7 @@ const LocationMarker = (props) => {
 
   return position === null ? null : (
     <Marker position={position}>
-      <Popup>{chainId} {address}</Popup>
+      <Popup>{position}</Popup>
     </Marker>
   )
 }

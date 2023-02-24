@@ -90,7 +90,8 @@ const Checkin = observer(() => {
               <TabPanels>
                 <TabPanel padding="0">
                   <Accordion allowMultiple>
-                    {checkInStore.nftBalanceList.value ? (
+                    {/* @ts-ignore */}
+                    {checkInStore.nftBalanceList.value?.length > 0 ? (
                       checkInStore.nftBalanceList.value?.map((item) => {
                         return (
                           <AccordionItem key={item.osm_id} border={"none"}>
@@ -142,7 +143,7 @@ const Checkin = observer(() => {
                                 textFillColor: "transparent",
                               }}
                             >
-                              {checkInStore.positionConfig[checkInStore.positionStatus]}{checkInStore.positionStatus}
+                              {checkInStore.positionConfig[checkInStore.positionStatus]}
                             </Text>
                           </Button>
                         </Flex>
