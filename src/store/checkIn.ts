@@ -102,19 +102,10 @@ export class checkInStore {
       if(isClaimed) {
         this.setData({tabIndex: 0})
         const list = this.nftBalanceList.value || []
-        if(list.length > 0) {
-          // @ts-ignore
-          const isHave = this.nftBalanceList.value.filter((o) => o.osm_id === place.osm_id)
-          if(isHave.length === 0) {
-            list.push(place)
-            this.nftBalanceList.setValue(Array.from(new Set(list)))
-          }
-        } else {
-          list.push(place)
-          this.nftBalanceList.setValue(Array.from(new Set(list)))
-        }
+        list.push(place)
+        this.nftBalanceList.setValue(list)
       }
-      return isClaimed ? [] : [place]
+      return [place]
     }
   })
 

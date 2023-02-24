@@ -27,6 +27,7 @@ const LocationMarker = (props) => {
   })
 
   useEffect(() => {
+    console.log('init location', chainId, address)
     if(chainId && address) {
       map.locate({timeout: 5000}).on("locationfound", ({latlng}) => {
         console.log('latlng', latlng)
@@ -39,6 +40,8 @@ const LocationMarker = (props) => {
         curStore.setData({positionStatus: 1})
         toast(`User denied Geolocation. Please allow location access or choose a location manually.`)
       });
+    } else {
+      curStore.setData({positionStatus: 1})
     }
   }, [chainId, address, map]);
 

@@ -102,11 +102,11 @@ const Checkin = observer(() => {
                                 </Flex>
                                 <Flex alignItems={'center'}>
                                   <Text textAlign={'left'} pl="1rem" flex="none" w="90px">Lat.: </Text>
-                                  <Text >{item.scaled_latitude}</Text>
+                                  <Text >{item.scaled_latitude.toFixed(4)}</Text>
                                 </Flex>
                                 <Flex alignItems={'center'}>
                                   <Text textAlign={'left'} pl="1rem" flex="none" w="90px">Long.: </Text>
-                                  <Text>{item.scaled_longitude}</Text>
+                                  <Text>{item.scaled_longitude.toFixed(4)}</Text>
                                 </Flex>
                               </Flex>
                             </AccordionPanel>
@@ -147,21 +147,15 @@ const Checkin = observer(() => {
                                     <Text flex="none" w="90px">Location ID: </Text>
                                     <Text fontSize={'1rem'} fontWeight={400}>{item.osm_id}</Text>
                                   </Flex>
-                                  {item.claimed ? (
-                                    <Button bg="white" disabled fontSize={'16px'} fontWeight="700" color="#306CE9">
-                                      Claimed
-                                    </Button>
-                                  ) : (
-                                    <Button
-                                      isLoading={checkInStore.mintOsmNFT.loading.value && checkInStore.claimIndex === oindex}
-                                      onClick={() => checkInStore.mintOsmNFT.call(item, oindex)}
-                                      bg="white" size="sm"
-                                      padding={'0 16px'}
-                                      fontSize={'16px'} fontWeight="700" color="#306CE9"
-                                    >
-                                      Mint OSM NFT
-                                    </Button>
-                                  )}
+                                  <Button
+                                    isLoading={checkInStore.mintOsmNFT.loading.value && checkInStore.claimIndex === oindex}
+                                    onClick={() => checkInStore.mintOsmNFT.call(item, oindex)}
+                                    bg="white" size="sm"
+                                    padding={'0 16px'}
+                                    fontSize={'16px'} fontWeight="700" color="#306CE9"
+                                  >
+                                    Mint
+                                  </Button>
                                 </Flex>
                                 <Flex fontSize={'1rem'} gap="1rem" fontWeight={400} flexDirection={"column"} alignItems="flex-start" justifyContent="flex-start">
                                   <Flex>
@@ -170,22 +164,16 @@ const Checkin = observer(() => {
                                   </Flex>
                                   <Flex alignItems={'center'}>
                                     <Text textAlign={'left'} flex="none" w="90px">Lat.: </Text>
-                                    <Text >{item.scaled_latitude}</Text>
+                                    <Text >{item.scaled_latitude.toFixed(4)}</Text>
                                   </Flex>
                                   <Flex alignItems={'center'}>
                                     <Text textAlign={'left'} flex="none" w="90px">Long.: </Text>
-                                    <Text>{item.scaled_longitude}</Text>
+                                    <Text>{item.scaled_longitude.toFixed(4)}</Text>
                                   </Flex>
                                 </Flex>
                               </Box>
                             );
                           })}
-                          {/* @ts-ignore */}
-                          {checkInStore.nftBalanceList.value?.length > 0 && checkInStore.mapPlaces.value?.length === 0  && (
-                            <Text fontSize={"1rem"} color="rgba(255, 255,255,0.5)" mt="3rem" w={"full"} align="center">
-                              Current Location is claimed ! Please choose another place.
-                            </Text>
-                          )}
                         </Box>
                       )}
                     </Box>
