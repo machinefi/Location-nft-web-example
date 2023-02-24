@@ -13,7 +13,7 @@ const LocationMarker = (props) => {
   const {curStore, address} = props
   const map = useMap()
   
-  useMapEvents({
+  const mapEvent = useMapEvents({
     click({ latlng }) {
       curStore.mapPlaces.call(latlng)
       setPosition(latlng)
@@ -28,7 +28,7 @@ const LocationMarker = (props) => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         const latlng = {lat: position.coords.latitude, lng: position.coords.longitude};
-        curStore.setData({positionStatus: 0})
+        curStore.setData({positionStatus: 2})
         setPosition(latlng)
         map.flyTo(latlng, map.getZoom())
         curStore.mapPlaces.call(latlng)

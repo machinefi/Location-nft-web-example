@@ -15,7 +15,6 @@ const OpenStreetMap = dynamic(() => import("../components/OpenStreatMap"), {
 
 const Checkin = observer(() => {
   const { checkInStore } = useStore();
-  const [tabIndex, setTabIndex] = useState(1);
 
   const [address, chainId, sdk, disconnect] = [useAddress(), useChainId(), useSDK(), useDisconnect()];
   const { address: contractAddress, abi: contractAbi } = checkInStore.contract[chainId as number] || {};
@@ -61,14 +60,14 @@ const Checkin = observer(() => {
         >
           <Text
             display={{ base: "block", lg: "none" }}
-            mb="2rem"
+            my="2rem"
             whiteSpace={"pre-line"}
             fontSize={{ base: "1.25rem" }}
             fontWeight={700}
             lineHeight={{ md: "4rem", xl: "4rem", "2xl": "4.5rem" }}
             fontFamily={"Prompt"}
           >{`Mint OpenStreetMap NFT`}</Text>
-          <Box  width={{ base: "100%", md: "40%" }} height="50vh" mr={{base: 0, md: "3%"}}>
+          <Box  width={{ base: "100%", md: "40%" }} height="50vh" mr={{base: 0, md: "3%"}} borderRadius="10px" overflow={'hidden'}>
             <OpenStreetMap curStore={checkInStore} address={address} />
           </Box>
           <Box textAlign={{ base: "center", lg: "left" }} py={{ base: "40px", lg: 0 }} w={{ base: "90%", lg: "35%" }}>
@@ -80,19 +79,10 @@ const Checkin = observer(() => {
               fontWeight={700}
               lineHeight={{ md: "4rem", xl: "4rem", "2xl": "4.5rem" }}
               fontFamily={"Prompt"}
-            >{`Mint OpenStreetMap NFT`}</Text>
-            {/* <Text
-              mb="2rem"
-              display={{ base: "none", lg: "block" }}
-              whiteSpace={"pre-line"}
-              fontSize="1.25rem"
-              fontWeight={300}
-              mt={{ base: "1rem", lg: "1rem", "2xl": "1.5625rem" }}
-              fontFamily={"Helvetica"}
-            >
-              {`Simply download ioPay wallet and connect your \n location  to claim the NFT!`}
-            </Text> */}
-            <Tabs isFitted variant="enclosed" defaultIndex={tabIndex} onChange={(index) => setTabIndex(index)}>
+            >{`Mint Location NFT`}</Text>
+         
+            {/* @ts-ignore */}
+            <Tabs isFitted variant="enclosed" index={checkInStore.tabIndex} onChange={(index) => checkInStore.setData({tabIndex: index})}>
               <TabList mb="1em">
                 <Tab _selected={{ color: "#0069f2", fontSize: "1rem", fontWeight: 700, borderColor: "#fff", bg: "#fff" }}>My NFT</Tab>
                 <Tab _selected={{ color: "#0069f2", fontSize: "1rem", fontWeight: 700, borderColor: "#fff", bg: "#fff" }}>Check In</Tab>
@@ -107,16 +97,16 @@ const Checkin = observer(() => {
                             <h2>
                               <AccordionButton>
                                 <Box as="span" flex="1" textAlign="left">
-                                  Place ID: {item.osm_id}
+                                  Location ID: {item.osm_id}
                                 </Box>
                                 <AccordionIcon />
                               </AccordionButton>
                             </h2>
                             <AccordionPanel pb={4}>
                               <Flex flexDirection={"column"} alignItems="flex-start" justifyContent="flex-start">
-                                <Text>Display Name: {item.osm_data?.display_name}</Text>
+                                <Text>Name: {item.osm_data?.display_name}</Text>
                                 <Text mt={"1rem"}>
-                                  Latitude: {item.scaled_latitude}, Longitude: {item.scaled_longitude}
+                                  Lat.: {item.scaled_latitude}, Long.: {item.scaled_longitude}
                                 </Text>
                               </Flex>
                             </AccordionPanel>
@@ -152,7 +142,7 @@ const Checkin = observer(() => {
                                 textFillColor: "transparent",
                               }}
                             >
-                              {checkInStore.positionConfig[checkInStore.positionStatus]}
+                              {checkInStore.positionConfig[checkInStore.positionStatus]}{checkInStore.positionStatus}
                             </Text>
                           </Button>
                         </Flex>
@@ -162,7 +152,7 @@ const Checkin = observer(() => {
                             return (
                               <Box key={item.osm_id}>
                                 <Flex key={item.lat} mb="1rem" w="100%" alignItems={"center"} justifyContent={"space-between"}>
-                                  <Text>Place ID: {item.osm_id}</Text>
+                                  <Text>Location ID: {item.osm_id}</Text>
                                   {item.claimed ? (
                                     <Button bg="white" disabled size="sm">
                                       <Text
@@ -201,14 +191,20 @@ const Checkin = observer(() => {
                                   )}
                                 </Flex>
                                 <Flex flexDirection={"column"} alignItems="flex-start" justifyContent="flex-start">
-                                  <Text>Display Name: {item.osm_data?.display_name}</Text>
+                                  <Text>Name: {item.osm_data?.display_name}</Text>
                                   <Text mt={"1rem"}>
-                                    Latitude: {item.scaled_latitude}, Longitude: {item.scaled_longitude}
+                                    Lat.: {item.scaled_latitude}, Long.: {item.scaled_longitude}
                                   </Text>
                                 </Flex>
                               </Box>
                             );
                           })}
+                          {/* @ts-ignore */}
+                          {checkInStore.nftBalanceList.value?.length > 0 && checkInStore.mapPlaces.value?.length === 0  && (
+                            <Text fontSize={"1rem"} color="rgba(255, 255,255,0.5)" mt="3rem" w={"full"} align="center">
+                              Current Location is claimed ! Please choose another place.
+                            </Text>
+                          )}
                         </Box>
                       )}
                     </Box>

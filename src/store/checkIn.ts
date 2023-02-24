@@ -51,6 +51,8 @@ export class checkInStore {
     1: 'Please Click Map Set Position',
     2: 'waiting'
   }
+  isClaimed: boolean = false;
+  tabIndex: number = 1;
 
   geoStreamSdk: GeostreamSDK
 
@@ -69,6 +71,9 @@ export class checkInStore {
        sdk, owner:address, chainId, disconnect, loading: true,
        contractInstance: contract
     });
+    if(address) {
+      this.nftBalanceList.call()
+    }
   }
 
   // init loading
@@ -95,8 +100,10 @@ export class checkInStore {
       }
       console.log("osmData", osmData.data, nftBalance.toNumber())
       if(isClaimed) {
+        this.setData({tabIndex: 0})
         const list = this.nftBalanceList.value || []
         if(list.length > 0) {
+          // @ts-ignore
           const isHave = this.nftBalanceList.value.filter((o) => o.osm_id === place.osm_id)
           if(isHave.length === 0) {
             list.push(place)
@@ -107,13 +114,20 @@ export class checkInStore {
           this.nftBalanceList.setValue(Array.from(new Set(list)))
         }
       }
-      return  [place]
+      return isClaimed ? [] : [place]
     }
   })
 
   // get nft balance
   nftBalanceList = new PromiseState({
     name: "nft balance list",
+    value: [] as any[],
+    function: async () => {
+      // const res = await axios.get(`https://nft.iopay.me/account/4690/own/${this.owner}?skip=0&first=1000&type=1155`)
+      // console.log("res", res)
+      // const osmData = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=jsonv2`)
+      // return []
+    }
   })
 
   // mint Osm NFT
