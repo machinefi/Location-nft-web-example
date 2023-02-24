@@ -215,7 +215,7 @@ body {
   height: auto;
   margin: 0;
   padding: 0 8px;
-  max-width: 37vw;
+  max-width: max-content;
 }
 
 .leaflet-control-geosearch.active form {
