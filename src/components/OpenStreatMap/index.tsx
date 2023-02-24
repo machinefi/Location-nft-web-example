@@ -13,7 +13,7 @@ const LocationMarker = (props) => {
   const {curStore, address} = props
   const map = useMap()
   
-  const mapEvent = useMapEvents({
+  useMapEvents({
     click({ latlng }) {
       curStore.mapPlaces.call(latlng)
       setPosition(latlng)
@@ -21,27 +21,27 @@ const LocationMarker = (props) => {
     locationfound(e) {
       // loading
     },
+    locationError(e) {
+      
+    }
   })
 
   useEffect(() => {
-   if(address) {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const latlng = {lat: position.coords.latitude, lng: position.coords.longitude};
-        curStore.setData({positionStatus: 2})
+    if(address) {
+      map.locate().on("locationfound", ({latlng}) => {
+        console.log('latlng', latlng)
         setPosition(latlng)
         map.flyTo(latlng, map.getZoom())
+        curStore.setData({positionStatus: 2})
         curStore.mapPlaces.call(latlng)
-      },(err)=>{
-        console.log(err);
+      }).on("locationerror", (e) => {
+        console.log('locationError', e)
         curStore.setData({positionStatus: 1})
-        toast(err.message)
+        toast(`User denied Geolocation. Please allow location access or choose a location manually.`)
       });
-    } else {
-      curStore.setData({positionStatus: 1})
     }
-   }
-  }, [address, navigator.geolocation])
+  }, [address, map]);
+
 
   return position === null ? null : (
     <Marker position={position}>
@@ -54,7 +54,8 @@ const Map = (props) => {
   const mapRef = useRef()
   const prov = OpenStreetMapProvider();
   const [center, setCenter] = useState({ lat: 37.7749295, lng: -122.4194155 })
-  
+
+
   return (
     <MapContainer center={center} zoom={13} ref={mapRef}>
       <TileLayer
