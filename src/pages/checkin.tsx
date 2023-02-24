@@ -64,7 +64,7 @@ const Checkin = observer(() => {
             display={{ base: "block", lg: "none" }}
             mb="2rem"
             whiteSpace={"pre-line"}
-            fontSize={{ base: "2rem" }}
+            fontSize={{ base: "1.25rem" }}
             fontWeight={700}
             lineHeight={{ md: "4rem", xl: "4rem", "2xl": "4.5rem" }}
             fontFamily={"Prompt"}
