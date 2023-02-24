@@ -41,7 +41,7 @@ body {
   }
 }
 
-.walletBtn {
+.walletBtn, .checkBtn {
   background-color: #fff !important;
   border: none !important;
   border-radius: 0 !important;
@@ -51,7 +51,7 @@ body {
 }
 
 
-.walletBtn:focus:after {
+.walletBtn:focus:after, .checkBtn:focus:after {
   border: none !important;
 }
 
@@ -63,9 +63,21 @@ body {
   font-size: 1.5rem;
 }
 
-.walletBtn svg {
+.walletBtn svg, .checkBtn svg {
   display: none !important;
 }
+
+.checkBtn {
+  border-radius: 5px !important;
+}
+
+
+.checkBtn span {
+  color: #0069f2 !important;
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
 
 #coinbasewallet {
   display: none !important;

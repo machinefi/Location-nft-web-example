@@ -28,7 +28,7 @@ const LocationMarker = (props) => {
 
   useEffect(() => {
     if(chainId && address) {
-      map.locate({timeout: 1000}).on("locationfound", ({latlng}) => {
+      map.locate({timeout: 5000}).on("locationfound", ({latlng}) => {
         console.log('latlng', latlng)
         setPosition(latlng)
         map.flyTo(latlng, map.getZoom())

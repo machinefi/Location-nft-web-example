@@ -34,7 +34,7 @@ const Checkin = observer(() => {
 
   return (
     // @ts-ignore
-    <Box w="100vw" h="100vh" overflow={"hidden"} bg={"linear-gradient(0deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05)),linear-gradient(107.56deg, #00fffc 0%, #0041ff 100%)"}>
+    <Box w="100vw" h="100vh" overflow={"hidden"} bg={"linear-gradient(107.56deg, #64D9EA 0%, #014FF0 100%);"}>
       <Head>
         <title>Check In demo </title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
@@ -44,11 +44,11 @@ const Checkin = observer(() => {
         w="100vw"
         h="100vh"
         overflow={{ base: "auto", lg: "hidden" }}
-        bgImage={{ base: "url(/images/bg_mobile.png)", lg: "url(/images/bg_pc.png)" }}
+        bgImage={{ base: "url(/images/bg_check_mobile.png)", lg: "url(/images/bg_checkin.png)" }}
         bgSize={{ base: "100%", lg: "100% 100%" }}
-        bgPosition={{ base: "0 210px", lg: "0 0" }}
+        bgPosition={{ base: "0 0", lg: "0 0" }}
         bgRepeat="no-repeat"
-        alignItems={"center"}
+        alignItems={{base: "flex-start", md: "center"}}
       >
         {/* center */}
         <Flex
@@ -58,34 +58,25 @@ const Checkin = observer(() => {
           justifyContent={{ base: "center", lg: "center" }}
           alignItems={{ base: "center", lg: "flex-start" }}
         >
-          <Text
-            display={{ base: "block", lg: "none" }}
-            my="2rem"
-            whiteSpace={"pre-line"}
-            fontSize={{ base: "1.25rem" }}
-            fontWeight={700}
-            lineHeight={{ md: "4rem", xl: "4rem", "2xl": "4.5rem" }}
-            fontFamily={"Prompt"}
-          >{`Mint OpenStreetMap NFT`}</Text>
-          <Box  width={{ base: "100%", md: "40%" }} height="50vh" mr={{base: 0, md: "3%"}} borderRadius="10px" overflow={'hidden'}>
+          <Box ml={{base: "3%", md: 0}} width={{ base: "94%", md: "40%", xl: "35%" }} height="50vh" mr={{base: '3%', md: "3%"}} borderRadius="10px" overflow={'hidden'}>
             <OpenStreetMap curStore={checkInStore} chainId={chainId} address={address} />
           </Box>
-          <Box textAlign={{ base: "center", lg: "left" }} py={{ base: "40px", lg: 0 }} w={{ base: "90%", lg: "35%" }}>
+          <Box textAlign={{ base: "center", lg: "left" }} py={{ base: "40px", lg: 0 }} w={{ base: "90%", lg: "35%", xl: "30%" }}>
             <Text
-              display={{ base: "none", lg: "block" }}
               mb="2rem"
               whiteSpace={"pre-line"}
-              fontSize={{ base: "3.5rem", lg: "3rem", "2xl": "3rem" }}
+              fontSize={{ base: "1.5rem", lg: "3rem", "2xl": "3rem" }}
               fontWeight={700}
               lineHeight={{ md: "4rem", xl: "4rem", "2xl": "4.5rem" }}
               fontFamily={"Prompt"}
+              textAlign="left"
             >{`Mint Location NFT`}</Text>
          
             {/* @ts-ignore */}
-            <Tabs isFitted variant="enclosed" index={checkInStore.tabIndex} onChange={(index) => checkInStore.setData({tabIndex: index})}>
-              <TabList mb="1em">
-                <Tab _selected={{ color: "#0069f2", fontSize: "1rem", fontWeight: 700, borderColor: "#fff", bg: "#fff" }}>My NFT</Tab>
-                <Tab _selected={{ color: "#0069f2", fontSize: "1rem", fontWeight: 700, borderColor: "#fff", bg: "#fff" }}>Check In</Tab>
+            <Tabs isFitted  variant="enclosed" index={checkInStore.tabIndex} onChange={(index) => checkInStore.setData({tabIndex: index})}>
+              <TabList mb="1em" border="none">
+                <Tab fontSize={'1.25rem'} fontWeight="700" bg="rgba(255, 255, 255, 0.1)" border="1px solid #fff" borderBottomLeftRadius="md" borderBottomRightRadius="0" borderTopRightRadius="0" _selected={{ color: "#0069f2",  borderColor: "#fff", bg: "#fff" }}>My NFT</Tab>
+                <Tab fontSize={'1.25rem'} fontWeight="700" bg="rgba(255, 255, 255, 0.1)" border="1px solid #fff" borderBottomRightRadius="md" borderTopLeftRadius="0" borderColor="#fff" _selected={{ color: "#0069f2",  borderColor: "#fff", bg: "#fff" }}>Check In</Tab>
               </TabList>
               <TabPanels>
                 <TabPanel padding="0">
@@ -103,19 +94,27 @@ const Checkin = observer(() => {
                                 <AccordionIcon />
                               </AccordionButton>
                             </h2>
-                            <AccordionPanel pb={4}>
-                              <Flex flexDirection={"column"} alignItems="flex-start" justifyContent="flex-start">
-                                <Text>Name: {item.osm_data?.display_name}</Text>
-                                <Text mt={"1rem"}>
-                                  Lat.: {item.scaled_latitude}, Long.: {item.scaled_longitude}
-                                </Text>
+                            <AccordionPanel p="0">
+                              <Flex fontSize={'1rem'} gap="1rem" fontWeight={400} flexDirection={"column"} alignItems="flex-start" justifyContent="flex-start">
+                                <Flex mt="1rem">
+                                  <Text flex="none" textAlign={'left'} pl="1rem" w="90px">Name: </Text>
+                                  <Text textAlign="left">{item.osm_data?.display_name}</Text>
+                                </Flex>
+                                <Flex alignItems={'center'}>
+                                  <Text textAlign={'left'} pl="1rem" flex="none" w="90px">Lat.: </Text>
+                                  <Text >{item.scaled_latitude}</Text>
+                                </Flex>
+                                <Flex alignItems={'center'}>
+                                  <Text textAlign={'left'} pl="1rem" flex="none" w="90px">Long.: </Text>
+                                  <Text>{item.scaled_longitude}</Text>
+                                </Flex>
                               </Flex>
                             </AccordionPanel>
                           </AccordionItem>
                         );
                       })
                     ) : (
-                      <Text fontSize={"2rem"} color="rgba(255, 255,255,0.5)" mt="3rem" w={"full"} align="center">
+                      <Text fontSize={"1rem"} color="rgba(255, 255,255,0.5)" mt="3rem" w={"full"} align="center">
                         Nothing
                       </Text>
                     )}
@@ -123,28 +122,19 @@ const Checkin = observer(() => {
                 </TabPanel>
                 <TabPanel p="0">
                   {!address ? (
-                    <Flex justifyContent={"center"}>
-                      <ConnectWallet className="walletBtn" />
+                    <Flex justifyContent={"center"} mt={{base: "3rem", md: "10vh"}}>
+                      <ConnectWallet className="checkBtn" />
                     </Flex>
                   ) : (
                     <Box>
                       {checkInStore.mapPlaces.loading.value ? (
-                        <Spinner size="xl" color="linear-gradient(107.56deg, #00C2FF 0%, #CC00FF 100%)" />
+                        <Flex justifyContent={'center'} alignItems="center" mt={{base: "3rem", md: "10vh"}}>
+                          <Spinner size="xl" color="linear-gradient(107.56deg, #00C2FF 0%, #CC00FF 100%)" />
+                        </Flex>
                       ) : !checkInStore.mapPlaces?.value ? (
-                        <Flex justifyContent={"center"}>
-                          <Button minW={"50%"} w="max-content" h={{ base: "50px", lg: "4rem" }} borderRadius={0} bg="white">
-                            <Text
-                              bg="linear-gradient(107.56deg, #00C2FF 0%, #CC00FF 100%)"
-                              fontSize={{ base: "1rem", lg: "1rem" }}
-                              fontWeight={700}
-                              fontFamily="Helvetica"
-                              backgroundClip={"text"}
-                              css={{
-                                textFillColor: "transparent",
-                              }}
-                            >
-                              {checkInStore.positionConfig[checkInStore.positionStatus]}
-                            </Text>
+                        <Flex justifyContent={"center"} mt={{base: "3rem", md: "10vh"}}>
+                          <Button w="max-content" padding={'7px 24px'} borderRadius={'5px'} bg="white" fontSize={'18px'} fontWeight="700" color="#306CE9">
+                            {checkInStore.positionConfig[checkInStore.positionStatus]}
                           </Button>
                         </Flex>
                       ) : (
@@ -153,49 +143,39 @@ const Checkin = observer(() => {
                             return (
                               <Box key={item.osm_id}>
                                 <Flex key={item.lat} mb="1rem" w="100%" alignItems={"center"} justifyContent={"space-between"}>
-                                  <Text>Location ID: {item.osm_id}</Text>
+                                  <Flex alignItems={'flex-start'}>
+                                    <Text flex="none" w="90px">Location ID: </Text>
+                                    <Text fontSize={'1rem'} fontWeight={400}>{item.osm_id}</Text>
+                                  </Flex>
                                   {item.claimed ? (
-                                    <Button bg="white" disabled size="sm">
-                                      <Text
-                                        bg="linear-gradient(107.56deg, #00C2FF 0%, #CC00FF 100%)"
-                                        fontSize="0.875rem"
-                                        fontWeight={700}
-                                        fontFamily="Helvetica"
-                                        backgroundClip={"text"}
-                                        css={{
-                                          textFillColor: "transparent",
-                                        }}
-                                      >
-                                        Claimed
-                                      </Text>
+                                    <Button bg="white" disabled fontSize={'16px'} fontWeight="700" color="#306CE9">
+                                      Claimed
                                     </Button>
                                   ) : (
                                     <Button
                                       isLoading={checkInStore.mintOsmNFT.loading.value && checkInStore.claimIndex === oindex}
                                       onClick={() => checkInStore.mintOsmNFT.call(item, oindex)}
-                                      bg="white"
-                                      size="sm"
+                                      bg="white" size="sm"
+                                      padding={'0 16px'}
+                                      fontSize={'16px'} fontWeight="700" color="#306CE9"
                                     >
-                                      <Text
-                                        bg="linear-gradient(107.56deg, #00C2FF 0%, #CC00FF 100%)"
-                                        fontSize="0.875rem"
-                                        fontWeight={700}
-                                        fontFamily="Helvetica"
-                                        backgroundClip={"text"}
-                                        css={{
-                                          textFillColor: "transparent",
-                                        }}
-                                      >
-                                        Mint OSM NFT
-                                      </Text>
+                                      Mint OSM NFT
                                     </Button>
                                   )}
                                 </Flex>
-                                <Flex flexDirection={"column"} alignItems="flex-start" justifyContent="flex-start">
-                                  <Text>Name: {item.osm_data?.display_name}</Text>
-                                  <Text mt={"1rem"}>
-                                    Lat.: {item.scaled_latitude}, Long.: {item.scaled_longitude}
-                                  </Text>
+                                <Flex fontSize={'1rem'} gap="1rem" fontWeight={400} flexDirection={"column"} alignItems="flex-start" justifyContent="flex-start">
+                                  <Flex>
+                                    <Text flex="none" textAlign={'left'} w="90px">Name: </Text>
+                                    <Text textAlign="left">{item.osm_data?.display_name}</Text>
+                                  </Flex>
+                                  <Flex alignItems={'center'}>
+                                    <Text textAlign={'left'} flex="none" w="90px">Lat.: </Text>
+                                    <Text >{item.scaled_latitude}</Text>
+                                  </Flex>
+                                  <Flex alignItems={'center'}>
+                                    <Text textAlign={'left'} flex="none" w="90px">Long.: </Text>
+                                    <Text>{item.scaled_longitude}</Text>
+                                  </Flex>
                                 </Flex>
                               </Box>
                             );
