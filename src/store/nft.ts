@@ -30,7 +30,7 @@ type SIGN_DATA = {
 
 export class nftStore {
   rootStore: RootStore;
-  defaultChainId: 4690
+  defaultChainId= 4690
   data = nftData
 
   contractInstance: any;

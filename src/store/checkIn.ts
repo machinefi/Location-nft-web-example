@@ -21,7 +21,7 @@ type SIGN_DATA = {
 
 export class checkInStore {
   rootStore: RootStore;
-  defaultChainId: 4690
+  defaultChainId = 4690;
   data = nftData
   contract={
     "4690": {
@@ -30,6 +30,7 @@ export class checkInStore {
     },
     "4689": {
       "address": "",
+      abi: OsmNFTABI
     }
   }
 
@@ -40,10 +41,16 @@ export class checkInStore {
   signStatus: boolean = false;
   owner: string = "";
   balance: number = 0;
-  chainId: number = 4689;
+  chainId: number = 4690;
   loading: boolean = true;
   claimIndex: number = 0;
   siteName: string = "";
+  positionStatus : number = 0; // 0 loading  1 refuse  2 allow
+  positionConfig = {
+    0: 'Please Waiting...',
+    1: 'Please Click Map Set Position',
+    2: 'waiting'
+  }
 
   geoStreamSdk: GeostreamSDK
 
@@ -76,8 +83,8 @@ export class checkInStore {
       const {lat, lng} = location
       const osmData = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
       const nftBalance = await this.contractInstance.call('balanceOf', this.owner, osmData.data.osm_id)
-      console.log("osmData", osmData.data, nftBalance.toNumber())
-      return [{
+      const isClaimed = nftBalance.toNumber() > 0
+      const place = {
         lat: new BigNumber((lat * 1000000).toFixed(0)).toNumber(),
         lng: new BigNumber((lng * 1000000).toFixed(0)).toNumber(),
         scaled_latitude: lat,
@@ -85,8 +92,20 @@ export class checkInStore {
         osm_id: osmData.data.osm_id,
         osm_data: osmData.data,
         claimed: nftBalance.toNumber() > 0
-      }]
+      }
+      console.log("osmData", osmData.data, nftBalance.toNumber())
+      if(isClaimed) {
+        const list = this.nftBalanceList.value || []
+        list.push(place)
+        this.nftBalanceList.setValue(list)
+      }
+      return  [place]
     }
+  })
+
+  // get nft balance
+  nftBalanceList = new PromiseState({
+    name: "nft balance list",
   })
 
   // mint Osm NFT

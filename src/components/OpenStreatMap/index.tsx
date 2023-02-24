@@ -4,20 +4,44 @@ import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents, withLeafl
 import { OpenStreetMapProvider } from "react-leaflet-geosearch";
 import SearchControl from "./SearchControl";
 import 'leaflet/dist/leaflet.css'
+import { toast } from 'react-hot-toast';
 
 
 
 const LocationMarker = (props) => {
   const [position, setPosition] = useState(null)
+  const {curStore, address} = props
+  const map = useMap()
+  
   useMapEvents({
     click({ latlng }) {
-      console.log('click', latlng)
-      props.curStore.mapPlaces.call(latlng)
+      curStore.mapPlaces.call(latlng)
       setPosition(latlng)
     },
     locationfound(e) {
+      // loading
     },
   })
+
+  useEffect(() => {
+   if(address) {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const latlng = {lat: position.coords.latitude, lng: position.coords.longitude};
+        curStore.setData({positionStatus: 0})
+        setPosition(latlng)
+        map.flyTo(latlng, map.getZoom())
+        curStore.mapPlaces.call(latlng)
+      },(err)=>{
+        console.log(err);
+        curStore.setData({positionStatus: 1})
+        toast(err.message)
+      });
+    } else {
+      curStore.setData({positionStatus: 1})
+    }
+   }
+  }, [address, navigator.geolocation])
 
   return position === null ? null : (
     <Marker position={position}>
@@ -29,21 +53,15 @@ const LocationMarker = (props) => {
 const Map = (props) => {
   const mapRef = useRef()
   const prov = OpenStreetMapProvider();
-  const [location, setPosition] = useState(null)
-
-  useEffect(() => {
-    if ( !mapRef ) return;
-    console.log('current', mapRef)
-  }, [location])
-
+  const [center, setCenter] = useState({ lat: 37.7749295, lng: -122.4194155 })
   
   return (
-    <MapContainer center={{ lat: 30.27, lng: 120.04 }} zoom={13} ref={mapRef}>
+    <MapContainer center={center} zoom={13} ref={mapRef}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <LocationMarker curStore={props.curStore} />
+      <LocationMarker curStore={props.curStore} address={props.address} />
       <SearchControl
         provider={prov}
         showMarker={true}
@@ -51,7 +69,6 @@ const Map = (props) => {
         popupFormat={({ query, result }) => {
           console.log('query', query, result);
           props.curStore.mapPlaces.call({lat: result.y, lng: result.x})
-          setPosition(result)
           return result.label
         }}
         maxMarkers={3}

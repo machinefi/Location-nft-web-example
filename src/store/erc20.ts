@@ -30,7 +30,7 @@ type SIGN_DATA = {
 
 export class erc20Store {
   rootStore: RootStore;
-  defaultChainId: 4689
+  defaultChainId= 4689
   data = erc20Data
 
 
