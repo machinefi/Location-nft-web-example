@@ -10,7 +10,7 @@ import { toast } from 'react-hot-toast';
 
 const LocationMarker = (props) => {
   const [position, setPosition] = useState(null)
-  const {curStore, address} = props
+  const {curStore,chainId, address} = props
   const map = useMap()
   
   useMapEvents({
@@ -27,7 +27,7 @@ const LocationMarker = (props) => {
   })
 
   useEffect(() => {
-    if(address) {
+    if(chainId && address) {
       map.locate().on("locationfound", ({latlng}) => {
         console.log('latlng', latlng)
         setPosition(latlng)
@@ -40,12 +40,12 @@ const LocationMarker = (props) => {
         toast(`User denied Geolocation. Please allow location access or choose a location manually.`)
       });
     }
-  }, [address, map]);
+  }, [chainId, address, map]);
 
 
   return position === null ? null : (
     <Marker position={position}>
-      <Popup>You are here</Popup>
+      <Popup>{chainId} {address}</Popup>
     </Marker>
   )
 }
@@ -55,14 +55,13 @@ const Map = (props) => {
   const prov = OpenStreetMapProvider();
   const [center, setCenter] = useState({ lat: 37.7749295, lng: -122.4194155 })
 
-
   return (
     <MapContainer center={center} zoom={13} ref={mapRef}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <LocationMarker curStore={props.curStore} address={props.address} />
+      <LocationMarker curStore={props.curStore} chainId={props.chainId} address={props.address} />
       <SearchControl
         provider={prov}
         showMarker={true}

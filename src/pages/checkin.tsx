@@ -68,7 +68,7 @@ const Checkin = observer(() => {
             fontFamily={"Prompt"}
           >{`Mint OpenStreetMap NFT`}</Text>
           <Box  width={{ base: "100%", md: "40%" }} height="50vh" mr={{base: 0, md: "3%"}} borderRadius="10px" overflow={'hidden'}>
-            <OpenStreetMap curStore={checkInStore} address={address} />
+            <OpenStreetMap curStore={checkInStore} chainId={chainId} address={address} />
           </Box>
           <Box textAlign={{ base: "center", lg: "left" }} py={{ base: "40px", lg: 0 }} w={{ base: "90%", lg: "35%" }}>
             <Text
