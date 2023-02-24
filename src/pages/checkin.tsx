@@ -93,7 +93,7 @@ const Checkin = observer(() => {
                     {checkInStore.nftBalanceList.value ? (
                       checkInStore.nftBalanceList.value?.map((item) => {
                         return (
-                          <AccordionItem key={item} border={"none"}>
+                          <AccordionItem key={item.osm_id} border={"none"}>
                             <h2>
                               <AccordionButton>
                                 <Box as="span" flex="1" textAlign="left">

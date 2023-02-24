@@ -123,39 +123,38 @@ export class checkInStore {
     name: "nft balance list",
     value: [] as any[],
     function: async () => {
-      // ${this.owner}
-      const { data } = await axios.get(`https://nft.iopay.me/account/4690/own/0x7890256910829ecc1cdd50ab50b1e92ec90a28da?skip=0&first=1000&type=1155`)
-      console.log("res", data)
+      const { data } = await axios.get(`https://nft.iopay.me/account/4690/own/${this.owner}?skip=0&first=1000&type=1155`)
+      if(data.length === 0) return []
       const list = await Promise.all(
         data?.map(async (item) => {
           const option = await this.getNftItemDetail.call(item.tokenId)
-          console.log("option", option)
-          return {
-            // lat: new BigNumber((lat * 1000000).toFixed(0)).toNumber(),
-            // lng: new BigNumber((lng * 1000000).toFixed(0)).toNumber(),
-            // scaled_latitude: lat,
-            // scaled_longitude: lng,
-            // osm_id: osmData.data.osm_id,
-            // osm_data: osmData.data,
-            // claimed: true
-          };
+          return {...option};
         })
       );
       
-      return []
+      return list
     }
   })
 
+  // use node_id query osm data
   getNftItemDetail = new PromiseState({
     name: "get nft item detail",
     function: async (osmId) => {
      try {
-      const nodeRes = await axios.get(`https://nominatim.openstreetmap.org/details?place_id=${osmId}&format=json`)
-      console.log("nodeRes", nodeRes)
+      const nodeRes = await axios.get(`https://nominatim.openstreetmap.org/details?osmtype=W&osmid=${osmId}&addressdetails=1&hierarchy=0&group_hierarchy=1&polygon_geojson=1&format=json`)
       if(nodeRes.data) {
         const {centroid: {coordinates}} = nodeRes.data
-        const osmData = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${coordinates[0]}&lon=${coordinates[1]}`)
-        console.log("osmData111", osmData.data)
+        const [lng, lat] = coordinates
+        const osmData = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
+        return {
+          lat: new BigNumber((lng * 1000000).toFixed(0)).toNumber(),
+          lng: new BigNumber((lat * 1000000).toFixed(0)).toNumber(),
+          scaled_latitude: lng,
+          scaled_longitude: lat,
+          osm_id: osmData.data.osm_id,
+          osm_data: osmData.data,
+          claimed: true
+        }
       }
      } catch (error) {
       console.log("error", error)
