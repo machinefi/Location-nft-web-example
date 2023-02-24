@@ -96,8 +96,16 @@ export class checkInStore {
       console.log("osmData", osmData.data, nftBalance.toNumber())
       if(isClaimed) {
         const list = this.nftBalanceList.value || []
-        list.push(place)
-        this.nftBalanceList.setValue(Array.from(new Set(list)))
+        if(list.length > 0) {
+          const isHave = this.nftBalanceList.value.filter((o) => o.osm_id === place.osm_id)
+          if(isHave.length === 0) {
+            list.push(place)
+            this.nftBalanceList.setValue(Array.from(new Set(list)))
+          }
+        } else {
+          list.push(place)
+          this.nftBalanceList.setValue(Array.from(new Set(list)))
+        }
       }
       return  [place]
     }
