@@ -11,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const tokenURLMetaData = {
     description: "nft description",
     image: `${baseURI}/api/image/${id}`,
-    name: `Location ${id} NFT`,
+    name: `Location NFT`,
   };
   try {
     const filePath = path.join(process.cwd(), "var", "image", `${id}.png`);
