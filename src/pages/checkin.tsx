@@ -58,7 +58,7 @@ const Checkin = observer(() => {
           justifyContent={{ base: "center", lg: "center" }}
           alignItems={{ base: "center", lg: "flex-start" }}
         >
-          <Box ml={{base: "3%", md: 0}} width={{ base: "94%", md: "40%", xl: "35%" }} height="50vh" mr={{base: '3%', md: "3%"}} borderRadius="10px" overflow={'hidden'}>
+          <Box ml={{base: "3%", md: 0}} width={{ base: "94%", lg: "40%", xl: "35%" }} height="50vh" mr={{base: '3%', md: "3%"}} borderRadius="10px" overflow={'hidden'}>
             {address && chainId && <OpenStreetMap curStore={checkInStore} chainId={chainId} address={address} />}
           </Box>
           <Box textAlign={{ base: "center", lg: "left" }} py={{ base: "40px", lg: 0 }} w={{ base: "90%", lg: "35%", xl: "30%" }}>
@@ -83,9 +83,9 @@ const Checkin = observer(() => {
                   <Accordion allowMultiple>
                     {/* @ts-ignore */}
                     {checkInStore.nftBalanceList.value?.length > 0 ? (
-                      checkInStore.nftBalanceList.value?.map((item) => {
+                      checkInStore.nftBalanceList.value?.map((item, i) => {
                         return (
-                          <AccordionItem key={item.osm_id} border={"none"}>
+                          <AccordionItem key={item.osm_id + i} border={"none"}>
                             <h2>
                               <AccordionButton>
                                 <Box as="span" flex="1" textAlign="left">

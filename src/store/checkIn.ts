@@ -114,7 +114,7 @@ export class checkInStore {
     name: "nft balance list",
     value: [] as any[],
     function: async () => {
-      const { data } = await axios.get(`https://nft.iopay.me/account/4690/own/${this.owner}?skip=0&first=1000&type=1155`)
+      const { data } = await axios.get(`https://nft.iopay.me/account/4690/own/${this.owner.toLowerCase()}?skip=0&first=1000&type=1155`)
       if(data.length === 0) return []
       const list = await Promise.all(
         data?.map(async (item) => {
