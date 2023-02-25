@@ -59,7 +59,7 @@ const Checkin = observer(() => {
           alignItems={{ base: "center", lg: "flex-start" }}
         >
           <Box ml={{base: "3%", md: 0}} width={{ base: "94%", lg: "40%", xl: "35%" }} height="50vh" mr={{base: '3%', md: "3%"}} borderRadius="10px" overflow={'hidden'}>
-            {address && chainId && <OpenStreetMap curStore={checkInStore} chainId={chainId} address={address} />}
+            <OpenStreetMap curStore={checkInStore} chainId={chainId} address={address} />
           </Box>
           <Box textAlign={{ base: "center", lg: "left" }} py={{ base: "40px", lg: 0 }} w={{ base: "90%", lg: "35%", xl: "30%" }}>
             <Text

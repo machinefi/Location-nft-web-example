@@ -49,7 +49,7 @@ const LocationMarker = (props) => {
 
   return position === null ? null : (
     <Marker position={position}>
-      <Popup>{position}-{curStore.positionStatus}-{status}</Popup>
+      <Popup>You are here {curStore.positionStatus}-{status}</Popup>
     </Marker>
   )
 }
