@@ -27,7 +27,8 @@ const LocationMarker = (props) => {
   useEffect(() => {
     if(chainId && address) {
       setStatus(1)
-      map.locate({enableHighAccuracy: true,  timeout: 5000, maximumAge: 0,}).on("locationfound", ({latlng}) => {
+      map.locate({enableHighAccuracy: true, watch:true, timeout: 5000, maximumAge: 0,}).on("locationfound", ({latlng}) => {
+        map.stopLocate()
         setStatus(2)
         console.log('latlng', latlng)
         setPosition(latlng)
