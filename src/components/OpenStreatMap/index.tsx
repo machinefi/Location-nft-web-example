@@ -19,9 +19,6 @@ const LocationMarker = (props) => {
       curStore.mapPlaces.call(latlng)
       setPosition(latlng)
     },
-    locationfound(e) {
-      // loading
-    },
   })
 
   useEffect(() => {
@@ -56,13 +53,24 @@ const LocationMarker = (props) => {
   )
 }
 
-const Map = (props) => {
+const OpenStreetMap = (props) => {
   const mapRef = useRef()
   const prov = OpenStreetMapProvider();
   const [center, setCenter] = useState({ lat: 37.7749295, lng: -122.4194155 })
 
+  function handleMapReady(e) {
+    const map = e.target
+    map.locate({enableHighAccuracy: true, timeout: 3000, maximumAge: 0,}).on("locationfound", ({latlng}) => {
+      alert(latlng)
+    }).on("locationerror", (err) => {
+      alert(err)
+    });
+  }
+
   return (
-    <MapContainer center={center} zoom={13} ref={mapRef}>
+    <MapContainer 
+      whenReady={handleMapReady} 
+      center={center} zoom={13} ref={mapRef}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -88,4 +96,4 @@ const Map = (props) => {
   )
 }
 
-export default Map
+export default OpenStreetMap
