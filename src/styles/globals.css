@@ -93,7 +93,7 @@ body {
     margin: auto !important;
   }
   #metamask {
-    display: none !important;
+    /* display: none !important; */
   }
 }
 

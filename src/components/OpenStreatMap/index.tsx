@@ -23,7 +23,6 @@ const LocationMarker = (props) => {
 
   useEffect(() => {
     if(chainId && address) {
-      setStatus(1)
       map.locate({enableHighAccuracy: true, timeout: 3000, maximumAge: 0,}).on("locationfound", ({latlng}) => {
         setPosition(latlng)
         map.flyTo(latlng, map.getZoom())
