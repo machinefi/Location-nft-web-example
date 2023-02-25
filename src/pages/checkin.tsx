@@ -81,8 +81,11 @@ const Checkin = observer(() => {
               <TabPanels>
                 <TabPanel padding="0">
                   <Accordion allowMultiple>
-                    {/* @ts-ignore */}
-                    {checkInStore.nftBalanceList.value?.length > 0 ? (
+                    {
+                      checkInStore.nftBalanceList.loading.value ? <Flex justifyContent={'center'} alignItems="center" mt="3rem">
+                        <Spinner size="xl" color="linear-gradient(107.56deg, #00C2FF 0%, #CC00FF 100%)" />
+                      {/* @ts-ignore */}
+                      </Flex> : checkInStore.nftBalanceList.value?.length > 0 ? (
                       checkInStore.nftBalanceList.value?.map((item, i) => {
                         return (
                           <AccordionItem key={item.osm_id + i} border={"none"}>
