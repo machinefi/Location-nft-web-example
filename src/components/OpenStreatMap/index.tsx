@@ -25,22 +25,16 @@ const LocationMarker = (props) => {
     if(chainId && address) {
       setStatus(1)
       map.locate({enableHighAccuracy: true, timeout: 3000, maximumAge: 0,}).on("locationfound", ({latlng}) => {
-        alert('location...')
-        setStatus(2)
-        console.log('latlng', latlng)
         setPosition(latlng)
         map.flyTo(latlng, map.getZoom())
         curStore.setData({positionStatus: 2})
         curStore.mapPlaces.call(latlng)
       }).on("locationerror", (e) => {
-        alert('error...')
-        setStatus(3)
         console.log('locationError', e)
         curStore.setData({positionStatus: 1})
         toast(`User denied Geolocation. Please allow location access or choose a location manually.`)
       });
     } else {
-      setStatus(4)
       curStore.setData({positionStatus: 1})
     }
   }, [chainId, address, map]);
@@ -48,7 +42,7 @@ const LocationMarker = (props) => {
 
   return position === null ? null : (
     <Marker position={position}>
-      <Popup>You are here {curStore.positionStatus}-{status}</Popup>
+      <Popup>You are here</Popup>
     </Marker>
   )
 }
@@ -58,18 +52,8 @@ const OpenStreetMap = (props) => {
   const prov = OpenStreetMapProvider();
   const [center, setCenter] = useState({ lat: 37.7749295, lng: -122.4194155 })
 
-  function handleMapReady(e) {
-    const map = e.target
-    map.locate({enableHighAccuracy: true, timeout: 3000, maximumAge: 0,}).on("locationfound", ({latlng}) => {
-      alert(latlng)
-    }).on("locationerror", (err) => {
-      alert(err)
-    });
-  }
-
   return (
     <MapContainer 
-      whenReady={handleMapReady} 
       center={center} zoom={13} ref={mapRef}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
