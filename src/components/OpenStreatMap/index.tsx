@@ -27,8 +27,8 @@ const LocationMarker = (props) => {
   useEffect(() => {
     if(chainId && address) {
       setStatus(1)
-      map.locate({enableHighAccuracy: true, watch:true, timeout: 5000, maximumAge: 0,}).on("locationfound", ({latlng}) => {
-        map.stopLocate()
+      map.locate({enableHighAccuracy: true, timeout: 3000, maximumAge: 0,}).on("locationfound", ({latlng}) => {
+        alert('location...')
         setStatus(2)
         console.log('latlng', latlng)
         setPosition(latlng)
@@ -36,7 +36,7 @@ const LocationMarker = (props) => {
         curStore.setData({positionStatus: 2})
         curStore.mapPlaces.call(latlng)
       }).on("locationerror", (e) => {
-        map.stopLocate()
+        alert('error...')
         setStatus(3)
         console.log('locationError', e)
         curStore.setData({positionStatus: 1})
