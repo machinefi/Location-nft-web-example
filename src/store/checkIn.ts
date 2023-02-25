@@ -92,8 +92,8 @@ export class checkInStore {
       const place = {
         lat: new BigNumber((lat * 1000000).toFixed(0)).toNumber(),
         lng: new BigNumber((lng * 1000000).toFixed(0)).toNumber(),
-        scaled_latitude: lat,
-        scaled_longitude: lng,
+        scaled_latitude: lat.toFixed(4),
+        scaled_longitude: lng.toFixed(4),
         osm_id: osmData.data.osm_id,
         osm_data: osmData.data,
         claimed: nftBalance.toNumber() > 0
@@ -140,8 +140,8 @@ export class checkInStore {
         return {
           lat: new BigNumber((lng * 1000000).toFixed(0)).toNumber(),
           lng: new BigNumber((lat * 1000000).toFixed(0)).toNumber(),
-          scaled_latitude: lng,
-          scaled_longitude: lat,
+          scaled_latitude: lng.toFixed(4),
+          scaled_longitude: lat.toFixed(4),
           osm_id: osmData.data.osm_id,
           osm_data: osmData.data,
           claimed: true

@@ -102,11 +102,11 @@ const Checkin = observer(() => {
                                 </Flex>
                                 <Flex alignItems={'center'}>
                                   <Text textAlign={'left'} pl="1rem" flex="none" w="90px">Lat.: </Text>
-                                  <Text >{item.scaled_latitude.toFixed(4)}</Text>
+                                  <Text >{item.scaled_latitude}</Text>
                                 </Flex>
                                 <Flex alignItems={'center'}>
                                   <Text textAlign={'left'} pl="1rem" flex="none" w="90px">Long.: </Text>
-                                  <Text>{item.scaled_longitude.toFixed(4)}</Text>
+                                  <Text>{item.scaled_longitude}</Text>
                                 </Flex>
                               </Flex>
                             </AccordionPanel>
@@ -164,11 +164,11 @@ const Checkin = observer(() => {
                                   </Flex>
                                   <Flex alignItems={'center'}>
                                     <Text textAlign={'left'} flex="none" w="90px">Lat.: </Text>
-                                    <Text >{item.scaled_latitude.toFixed(4)}</Text>
+                                    <Text >{item.scaled_latitude}</Text>
                                   </Flex>
                                   <Flex alignItems={'center'}>
                                     <Text textAlign={'left'} flex="none" w="90px">Long.: </Text>
-                                    <Text>{item.scaled_longitude.toFixed(4)}</Text>
+                                    <Text>{item.scaled_longitude}</Text>
                                   </Flex>
                                 </Flex>
                               </Box>
