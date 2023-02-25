@@ -36,6 +36,7 @@ const LocationMarker = (props) => {
         curStore.setData({positionStatus: 2})
         curStore.mapPlaces.call(latlng)
       }).on("locationerror", (e) => {
+        map.stopLocate()
         setStatus(3)
         console.log('locationError', e)
         curStore.setData({positionStatus: 1})
