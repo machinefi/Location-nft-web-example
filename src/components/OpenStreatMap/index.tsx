@@ -12,6 +12,7 @@ const LocationMarker = (props) => {
   const [position, setPosition] = useState(null)
   const {curStore,chainId, address} = props
   const map = useMap()
+  const [status, setStatus] = useState(0)
   
   useMapEvents({
     click({ latlng }) {
@@ -21,26 +22,26 @@ const LocationMarker = (props) => {
     locationfound(e) {
       // loading
     },
-    locationError(e) {
-      
-    }
   })
 
   useEffect(() => {
-    console.log('init location', chainId, address)
     if(chainId && address) {
+      setStatus(1)
       map.locate({enableHighAccuracy: true,  timeout: 5000, maximumAge: 0,}).on("locationfound", ({latlng}) => {
+        setStatus(2)
         console.log('latlng', latlng)
         setPosition(latlng)
         map.flyTo(latlng, map.getZoom())
         curStore.setData({positionStatus: 2})
         curStore.mapPlaces.call(latlng)
       }).on("locationerror", (e) => {
+        setStatus(3)
         console.log('locationError', e)
         curStore.setData({positionStatus: 1})
         toast(`User denied Geolocation. Please allow location access or choose a location manually.`)
       });
     } else {
+      setStatus(4)
       curStore.setData({positionStatus: 1})
     }
   }, [chainId, address, map]);
@@ -48,7 +49,7 @@ const LocationMarker = (props) => {
 
   return position === null ? null : (
     <Marker position={position}>
-      <Popup>{position}</Popup>
+      <Popup>{position}-{curStore.positionStatus}-{status}</Popup>
     </Marker>
   )
 }
