@@ -81,6 +81,11 @@ export class checkInStore {
     return  this.mapPlaces.loading.value
   }
 
+  // Is the balance sufficient 
+  get isBalanceEnough() {
+    return this.rootStore.god.Coin.balance.value.comparedTo(0) > 0
+  }
+
   // click map set location
   mapPlaces = new PromiseState({
     name: "map places",

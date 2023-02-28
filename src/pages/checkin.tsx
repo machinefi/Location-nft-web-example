@@ -150,15 +150,20 @@ const Checkin = observer(() => {
                                     <Text flex="none" w="90px">Location ID: </Text>
                                     <Text fontSize={'1rem'} fontWeight={400}>{item.osm_id}</Text>
                                   </Flex>
-                                  <Button
-                                    isLoading={checkInStore.mintOsmNFT.loading.value && checkInStore.claimIndex === oindex}
-                                    onClick={() => checkInStore.mintOsmNFT.call(item, oindex)}
-                                    bg="white" size="sm"
-                                    padding={'0 16px'}
-                                    fontSize={'16px'} fontWeight="700" color="#306CE9"
-                                  >
-                                    Mint
+                                  {
+                                    checkInStore.isBalanceEnough ? <Button
+                                      isLoading={checkInStore.mintOsmNFT.loading.value && checkInStore.claimIndex === oindex}
+                                      onClick={() => checkInStore.mintOsmNFT.call(item, oindex)}
+                                      bg="white" size="sm"
+                                      padding={'0 16px'}
+                                      fontSize={'16px'} fontWeight="700" color="#306CE9"
+                                    >
+                                      Mint
+                                    </Button> : <Button disabled opacity={0.7} bg="white" size="sm" padding={'0 16px'} fontSize={'12px'} fontWeight="700" color="#306CE9">
+                                      Insufficient balance
                                   </Button>
+                                  }
+                                 
                                 </Flex>
                                 <Flex fontSize={'1rem'} gap="1rem" fontWeight={400} flexDirection={"column"} alignItems="flex-start" justifyContent="flex-start">
                                   <Flex>
