@@ -151,7 +151,7 @@ const Checkin = observer(() => {
                                     <Text fontSize={'1rem'} fontWeight={400}>{item.osm_id}</Text>
                                   </Flex>
                                   {
-                                    checkInStore.isBalanceEnough ? <Button
+                                    checkInStore.isBalanceEnough.value ? <Button
                                       isLoading={checkInStore.mintOsmNFT.loading.value && checkInStore.claimIndex === oindex}
                                       onClick={() => checkInStore.mintOsmNFT.call(item, oindex)}
                                       bg="white" size="sm"

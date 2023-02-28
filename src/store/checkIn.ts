@@ -72,6 +72,7 @@ export class checkInStore {
        contractInstance: contract
     });
     if(address) {
+      this.isBalanceEnough.call()
       this.nftBalanceList.call()
     }
   }
@@ -82,9 +83,15 @@ export class checkInStore {
   }
 
   // Is the balance sufficient 
-  get isBalanceEnough() {
-    return this.rootStore.god.Coin.balance.value.comparedTo(0) > 0
-  }
+  isBalanceEnough = new PromiseState({
+    name: "is balance enough",
+    function: async () => {
+      const wallet = await this.sdk.wallet.balance()
+      const status = Number(wallet.displayValue) > 0
+      if(!status) toast('Insufficient balance')
+      return status
+    }
+  })
 
   // click map set location
   mapPlaces = new PromiseState({
